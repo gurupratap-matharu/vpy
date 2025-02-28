@@ -12,6 +12,7 @@ django = ">=5.1,<5.2"
 dotenv = "^0.9.9"
 django-extensions = "^3.2.3"
 wagtail-localize = "^1.11.3"
+gunicorn = "^23.0.0"
 
 
 [tool.poetry.group.dev.dependencies]
