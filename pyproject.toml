@@ -1,0 +1,72 @@
+[tool.poetry]
+name = "vpy"
+version = "0.1.0"
+description = "Ventanita for Paraguay"
+authors = ["Gurupratap Matharu <gurupratap.matharu@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+wagtail = ">=6.4,<6.5"
+django = ">=5.1,<5.2"
+dotenv = "^0.9.9"
+django-extensions = "^3.2.3"
+wagtail-localize = "^1.11.3"
+
+
+[tool.poetry.group.dev.dependencies]
+djlint = "^1.36.4"
+black = "^25.1.0"
+isort = "^6.0.1"
+ruff = "^0.9.8"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+line-length = 120
+exclude = [
+    "*migrations*",
+    ]
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+skip = ["docs", "migrations", "media", "static", ".git", ".github", ".ruff_cache", "htmlcov"]
+skip_glob = ["docs/*", "migrations/*", "static/*", "staticfiles/*", "media/*", "htmlcov/*", "*/locale/*", "*.html"]
+known_django = "django"
+known_wagtail = "wagtail"
+sections = "FUTURE,STDLIB,DJANGO,WAGTAIL,THIRDPARTY,FIRSTPARTY,LOCALFOLDER"
+
+[tool.black]
+exclude = '''
+/(
+  | migrations | docs
+)/
+'''
+
+[tool.djlint]
+blank_line_before_tag = "load,extends,block,include"
+blank_line_after_tag = "load,extends,endblock,include"
+close_void_tags = true
+custom_blocks = "toc,example"
+custom_html = "mjml"
+exclude = ".venv,venv,.tox,.eggs,.git"
+extend_exclude = ".custom"
+format_attribute_template_tags = true
+format_css = true
+format_js = true
+# ignore = "H006"
+ignore_blocks="raw,example"
+indent=2
+max_attribute_length = 120
+max_line_length = 120
+profile = "django"
+use_gitignore = true
+
+[tool.djlint.css]
+indent_size = 5
+
+[tool.djlint.js]
+indent_size = 5

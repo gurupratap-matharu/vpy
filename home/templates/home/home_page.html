@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block body_class %}template-homepage{% endblock %}
+
+{% block extra_css %}
+{% endblock extra_css %}
+
+{% block content %}
+  <article class="container col-12 col-xl-9">
+    <h1 class="display-1 text-center">Bus</h1>
+    <section class="py-3 py-md-5">
+
+      {% include 'includes/search_form.html' %}
+
+    </section>
+  </article>
+{% endblock content %}
+{% block extra_js %}
+  <script defer src="{% static 'js/autocomplete.min.js' %}"></script>
+  <script defer src="{% static 'js/flatpickr.min.js' %}"></script>
+  <script defer src="{% static 'js/es.js' %}"></script>
+  <script defer src="{% static 'js/search.js' %}"></script>
+{% endblock extra_js %}
