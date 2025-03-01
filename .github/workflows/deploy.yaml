@@ -24,7 +24,7 @@ jobs:
       - name: Deploy to server
         # don't run locally
         if: ${{ !env.ACT }}
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@master@v1.2.1
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USERNAME }}
