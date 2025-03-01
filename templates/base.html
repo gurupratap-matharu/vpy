@@ -1,7 +1,6 @@
 {% load static i18n wagtailcore_tags wagtailuserbar %}
 
 {% get_current_language as LANGUAGE_CODE %}
-
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}">
   <head>
@@ -30,7 +29,7 @@
     {# Force all links in the live preview panel to be opened in a new tab #}
     {% if request.in_preview_panel %}<base target="_blank" />{% endif %}
     {% if not debug %}
-      <script async src="https://www.googletagmanager.com/gtag/js?id=G-FXKFW99W2Z"></script>
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-MZEYNLZLPE"></script>
       <script>
            window.dataLayer = window.dataLayer || [];
 
@@ -51,7 +50,7 @@
   </head>
   <body class="
     {% block body_class %}{% endblock body_class %}
-    ">
+     ">
     {% wagtailuserbar %}
 
     {% block header %}
