@@ -1,0 +1,22 @@
+<h2 class="fs-5 pb-3">{{ self.title }}</h2>
+<div class="accordion accordion-flush" id="accordionFAQ">
+  {% for element in self.item %}
+    <div class="accordion-item">
+      <h3 class="accordion-header">
+        <button class="accordion-button ps-0 collapsed font-weight-bold"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapse{{ forloop.counter }}"
+                aria-expanded="{% if forloop.first %}
+                                 true
+                               {% else %}
+                                 false
+                               {% endif %}"
+                aria-controls="collapse{{ forloop.counter }}">{{ element.question }}</button>
+      </h3>
+      <div id="collapse{{ forloop.counter }}" class="accordion-collapse collapse" data-bs-parent="#accordionFAQ">
+        <div class="accordion-body ps-0">{{ element.answer }}</div>
+      </div>
+    </div>
+  {% endfor %}
+</div>

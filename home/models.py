@@ -1,5 +1,5 @@
-from wagtail.models import Page
+from base.models import BasePage
 
 
-class HomePage(Page):
+class HomePage(BasePage):
     pass

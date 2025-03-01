@@ -22,6 +22,7 @@ CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", default="").split(" ")
 INSTALLED_APPS = [
     "home",
     "search",
+    "base.apps.BaseConfig",
     # Wagtail
     "wagtail.contrib.forms",
     "wagtail.contrib.redirects",
