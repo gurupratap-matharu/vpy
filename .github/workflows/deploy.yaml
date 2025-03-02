@@ -12,19 +12,18 @@ on:
 jobs:
   deploy:
     name: Deploy
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         python-version: ["3.13"]
         poetry-version: ["1.7.1"]
-        os: [ubuntu-latest]
 
     steps:
       - name: Deploy to server
         # don't run locally
         if: ${{ !env.ACT }}
-        uses: appleboy/ssh-action@master@v1.2.1
+        uses: appleboy/ssh-action@v1.2.1
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USERNAME }}
