@@ -16,6 +16,7 @@ urlpatterns = [
     path("favicon.ico", favicon),
     path("robots.txt", RobotsView.as_view()),
     path("admin/", include(wagtailadmin_urls)),
+    path("accounts/", include("allauth.urls")),
     path("i18n/", include("django.conf.urls.i18n")),
     path("documents/", include(wagtaildocs_urls)),
     path("search/", search_views.search, name="search"),
