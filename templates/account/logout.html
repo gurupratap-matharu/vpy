@@ -1,0 +1,34 @@
+{% extends "layouts/base.html" %}
+
+{% load i18n account %}
+
+{% block title %}
+  {% trans "Log out" %}
+{% endblock title %}
+
+{% block header %}
+{% endblock header %}
+
+{% block content %}
+  <div class="row">
+    <div class="col col-sm-8 col-md-6 col-lg-4 mx-auto">
+      <div class="card mt-7">
+        <div class="card-header pb-0">
+          <h5 class="text-primary text-gradient">Sign Out</h5>
+          <p>{% trans "Are you sure you wish to sign out?" %}</p>
+        </div>
+        <div class="card-body">
+          <form action="{% url 'account_logout' %}" role="form" method="post">
+            {% csrf_token %}
+            {{ form }}
+            <button type="submit" class="btn btn-round bg-gradient-primary w-100">Sign Out</button>
+          </form>
+        </div>
+        <p class="text-sm mx-auto">
+          Go back
+          <a href="/" class="text-primary text-gradient font-weight-bold">Home</a>
+        </p>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
