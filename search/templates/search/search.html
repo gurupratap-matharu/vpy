@@ -1,35 +1,50 @@
-{% extends "base.html" %}
+{% extends "layouts/base.html" %}
 
-{% load static wagtailcore_tags %}
+{% load static i18n wagtailcore_tags %}
 
-{% block body_class %}template-searchresults{% endblock %}
+{% block body_class %}template-searchresults{% endblock body_class %}
 
-{% block title %}Search{% endblock %}
+{% block title %}{% translate "Search" %}{% endblock title %}
 
 {% block content %}
-  <h1>Search</h1>
-  <form action="{% url 'search' %}" method="get">
-    <input type="text" name="query" {% if search_query %}value="{{ search_query }}"{% endif %} />
-    <input type="submit" value="Search" class="button" />
-  </form>
-  {% if search_results %}
-    <ul>
-      {% for result in search_results %}
-        <li>
-          <h4>
-            <a href="{% pageurl result %}">{{ result }}</a>
-          </h4>
-          {% if result.search_description %}{{ result.search_description }}{% endif %}
-        </li>
-      {% endfor %}
-    </ul>
-    {% if search_results.has_previous %}
-      <a href="{% url 'search' %}?query={{ search_query|urlencode }}&amp;page={{ search_results.previous_page_number }}">Previous</a>
-    {% endif %}
-    {% if search_results.has_next %}
-      <a href="{% url 'search' %}?query={{ search_query|urlencode }}&amp;page={{ search_results.next_page_number }}">Next</a>
-    {% endif %}
-  {% elif search_query %}
-    No results found
-  {% endif %}
-{% endblock %}
+  <div class="container">
+    <div class="row">
+      <div class="col col-sm-10 col-md-8 col-lg-6 mx-auto">
+        <h1 class="h3 text-center">{% translate "How can we help?" %}</h1>
+          <form action="{% url 'search' %}" method="get" class="mb-3">
+            <div class="input-group">
+              <span class="input-group-text" id="basic-addon1">🔍</span>
+              <input type="text"
+                     class="form-control"
+                     name="query"
+                     value="{{ search_query|default:'' }}"
+                     placeholder="Search for articles"
+                     aria-label="search"
+                     aria-describedby="basic-addon2" />
+               <button class="btn bg-gradient-primary mb-0" type="submit" id="button-addon2">Go</button>
+            </div>
+          </form>
+        {% if search_results %}
+          <ul>
+            {% for result in search_results %}
+              <li>
+                <h4>
+                  <a href="{% pageurl result %}">{{ result }}</a>
+                </h4>
+                {% if result.search_description %}{{ result.search_description }}{% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+          {% if search_results.has_previous %}
+            <a href="{% url 'search' %}?query={{ search_query|urlencode }}&amp;page={{ search_results.previous_page_number }}">Previous</a>
+          {% endif %}
+          {% if search_results.has_next %}
+            <a href="{% url 'search' %}?query={{ search_query|urlencode }}&amp;page={{ search_results.next_page_number }}">Next</a>
+          {% endif %}
+        {% elif search_query %}
+          No results found
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endblock content %}
