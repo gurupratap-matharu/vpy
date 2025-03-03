@@ -1,10 +1,50 @@
-{% extends "base.html" %}
+{% extends "layouts/base.html" %}
+
+{% load static i18n %}
 
 {% block title %}Page not found{% endblock %}
+
+{% block header %}
+{% include 'includes/navigation-basic.html' %}
+{% endblock header %}
 
 {% block body_class %}template-404{% endblock %}
 
 {% block content %}
-  <h1>Page not found</h1>
-  <h2>Sorry, this page could not be found.</h2>
+<div class="container">
+
+  <div class="row mt-3">
+    <div class="col col-sm-10 col-md-8 col-lg-6 mx-auto">
+      <div class="alert alert-light alert-dismissible fade show" role="alert">
+        <svg class="bi flex-shrink-0 me-2" width="24" height="24" fill="currentColor" aria-label="Info:">
+          <use xlink:href="{% static 'icons/icons.svg' %}#bell" />
+        </svg>
+        Well this is awkward, looks like that page doesn't exist anymore. Try searching
+        for something similar below.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+      <div class="d-flex flex-column text-center gap-3">
+        <h3>{% translate "Hi, How can we help?" %}</h3>
+        <form action="{% url 'search' %}" method="get" class="mb-3">
+          <div class="input-group">
+            <span class="input-group-text" id="basic-addon1">🔍</span>
+            <input type="text"
+                   class="form-control"
+                   name="query"
+                   value="{{ search_query }}"
+                   placeholder="Search for articles"
+                   aria-label="search"
+                   aria-describedby="basic-addon1" />
+          </div>
+        </form>
+        {% if not user.is_authenticated %}
+          <h5>{% translate "Login for personalised support" %}</h5>
+          <a href="{% url 'account_login' %}" class="btn w-50 mx-auto btn-round bg-gradient-primary">Log in</a>
+          <a href="{% url 'account_reset_password' %}" class="text-sm link-dark">{% translate "Trouble logging in?" %}</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+</div>
 {% endblock %}
