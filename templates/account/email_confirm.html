@@ -1,8 +1,6 @@
 {% extends "layouts/base.html" %}
 
-{% load i18n %}
-
-{% load account %}
+{% load i18n account %}
 
 {% block title %}
   {% trans "Confirm E-mail Address" %}
@@ -14,9 +12,9 @@
 {% block content %}
   <div class="row vh-100">
     <div class="col col-sm-8 col-md-6 col-lg-4 mx-auto">
-      <div class="card mt-7">
+      <div class="card card-plain">
         <div class="card-header pb-0">
-          <h5 class="font-weight-bolder text-primary text-gradient">{% trans "Confirm E-mail Address" %}</h5>
+          <h5>{% trans "Confirm E-mail Address" %}</h5>
         </div>
         <div class="card-body">
           {% if confirmation %}
