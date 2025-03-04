@@ -197,6 +197,7 @@ class BlogPage(BasePage):
 
     content_panels = BasePage.content_panels + [
         FieldPanel("subtitle"),
+        FieldPanel("image"),
         FieldPanel("intro"),
         FieldPanel("body"),
         MultiFieldPanel(
@@ -221,7 +222,6 @@ class BlogPage(BasePage):
 
     promote_panels = [
         MultiFieldPanel(BasePage.promote_panels, "Common page configuration"),
-        FieldPanel("image"),
     ]
 
     # Specifies parent to BlogPage as being BlogIndexPages

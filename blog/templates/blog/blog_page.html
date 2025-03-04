@@ -1,7 +1,32 @@
 {% extends "layouts/base.html" %}
 
-{% load static i18n wagtailcore_tags wagtailimages_tags navigation_tags %}
+{% load static wagtailcore_tags wagtailimages_tags %}
+
+{% block title %}
+  {{ page.title }}
+{% endblock title %}
+
+{% block header %}
+{% endblock header %}
 
 {% block content %}
-<h1>Blog Page</h1>
+  <div class="container">
+    <div class="row">
+      <div class="col col-lg-8 col-xl-6 mx-auto">
+        <h1 class="display-3 text-center">{{ page.title }}</h1>
+        {% for author in page.authors %}
+          <div class="d-flex justify-content-center align-items-center my-3">
+            {% image author.image fill-50x50-c100 class="avatar rounded-circle" %}
+            <div class="name ps-3 pt-3">
+              <p>{{ author.first_name }} {{ author.last_name }}</p>
+            </div>
+          </div>
+        {% endfor %}
+        <p class="text-center my-3">Updated: {{ page.date }}</p>
+        <p class="lead">{{ page.subtitle }}</p>
+        {{ page.intro }}
+        {{ page.body }}
+      </div>
+    </div>
+  </div>
 {% endblock content %}

@@ -3,9 +3,8 @@ import logging
 from wagtail.models import Page, Site
 from wagtail.test.utils import WagtailPageTestCase
 
-from home.models import HomePage
-
 from blog.models import BlogIndexPage, BlogPage
+from home.models import HomePage
 
 logger = logging.getLogger(__name__)
 
