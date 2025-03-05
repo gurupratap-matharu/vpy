@@ -1,0 +1,151 @@
+{% load static i18n %}
+
+<footer class="footer mt-5">
+  <hr class="horizontal dark mb-5" />
+  <div class="container">
+    <div class="row">
+      <div class="col-md-3 mb-4 ms-auto">
+        <div>
+          <h6 class="text-gradient text-primary font-weight-bolder">
+            <a href="/">Ventanita</a>
+          </h6>
+        </div>
+        <div>
+          <ul class="d-flex flex-row ms-n3 nav">
+            <li class="nav-item">
+              <a class="nav-link pe-1"
+                 target="_blank"
+                 href="https://www.facebook.com/profile.php?id=61565586036921"
+                 title="Facebook"
+                 rel="noreferrer">
+                <svg class="bi opacity-8" width="16" height="16" fill="currentColor" aria-hidden="true">
+                  <use xlink:href="{% static 'assets/icons/icons.svg' %}#facebook" />
+                </svg>
+                <span class="visually-hidden">Facebook</span>
+                <span class="visually-hidden">(opens in new tab)</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link pe-1" target="_blank" href="https://twitter.com" rel="noreferrer">
+                <svg class="bi opacity-8" width="16" height="16" fill="currentColor" aria-hidden="true">
+                  <use xlink:href="{% static 'assets/icons/icons.svg' %}#twitter" />
+                </svg>
+                <span class="visually-hidden">Twitter</span>
+                <span class="visually-hidden">(opens in new tab)</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link pe-1" target="_blank" href="https://instagram.com" rel="noreferrer">
+                <svg class="bi opacity-8" width="16" height="16" fill="currentColor" aria-hidden="true">
+                  <use xlink:href="{% static 'assets/icons/icons.svg' %}#instagram" />
+                </svg>
+                <span class="visually-hidden">Instagram</span>
+                <span class="visually-hidden">(opens in new tab)</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link pe-1" target="_blank" href="https://youtube.com" rel="noreferrer">
+                <svg class="bi opacity-8" width="16" height="16" fill="currentColor" aria-hidden="true">
+                  <use xlink:href="{% static 'assets/icons/icons.svg' %}#youtube" />
+                </svg>
+                <span class="visually-hidden">Youtube</span>
+                <span class="visually-hidden">(opens in new tab)</span>
+              </a>
+            </li>
+          </ul>
+          <div class="d-flex mt-3 mb-2">
+            <form action="{% url 'set_language' %}" method="post">
+              {% csrf_token %}
+              <input name="next" type="hidden" value="{{ redirect_to }}" />
+              <div class="input-group input-group-sm mb-3">
+                <select name="language" class="form-select form-select-sm bg-transparent" aria-label="Change language">
+                  {% get_current_language as LANGUAGE_CODE %}
+                  {% get_available_languages as LANGUAGES %}
+                  {% get_language_info_list for LANGUAGES as languages %}
+                  {% for language in languages %}
+                    <option value="{{ language.code }}" {% if language.code == LANGUAGE_CODE %}selected{% endif %}>
+                      {{ language.name }}
+                    </option>
+                  {% endfor %}
+                </select>
+                <button class="btn btn-outline-primary mb-0" type="submit">Go</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-2 col-sm-6 col-6 mb-4">
+        <div>
+          <h6 class="text-gradient text-primary text-sm">{% translate "Company" %}</h6>
+          <ul class="flex-column ms-n3 nav">
+            <li class="nav-item">
+              <a class="nav-link" href="#">{% translate "About Us" %}</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="https://forms.gle/mMAoc95hbJoF76hUA" target="_blank">{% translate "Work with us" %}</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/empresas-de-bus/">{% translate "Partners" %}</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/">{% translate "Blog" %}</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-md-2 col-sm-6 col-6 mb-4">
+        <div>
+          <h6 class="text-gradient text-primary text-sm">{% translate "Resources" %}</h6>
+          <ul class="flex-column ms-n3 nav">
+            <li class="nav-item">
+              <a class="nav-link" href="/pasajes-de-micro/">{% translate "Routes" %}</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-md-2 col-sm-6 col-6 mb-4">
+        <div>
+          <h6 class="text-gradient text-primary text-sm">{% translate "Help & Support" %}</h6>
+          <ul class="flex-column ms-n3 nav">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'pages:contact' %}">{% translate "Contact Us" %}</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">{% translate "Help Center" %}</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">{% translate "Feedback" %}</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-md-2 col-sm-6 col-6 mb-4 me-auto">
+        <div>
+          <h6 class="text-gradient text-primary text-sm">{% translate "Useful Links" %}</h6>
+          <ul class="flex-column ms-n3 nav">
+            <li class="nav-item">
+              <a class="nav-link" href="">{% translate "Terms & Conditions" %}</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="">{% translate "Privacy Policy" %}</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="">{% translate "Sitemap" %}</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="text-center">
+          <p class="mt-4 nav-link">
+            {% translate "All rights reserved. Copyright ©" %}
+            <script>
+                 document.write(new Date().getFullYear());
+            </script>
+            {% translate "Made with ❤️ in Argentina 🇦🇷" %}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
