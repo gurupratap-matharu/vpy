@@ -1,0 +1,40 @@
+{% extends "layouts/base.html" %}
+
+{% load i18n %}
+
+{% block title %}
+  Contact
+{% endblock title %}
+
+{% block content %}
+  <div class="row">
+    <div class="col col-sm-8 col-md-6 col-lg-4 mx-auto">
+      <div class="card card-plain">
+        <div class="card-header pb-0">
+          <h1 class="h5 text-center">{% translate "Contact Us" %}</h1>
+        </div>
+        <div class="card-body">
+          <form method="post">
+            {% csrf_token %}
+            {% for field in form.visible_fields %}
+              <div class="mb-3">
+                <span class="text-danger">{{ field.errors }}</span>
+                <label class="form-label text-sm visually-hidden" for="{{ field.auto_id }}{% if field.label == 'Captcha' %}_1{% endif %}">
+                  {{ field.label }}
+                </label>
+                {{ field }}
+                <div class="form-text ms-2" id="{{ field.auto_id }}_helptext">
+                  <small>{{ field.help_text|safe }}</small>
+                </div>
+              </div>
+            {% endfor %}
+            <div class="d-flex justify-content-between">
+              <a href="/" class="btn btn-link text-dark me-3">{% translate "Cancel" %}</a>
+              <button type="submit" class="btn bg-gradient-primary">{% translate "Send" %}</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}

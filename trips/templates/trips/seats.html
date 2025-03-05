@@ -1,0 +1,9 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Select Seat{% endblock %}
+
+{% block content %}
+  <h1>Select Seats</h1>
+  <a href="{% url 'trips:search-results' %}">Back</a>
+  <a href="{% url 'trips:order' %}">Continue</a>
+{% endblock content %}
