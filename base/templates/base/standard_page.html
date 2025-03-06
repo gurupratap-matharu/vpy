@@ -1,6 +1,6 @@
 {% extends "layouts/base.html" %}
 
-{% load wagtailimages_tags  %}
+{% load wagtailimages_tags %}
 
 {% block content %}
   <article class="container col-12 col-xl-9 pt-3">
@@ -9,9 +9,10 @@
       {{ page.body }}
     </section>
   </article>
-
 {% endblock content %}
+
 {% block footer %}
 
   {% include "includes/footer-grand.html" %}
+
 {% endblock footer %}
