@@ -421,6 +421,12 @@
   </section>
 {% endblock content %}
 
+{% block footer %}
+
+  {% include "includes/footer-grand.html" %}
+
+{% endblock footer %}
+
 {% block extra_js %}
   <script src={% static 'assets/js/countup.min.js' %}></script>
   <script type="text/javascript">

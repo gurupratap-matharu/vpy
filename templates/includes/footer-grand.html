@@ -5,11 +5,7 @@
   <div class="container">
     <div class="row">
       <div class="col-md-3 mb-4 ms-auto">
-        <div>
-          <h6 class="text-gradient text-primary font-weight-bolder">
-            <a href="/">Ventanita</a>
-          </h6>
-        </div>
+        <a href="/" class="h6 text-primary text-gradient">Ventanita</a>
         <div>
           <ul class="d-flex flex-row ms-n3 nav">
             <li class="nav-item">
@@ -79,7 +75,7 @@
           <h6 class="text-gradient text-primary text-sm">{% translate "Company" %}</h6>
           <ul class="flex-column ms-n3 nav">
             <li class="nav-item">
-              <a class="nav-link" href="#">{% translate "About Us" %}</a>
+              <a class="nav-link" href="/about/">{% translate "About Us" %}</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="https://forms.gle/mMAoc95hbJoF76hUA" target="_blank">{% translate "Work with us" %}</a>
@@ -111,10 +107,10 @@
               <a class="nav-link" href="{% url 'pages:contact' %}">{% translate "Contact Us" %}</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">{% translate "Help Center" %}</a>
+              <a class="nav-link" href="/ayuda/">{% translate "Help Center" %}</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">{% translate "Feedback" %}</a>
+              <a class="nav-link" href="{% url 'pages:feedback' %}">{% translate "Feedback" %}</a>
             </li>
           </ul>
         </div>
@@ -124,13 +120,13 @@
           <h6 class="text-gradient text-primary text-sm">{% translate "Useful Links" %}</h6>
           <ul class="flex-column ms-n3 nav">
             <li class="nav-item">
-              <a class="nav-link" href="">{% translate "Terms & Conditions" %}</a>
+              <a class="nav-link" href="/terminos-y-condiciones/">{% translate "Terms & Conditions" %}</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="">{% translate "Privacy Policy" %}</a>
+              <a class="nav-link" href="/politicas-de-privacidad/">{% translate "Privacy Policy" %}</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="">{% translate "Sitemap" %}</a>
+              <a class="nav-link" href="/sitemap/">{% translate "Sitemap" %}</a>
             </li>
           </ul>
         </div>
@@ -142,7 +138,7 @@
             <script>
                  document.write(new Date().getFullYear());
             </script>
-            {% translate "Made with ❤️ in Argentina 🇦🇷" %}
+            {% translate "Made with ❤️ in Paraguay 🇵🇾" %}
           </p>
         </div>
       </div>
