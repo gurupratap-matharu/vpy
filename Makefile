@@ -61,6 +61,7 @@ build: install makemigrations migrate runserver
 format:
 	poetry run black .
 	poetry run isort . --profile black
+	poetry run ruff check --fix .
 	djlint --reformat .
 
 lint:
