@@ -1,12 +1,25 @@
+import logging
+
+from django.contrib import messages
 from django.db import models
+from django.forms import widgets
+from django.shortcuts import redirect
+from django.utils.translation import gettext_lazy as _
 
 from wagtail.admin.panels import (
     FieldPanel,
     FieldRowPanel,
+    InlinePanel,
     MultiFieldPanel,
     PublishingPanel,
 )
-from wagtail.fields import StreamField
+from wagtail.contrib.forms.models import (
+    FORM_FIELD_CHOICES,
+    AbstractEmailForm,
+    AbstractFormField,
+)
+from wagtail.contrib.forms.panels import FormSubmissionsPanel
+from wagtail.fields import RichTextField, StreamField
 from wagtail.models import (
     DraftStateMixin,
     LockableMixin,
@@ -17,9 +30,12 @@ from wagtail.models import (
 )
 from wagtail.models.i18n import Locale
 
+from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
 
 from .blocks import BaseStreamBlock
+
+logger = logging.getLogger(__name__)
 
 
 class Person(
@@ -235,3 +251,106 @@ class StandardPage(BasePage):
 
     def __str__(self):
         return self.title
+
+
+class FormField(AbstractFormField):
+    """
+    One FormPage can have many FormFields. Here we declare the parentalkey (foreign key)
+    for our form.
+    """
+
+    field_type = models.CharField(
+        verbose_name="field type", max_length=16, choices=list(FORM_FIELD_CHOICES)
+    )
+
+    page = ParentalKey("FormPage", related_name="form_fields", on_delete=models.CASCADE)
+
+
+class FormPage(AbstractEmailForm):
+    page_description = "Use this page to create a simple form"
+
+    image = models.ForeignKey(
+        "wagtailimages.Image",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
+    )
+    body = StreamField(BaseStreamBlock(), use_json_field=True, blank=True)
+    thank_you_text = RichTextField(blank=True)
+
+    # Veer note how we include the FormField obj via an InlinePanel using the
+    # related_name value
+    content_panels = AbstractEmailForm.content_panels + [
+        FormSubmissionsPanel(),
+        FieldPanel("image"),
+        FieldPanel("body"),
+        InlinePanel("form_fields", heading="Form fields", label="Field"),
+        FieldPanel("thank_you_text"),
+        MultiFieldPanel(
+            [
+                FieldRowPanel(
+                    [
+                        FieldPanel("from_address"),
+                        FieldPanel("to_address"),
+                    ]
+                ),
+                FieldPanel("subject"),
+            ],
+            "Email",
+        ),
+    ]
+
+    class Meta:
+        verbose_name = "formpage"
+        verbose_name_plural = "formpages"
+
+    def get_form(self, *args, **kwargs):
+        form = super().get_form(*args, **kwargs)
+
+        for name, field in form.fields.items():
+            if isinstance(field.widget, widgets.Textarea):
+                field.widget.attrs.update({"rows": "5"})
+
+            if isinstance(field.widget, widgets.Select):
+                field.widget.attrs.update({"class": "form-select"})
+
+            attrs = field.widget.attrs
+            css_classes = attrs.get("class", "").split()
+            css_classes.append("form-control")
+            attrs.update({"class": " ".join(css_classes)})
+
+        return form
+
+    def process_form_submission(self, form):
+        """
+        We manually create the form submission to show in the wagtail UI and
+        send an email.
+        """
+
+        cleaned_data = form.cleaned_data
+        submission = self.get_submission_class().objects.create(
+            form_data=cleaned_data, page=self
+        )
+
+        logger.info("submission:%s" % submission)
+
+        # important: if extending AbstractEmailForm, email logic must be re-added here
+        if self.to_address:
+            self.send_mail(form)
+
+        return submission
+
+    def render_landing_page(self, request, form_submission=None, *args, **kwargs):
+        """
+        Redirect user to home page after successful submission.
+        """
+
+        url = "/"
+        # if a form_submission instance is available, append the id to URL
+        # when previewing landing page, there will not be a form_submission instance
+        if form_submission:
+            url += "?id=%s" % form_submission.id
+
+        messages.success(request, _("Message sent successfully! 🙌"))
+        return redirect(url, permanent=False)
