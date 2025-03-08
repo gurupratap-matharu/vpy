@@ -1,0 +1,99 @@
+{% extends "layouts/base.html" %}
+
+{% load static i18n wagtailcore_tags wagtailimages_tags navigation_tags %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'assets/css/leaflet.css' %}" />
+  <link rel="stylesheet" href="{% static 'assets/css/leaflet.fullscreen.css' %}" />
+{% endblock extra_css %}
+
+{% block content %}
+  <article class="container col-12 col-xl-9 pt-7 min-vh-75">
+    <h1 class="fs-2">
+      <span class="text-primary text-gradient">Busca pasajes baratos a</span>
+      <br />
+      {{ page.title }}
+    </h1>
+    <section class="py-3 py-md-5">
+
+      {% include 'includes/search_form.html' %}
+
+    </section>
+    <section class="py-3">
+      {% breadcrumbs %}
+    </section>
+    <section class="py-3">
+      <h2 class="fs-4 pb-3">Comprá tus pasajes a {{ page.title }}</h2>
+    </section>
+    {% if page.image %}
+      <section class="py-3">
+        {% picture page.image format-{avif,webp,jpeg} original class="img-fluid shadow-xl border-radius-xl" %}
+      </section>
+    {% endif %}
+    {% if page.intro %}
+      <section class="pt-3">
+        <h2 class="lead">{{ page.intro }}</h2>
+      </section>
+    {% endif %}
+    {% if page.body %}
+      <section class="py-3 py-md-5">
+        {{ page.body }}
+      </section>
+    {% endif %}
+    <section class="py-3 py-md-5 rounded-3 min-vh-50 shadow-xl" id="map">
+    </section>
+    {% if page.faq %}
+      <section class="py-3 py-md-5">
+        {{ page.faq }}
+      </section>
+    {% endif %}
+    <section class="py-3 py-md-5">
+      <h2 class="fs-5 pb-3">¡Comprá tu pasaje a {{ page.title }}!</h2>
+      <p>
+        En <a href="https://ventanita.com.ar" class="fw-bold">ventanita.com.ar</a> podes buscar y
+        comparar los mejores precios de micros a {{ page.title }}, así como también obtener información detallada sobre las rutas y los horarios de partida. Averigua los promociones vigentes y comience a disfrutar de su viaje sin complicaciones.
+      </p>
+    </section>
+    {% if page.links %}
+      <section class="py-3 py-md-5">
+        {{ page.links }}
+      </section>
+    {% endif %}
+    {% if page.companies %}
+      <section class="py-3 py-md-5">
+        {{ page.companies }}
+      </section>
+    {% endif %}
+    <section class="py-3 py-md-5">
+
+      {% include 'includes/featured-companies.html' %}
+
+    </section>
+    <section class="py-3 py-md-5">
+
+      {% include 'includes/why-us.html' %}
+
+    </section>
+  </article>
+{% endblock content %}
+
+{% block modal %}
+
+  {% include 'includes/offcanvas.html' %}
+
+{% endblock modal %}
+
+{% block extra_js %}
+  {{ lat_long|json_script:"coordinates" }}
+  <script defer src="{% static 'assets/js/autocomplete/autocomplete.min.js' %}"></script>
+  <script defer src="{% static 'assets/js/autocomplete/config.js' %}"></script>
+  <script defer src="{% static 'assets/js/dates/flatpickr.min.js' %}"></script>
+  <script defer src="{% static 'assets/js/dates/es.js' %}"></script>
+  <script defer src="{% static 'assets/js/dates/picker.js' %}"></script>
+  <script defer src="{% static 'assets/js/maps/leaflet.js' %}"></script>
+  <script defer src="{% static 'assets/js/maps/Leaflet.fullscreen.min.js' %}"></script>
+  <script defer src="{% static 'assets/js/maps/station_page.js' %}"></script>
+  {# djlint:off #}
+  <script type="application/ld+json">{{ page.ld_entity }}</script>
+  {# djlint:on #}
+{% endblock extra_js %}

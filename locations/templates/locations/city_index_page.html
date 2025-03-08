@@ -1,0 +1,24 @@
+{% extends "layouts/base.html" %}
+
+{% load static wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+  <div class="container mt-3">
+    <section class="py-3 py-md-5">
+      <h1 class="fs-2">{{ page.title }}</h1>
+    </section>
+    <div class="row row-cols-2 row-cols-md-4 mx-2">
+      {% for city in cities %}
+        <div class="col p-1">
+          <a href="{% pageurl city %}">{{ city }}</a>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endblock content %}
+
+{% block footer %}
+
+  {% include "includes/footer-grand.html" %}
+
+{% endblock footer %}
