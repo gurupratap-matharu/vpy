@@ -1,5 +1,6 @@
-{% load static i18n wagtailcore_tags wagtailuserbar %}
+{% load static i18n wagtailcore_tags wagtailimages_tags  wagtailuserbar %}
 
+{% image page.social_image original as tmp_photo %}
 {% get_current_language as LANGUAGE_CODE %}
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}">
@@ -11,21 +12,50 @@
     <title>
 
       {% block title %}
-        {% if page.seo_title %}
-          {{ page.seo_title }}
-        {% else %}
-          {{ page.title }}
-        {% endif %}
-      {% endblock %}
-
-      {% block title_suffix %}
-        {% wagtail_site as current_site %}
-        {% if current_site and current_site.site_name %}- {{ current_site.site_name }}{% endif %}
+        {% firstof page.seo_title page.title %} | Ventanita
       {% endblock %}
 
     </title>
     {% if page.search_description %}<meta name="description" content="{{ page.search_description }}" />{% endif %}
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="MSSmartTagsPreventParsing" content="true" />
+    <meta name="Copyright" content="Ventanita Team" />
+    <meta name="author" content="Ventanita Team" />
+    <meta name="color-scheme" content="light dark" />
+    <meta property="theme-color" content="#ffffff" />
+
+    {% block og_tags %}
+      <meta property="og:title" content="{% firstof page.seo_title page.title "Pasajes de Micro" %}" />
+      <meta property="og:url" content="{{ page.get_full_url }}" />
+      <meta property="og:type" content="article" />
+      <meta property="og:description" content="{{ page.search_description }}" />
+      <meta property="og:image" content="{{ tmp_photo.full_url }}" />
+      <meta property="og:image:alt" content="{{ tmp_photo.alt }}" />
+      <meta property="og:image:width" content="{{ tmp_photo.width }}" />
+      <meta property="og:image:height" content="{{ tmp_photo.height }}" />
+      <meta property="og:image:type" content="image/jpg" />
+      <meta property="og:site_name" content="Ventanita" />
+      <meta property="og:locale" content="{{ LANGUAGE_CODE }}" />
+      <meta property="article:published_time" content="{{ page.first_published_at|date:"c" }}" />
+      <meta property="article:modified_time" content="{{ page.latest_revision_created_at|date:"c" }}" />
+      <meta property="twitter:card" content="summary_large_image" />
+      <meta property="twitter:creator" content="@Ventanita" />
+      <meta property="twitter:site" content="@Ventanita" />
+      <meta name="twitter:title" content="{% firstof page.seo_title page.title %}" />
+      <meta name="twitter:image" content="{{ tmp_photo.full_url }}" />
+      <meta name="twitter:description" content="{{ page.search_description }}" />
+    {% endblock og_tags %}
+
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'assets/img/logos/apple-touch-icon.png' %}" />
+    <meta name="apple-mobile-web-app-title" content="Ventanita" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta property="apple-mobile-web-app-status-bar-style" content="default" />
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'assets/img/logos/favicon-32x32.png' %}" />
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'assets/img/logos/favicon-16x16.png' %}" />
+    <link rel="manifest" href="{% static 'assets/img/logos/site.webmanifest' %}" />
+    <link rel="mask-icon" href="{% static 'assets/img/logos/safari-pinned-tab.svg' %}" color="#5bbad5" />
+    <link rel="shortcut icon" href="{% static 'assets/img/logos/favicon.ico' %}" />
+    <link rel="icon" href="{% static "assets/img/logos/ventanita.svg" %}" sizes="any" type="image/svg+xml" />
     {# Force all links in the live preview panel to be opened in a new tab #}
     {% if request.in_preview_panel %}<base target="_blank" />{% endif %}
     {% if not debug %}
@@ -45,49 +75,34 @@
     <link rel="stylesheet" type="text/css" href="{% static 'assets/css/styles.min.css' %}" />
 
     {% block extra_css %}
-      {# Override this in templates to add extra stylesheets #}
     {% endblock extra_css %}
 
+    {# Href Lang Attributes #}
+    {% if page %}
+      <link rel="alternate" hreflang="x-default" href="{{ page.get_default_locale_url }}" />
+      <link rel="alternate" hreflang="{{ LANGUAGE_CODE }}" href="{{ page.full_url }}" />
+      {% for translation in page.get_translations.live %}
+        {% get_language_info for translation.locale.language_code as lang %}
+        <link rel="alternate" hreflang="{{ lang.code }}" href="{% fullpageurl translation %}" />
+      {% endfor %}
+    {% endif %}
   </head>
-  <body class=" 
-    {% block body_class %}{% endblock body_class %}
-     ">
+  {# djlint:off #}
+  <body class="{% block body_class %}template-{{ self.get_verbose_name|slugify }}{% endblock body_class %}">
     {% wagtailuserbar %}
 
-    {% block header %}
+    {% block header %}{% include "includes/navigation.html" %}{% endblock header %}
+    {% block messages %}{% include "includes/messages.html" %}{% endblock messages %}
 
-      {% include "includes/navigation.html" %}
+    <main>{% block content %}{% endblock content %}</main>
 
-    {% endblock header %}
+    {% block modal %}{% endblock modal %}
+    {% block footer %}{% endblock footer %}
 
-    {% block messages %}
-
-      {% include "includes/messages.html" %}
-
-    {% endblock messages %}
-
-    <main>
-
-      {% block content %}
-      {% endblock content %}
-
-    </main>
-
-    {% block modal %}
-    {% endblock modal %}
-
-    {% block footer %}
-    {% endblock footer %}
-
-    {# Global javascript #}
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-            crossorigin="anonymous"></script>
+    <script src="{% static "assets/js/bootstrap.bundle.min.js" %}"></script>
     <script type="text/javascript" src="{% static 'assets/js/main.js' %}"></script>
 
-    {% block extra_js %}
-      {# Override this in templates to add extra javascript #}
-    {% endblock extra_js %}
-
+    {% block extra_js %}{% endblock extra_js %}
   </body>
+  {# djlint:on #}
 </html>
