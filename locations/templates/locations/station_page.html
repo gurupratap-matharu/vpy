@@ -3,14 +3,14 @@
 {% load static i18n wagtailcore_tags wagtailimages_tags navigation_tags %}
 
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'assets/css/leaflet.css' %}" />
-  <link rel="stylesheet" href="{% static 'assets/css/leaflet.fullscreen.css' %}" />
+  <link rel="stylesheet" href="{% static 'assets/vendor/leaflet/leaflet.css' %}" />
+  <link rel="stylesheet" href="{% static 'assets/vendor/leaflet-fullscreen/leaflet.fullscreen.css' %}" />
 {% endblock extra_css %}
 
 {% block content %}
-  <article class="container col-12 col-xl-9 pt-7 min-vh-75">
+  <article class="container col-12 col-xl-9 mt-3 min-vh-75">
     <h1 class="fs-2">
-      <span class="text-primary text-gradient">Busca pasajes baratos a</span>
+      <span class="text-primary text-gradient">{% translate "Busca pasajes baratos a" %}</span>
       <br />
       {{ page.title }}
     </h1>
@@ -50,7 +50,7 @@
     <section class="py-3 py-md-5">
       <h2 class="fs-5 pb-3">¡Comprá tu pasaje a {{ page.title }}!</h2>
       <p>
-        En <a href="https://ventanita.com.ar" class="fw-bold">ventanita.com.ar</a> podes buscar y
+        En <a href="https://ventanita.com.py" class="fw-bold">ventanita.com.py</a> podes buscar y
         comparar los mejores precios de micros a {{ page.title }}, así como también obtener información detallada sobre las rutas y los horarios de partida. Averigua los promociones vigentes y comience a disfrutar de su viaje sin complicaciones.
       </p>
     </section>
@@ -66,33 +66,26 @@
     {% endif %}
     <section class="py-3 py-md-5">
 
-      {% include 'includes/featured-companies.html' %}
+      {% include 'includes/company-logos.html' %}
 
     </section>
     <section class="py-3 py-md-5">
 
-      {% include 'includes/why-us.html' %}
+      {% include 'includes/mission.html' %}
 
     </section>
   </article>
 {% endblock content %}
 
-{% block modal %}
-
-  {% include 'includes/offcanvas.html' %}
-
-{% endblock modal %}
-
 {% block extra_js %}
   {{ lat_long|json_script:"coordinates" }}
-  <script defer src="{% static 'assets/js/autocomplete/autocomplete.min.js' %}"></script>
-  <script defer src="{% static 'assets/js/autocomplete/config.js' %}"></script>
-  <script defer src="{% static 'assets/js/dates/flatpickr.min.js' %}"></script>
-  <script defer src="{% static 'assets/js/dates/es.js' %}"></script>
-  <script defer src="{% static 'assets/js/dates/picker.js' %}"></script>
-  <script defer src="{% static 'assets/js/maps/leaflet.js' %}"></script>
-  <script defer src="{% static 'assets/js/maps/Leaflet.fullscreen.min.js' %}"></script>
-  <script defer src="{% static 'assets/js/maps/station_page.js' %}"></script>
+  <script defer src="{% static 'assets/js/autocomplete.min.js' %}"></script>
+  <script defer src="{% static 'assets/js/flatpickr.min.js' %}"></script>
+  <script defer src="{% static 'assets/js/es.js' %}"></script>
+  <script defer src="{% static 'assets/js/search.js' %}"></script>
+  <script defer src="{% static 'assets/vendor/leaflet/leaflet.js' %}"></script>
+  <script defer src="{% static 'assets/vendor/leaflet-fullscreen/Leaflet.fullscreen.min.js' %}"></script>
+  <script defer src="{% static 'assets/js/city_page.js' %}"></script>
   {# djlint:off #}
   <script type="application/ld+json">{{ page.ld_entity }}</script>
   {# djlint:on #}

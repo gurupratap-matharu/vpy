@@ -270,7 +270,7 @@ class StationPage(RoutablePageMixin, BasePage):
     )
 
     links = StreamField(
-        [("Links", LinkBlock())],
+        [("Links", NavTabLinksBlock())],
         verbose_name="Links Section",
         blank=True,
         max_num=1,
