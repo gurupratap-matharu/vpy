@@ -126,7 +126,6 @@ class CityPage(BasePage):
     ]
 
     parent_page_types = ["locations.CityIndexPage"]
-    subpage_types = ["locations.StationPage"]
 
     class Meta:
         verbose_name = "CityPage"
@@ -196,6 +195,34 @@ class CityPage(BasePage):
             }
         )
         return mark_safe(page_schema)
+
+
+class StationIndexPage(BasePage):
+    """
+    A Page model that creates an index page (a listview)
+    """
+
+    page_description = "Use this page to show a list of terminals or stations"
+
+    intro = models.TextField(help_text="Text to describe the page", blank=True)
+
+    content_panels = BasePage.content_panels + [
+        FieldPanel("intro"),
+    ]
+
+    subpage_types = ["StationPage"]
+
+    class Meta:
+        verbose_name = "Station Index Page"
+        verbose_name_plural = "Station Index Pages"
+
+    def children(self):
+        """
+        Allow children of this indexpage to be accessible via the indexpage object on
+        templates. We can use this to show featured sections of the site and their
+        child pages.
+        """
+        return self.get_children().specific().live()
 
 
 class StationPage(RoutablePageMixin, BasePage):
@@ -274,9 +301,6 @@ class StationPage(RoutablePageMixin, BasePage):
         FieldPanel("companies"),
     ]
 
-    parent_page_types = ["locations.CityPage"]
-    subpage_types = []
-
     class Meta:
         verbose_name = "Station Page"
         verbose_name_plural = "Station Pages"
@@ -285,7 +309,9 @@ class StationPage(RoutablePageMixin, BasePage):
         return self.title
 
     def get_context(self, request, *args, **kwargs):
+
         context = super().get_context(request, *args, **kwargs)
+
         lat, long = self.lat_long.split(",")
         context["lat_long"] = {"lat": lat, "long": long}
 

@@ -7,11 +7,11 @@
 {% endblock title %}
 
 {% block content %}
-  <div class="container col-12 col-xl-9 mt-3 min-vh-75">
+  <article class="container col-12 col-xl-9 mt-3 min-vh-75">
     <h1 class="fs-2">
-      <span class="text-primary text-gradient">{% translate "Busca pasajes baratos en" %}</span>
+      <span class="text-primary text-gradient">{{ page.title }}</span>
       <br />
-      {{ page.title }}
+      en Paraguay
     </h1>
     <section class="py-3 py-md-5">
 
@@ -21,10 +21,10 @@
     <section class="py-3">
       {% breadcrumbs %}
     </section>
-    <section class="row row-cols-2 row-cols-md-4 mx-2">
-      {% for city in cities %}
+    <section class="py-3 py-md-5 row row-cols-2 row-cols-md-4">
+      {% for station in page.children %}
         <div class="col p-1">
-          <a href="{% pageurl city %}">{{ city }}</a>
+          <a href="{% pageurl station %}">{{ station }}</a>
         </div>
       {% endfor %}
     </section>
@@ -45,7 +45,7 @@
       {% include "includes/mission.html" %}
 
     </section>
-  </div>
+  </article>
 {% endblock content %}
 
 {% block footer %}

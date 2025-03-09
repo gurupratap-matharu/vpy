@@ -84,54 +84,14 @@
       </section>
     {% endif %}
     <section class="py-3 py-md-5">
-      <h2 class="fs-5 pb-3">{% translate "Empresas destacadas" %}</h2>
-      <div class="row align-items-center gy-3">
-        <div class="col-4 col-sm-3 col-lg-2">
-          <a href="#">
-            <img class="img-fluid"
-                 loading="lazy"
-                 src="{% static 'assets/img/company-logos/logo-nsa.jpg' %}"
-                 alt="Logo of Nuestra Senora de la Asunción" />
-          </a>
-        </div>
-        <div class="col-4 col-sm-3 col-lg-2">
-          <a href="#">
-            <img class="img-fluid"
-                 loading="lazy"
-                 src="{% static 'assets/img/company-logos/logo-crucero-del-norte.png' %}"
-                 alt="Logo of Crucero Del Norte" />
-          </a>
-        </div>
-        <div class="col-4 col-sm-3 col-lg-2">
-          <a href="#">
-            <img class="img-fluid" loading="lazy" src="{% static 'assets/img/company-logos/logo-sol-bus.png' %}" alt="Logo of Sol Bus" />
-          </a>
-        </div>
-        <div class="col-4 col-sm-3 col-lg-2">
-          <a href="#">
-            <img class="img-fluid"
-                 loading="lazy"
-                 src="{% static 'assets/img/company-logos/logo-expreso-paraguay.png' %}"
-                 alt="Logo of Expreso Paraguay" />
-          </a>
-        </div>
-        <div class="col-4 col-sm-3 col-lg-3">
-          <a href="#">
-            <img class="img-fluid"
-                 loading="lazy"
-                 src="{% static 'assets/img/company-logos/logo-la-santaniana.jpg' %}"
-                 alt="Logo of La Santaniana" />
-          </a>
-        </div>
-      </div>
+
+      {% include "includes/company-logos.html" %}
+
     </section>
     <section class="py-3 py-md-5">
-      <h2 class="fs-5 pb-3">{% translate "¿Por que Ventanita?" %}</h2>
-      <div class="d-flex">
-        <p>
-          {% translate "Nuestra misión es brindarles a todos la oportunidad de viajar y mostrarles el mundo. Creemos que todos merecen viajar y que el mundo es un lugar mejor cuando experimentamos, compartimos y construimos una vida a través de nuestras historias." %}
-        </p>
-      </div>
+
+      {% include "includes/mission.html" %}
+
     </section>
   </div>
 </article>
