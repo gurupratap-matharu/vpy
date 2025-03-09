@@ -12,7 +12,7 @@ from modelcluster.contrib.taggit import ClusterTaggableManager
 from modelcluster.models import ParentalKey, ParentalManyToManyField
 from taggit.models import TaggedItemBase
 
-from base.blocks import BaseStreamBlock, ContactBlock, FAQBlock, LinkBlock
+from base.blocks import BaseStreamBlock, ContactBlock, FAQBlock, NavTabLinksBlock
 from base.models import BasePage
 
 logger = logging.getLogger(__name__)
@@ -124,7 +124,7 @@ class PartnerPage(BasePage):
     )
 
     links = StreamField(
-        [("Links", LinkBlock())],
+        [("Links", NavTabLinksBlock())],
         verbose_name="Links Section",
         blank=True,
         max_num=1,

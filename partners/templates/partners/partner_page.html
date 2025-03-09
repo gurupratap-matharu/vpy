@@ -15,30 +15,20 @@
     <section class="py-3">
       {% breadcrumbs %}
     </section>
-    <section class="py-3">
-      <h1 class="fs-2">
-        <span class="text-primary text-gradient">Comprá tus pasajes en</span>
-        <br />
-        {{ page.title }}
-      </h1>
-    </section>
-    <section class="py-3 py-md-5">
-      <h2 class="fs-5 pb-3">{% translate "About " %}{{ page.title }}</h2>
-      <div class="row">
-        <div class="col-md-7 rounded-3">{{ page.intro }}</div>
-        <div class="col-md-5 rounded-3 my-auto">
-          {% image page.hero_image original class="img-fluid rounded-3" loading="lazy" %}
-        </div>
-      </div>
-    </section>
-    {% if page.faq %}
-      <section class="py-3 py-md-5">
-        {{ page.faq }}
+    {% if page.hero_image %}
+      <section class="py-3">
+        {% picture page.hero_image format-{avif,webp,jpeg} original class="img-fluid shadow-xl border-radius-xl" %}
       </section>
     {% endif %}
     {% if page.body %}
-      <section class="py-3 py-md-5">
+      <section class="pt-3 pt-md-5">
+        <h2 class="fs-4 pb-3">{% translate "Comprá tus pasajes con" %} {{ page.title }}</h2>
         {{ page.body }}
+      </section>
+    {% endif %}
+    {% if page.faq %}
+      <section class="py-3 py-md-5">
+        {{ page.faq }}
       </section>
     {% endif %}
     {% if page.links %}
@@ -47,54 +37,14 @@
       </section>
     {% endif %}
     <section class="py-3 py-md-5">
-      <h2 class="fs-5 pb-3">{% translate "Empresas destacadas" %}</h2>
-      <div class="row align-items-center gy-3">
-        <div class="col-4 col-sm-3 col-lg-2">
-          <a href="#">
-            <img class="img-fluid"
-                 loading="lazy"
-                 src="{% static 'assets/img/company-logos/logo-nsa.jpg' %}"
-                 alt="Logo of Nuestra Senora de la Asunción" />
-          </a>
-        </div>
-        <div class="col-4 col-sm-3 col-lg-2">
-          <a href="#">
-            <img class="img-fluid"
-                 loading="lazy"
-                 src="{% static 'assets/img/company-logos/logo-crucero-del-norte.png' %}"
-                 alt="Logo of Crucero Del Norte" />
-          </a>
-        </div>
-        <div class="col-4 col-sm-3 col-lg-2">
-          <a href="#">
-            <img class="img-fluid" loading="lazy" src="{% static 'assets/img/company-logos/logo-sol-bus.png' %}" alt="Logo of Sol Bus" />
-          </a>
-        </div>
-        <div class="col-4 col-sm-3 col-lg-2">
-          <a href="#">
-            <img class="img-fluid"
-                 loading="lazy"
-                 src="{% static 'assets/img/company-logos/logo-expreso-paraguay.png' %}"
-                 alt="Logo of Expreso Paraguay" />
-          </a>
-        </div>
-        <div class="col-4 col-sm-3 col-lg-3">
-          <a href="#">
-            <img class="img-fluid"
-                 loading="lazy"
-                 src="{% static 'assets/img/company-logos/logo-la-santaniana.jpg' %}"
-                 alt="Logo of La Santaniana" />
-          </a>
-        </div>
-      </div>
+
+      {% include "includes/company-logos.html" %}
+
     </section>
     <section class="py-3 py-md-5">
-      <h2 class="fs-5 pb-3">{% translate "¿Por que Ventanita?" %}</h2>
-      <div class="d-flex">
-        <p>
-          {% translate "Nuestra misión es brindarles a todos la oportunidad de viajar y mostrarles el mundo. Creemos que todos merecen viajar y que el mundo es un lugar mejor cuando experimentamos, compartimos y construimos una vida a través de nuestras historias." %}
-        </p>
-      </div>
+
+      {% include "includes/mission.html" %}
+
     </section>
   </article>
 {% endblock content %}
