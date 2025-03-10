@@ -77,6 +77,12 @@
   </article>
 {% endblock content %}
 
+{% block footer %}
+
+  {% include "includes/footer-grand.html" %}
+
+{% endblock footer %}
+
 {% block extra_js %}
   {{ lat_long|json_script:"coordinates" }}
   <script defer src="{% static 'assets/js/autocomplete.min.js' %}"></script>
