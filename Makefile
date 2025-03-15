@@ -25,7 +25,7 @@ check-deploy:
 	python manage.py check --deploy
 
 css:
-	sass static/scss/soft-design-system.scss -s compressed static/css/styles.min.css
+	sass static/assets/scss/soft-design-system.scss -s compressed static/assets/css/styles.min.css
 
 shellplus:
 	python manage.py shell_plus --print-sql

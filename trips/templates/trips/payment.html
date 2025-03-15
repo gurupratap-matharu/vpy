@@ -9,14 +9,17 @@
 {% block content %}
   <div class="container">
     <div class="row">
-      <div class="col col-md-6 mx-auto">
-        <div class="card">
+      <div class="col col-md-6 col-xl-4 mx-auto">
+        <div class="card card-plain">
           <div class="card-header">
-            <h5>Pago</h5>
+            <h5 class="text-center">Pago</h5>
           </div>
           <div class="card-body">
+            <img width="300" height="300" class="img-fluid d-block mx-auto" src="{% static 'assets/img/stock/qrcode.png' %}">
+          </div>
+          <div class="card-footer d-flex justify-content-between">
             <a href="{% url 'trips:order' %}">Back</a>
-            <a href="{% url 'trips:payment-success' %}">Pay</a>
+            <a href="{% url 'trips:payment-success' %}" class="btn btn-round bg-gradient-primary">Pagar</a>
           </div>
         </div>
       </div>
