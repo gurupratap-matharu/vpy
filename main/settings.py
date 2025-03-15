@@ -174,7 +174,6 @@ RECIPIENT_LIST = [
 
 ADMINS = [
     ("Veer", "veerplaying@gmail.com"),
-    ("Gurupratap", "gurupratap.matharu@gmail.com"),
 ]
 
 TEMPLATES = [
