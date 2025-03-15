@@ -1,9 +1,13 @@
-{% extends 'layouts/base.html' %}
+{% extends "layouts/base.html" %}
 
-{% block title %}Passenger{% endblock %}
+{% load i18n static %}
+
+{% block title %}Pasajeros{% endblock %}
 
 {% block content %}
-  <h1>Passenger</h1>
+  <div class="row">
+    <div class="col col-md-9 mx-auto"></div>
+  </div>
   <a href="{% url 'trips:seats' %}">Back</a>
-  <a href="#">Continue</a>
+  <a href="{% url 'trips:payment' %}">Continue</a>
 {% endblock content %}

@@ -1,9 +1,33 @@
 {% extends 'layouts/base.html' %}
 
-{% block title %}Select Seat{% endblock %}
+{% load i18n static %}
+
+{% block title %}
+  Elegir Asiento
+{% endblock title %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'assets/css/seatchart.css' %}" />
+{% endblock extra_css %}
 
 {% block content %}
-  <h1>Select Seats</h1>
-  <a href="{% url 'trips:search-results' %}">Back</a>
-  <a href="{% url 'trips:order' %}">Continue</a>
+  <div class="row">
+    <div class="col col-md-9 mx-auto">
+      <div class="card card-plain">
+        <div class="card-header">
+          <h5 class="text-center">Elegir Asiento</h5>
+        </div>
+        <div class="card-body seat-container"></div>
+        <div class="card-footer d-flex justify-content-center">
+          <a href="{% url 'trips:search-results' %}">Atras</a>
+          <a href="{% url 'trips:order' %}" class="ms-3">Confirmar</a>
+        </div>
+      </div>
+    </div>
+  </div>
 {% endblock content %}
+
+{% block extra_js %}
+  <script defer src="{% static 'assets/js/seatchart.min.js' %}"></script>
+  <script defer src="{% static 'assets/js/seats.js' %}"></script>
+{% endblock extra_js %}

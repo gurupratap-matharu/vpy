@@ -1,0 +1,25 @@
+{% extends "layouts/base.html" %}
+
+{% load i18n static %}
+
+{% block title %}
+  Pago
+{% endblock title %}
+
+{% block content %}
+  <div class="container">
+    <div class="row">
+      <div class="col col-md-6 mx-auto">
+        <div class="card">
+          <div class="card-header">
+            <h5>Pago</h5>
+          </div>
+          <div class="card-body">
+            <a href="{% url 'trips:order' %}">Back</a>
+            <a href="{% url 'trips:payment-success' %}">Pay</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
