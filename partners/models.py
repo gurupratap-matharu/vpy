@@ -1,7 +1,6 @@
 import logging
 
 from django import forms
-from django.core.paginator import Paginator
 from django.db import models
 
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
@@ -57,20 +56,8 @@ class PartnerIndexPage(BasePage):
         verbose_name = "partnerindexpage"
         verbose_name_plural = "partnerindexpages"
 
-    def get_context(self, request, *args, **kwargs):
-        context = super().get_context(request, *args, **kwargs)
-
-        qs = (
-            self.get_children().live().order_by("-first_published_at")
-        )  # <-- change this to by country
-
-        paginator = Paginator(qs, 12)
-        page_number = request.GET.get("page")
-        page_obj = paginator.get_page(page_number)
-
-        context["partners"] = context["page_obj"] = page_obj
-
-        return context
+    def children(self):
+        return self.get_children().specific().live()
 
 
 class PartnerPage(BasePage):
