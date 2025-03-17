@@ -10,9 +10,9 @@ logger = logging.getLogger(__name__)
 
 class FeedbackForm(forms.Form):
     placeholder = _(
-        "Send us your feedback or report an issue. Please provide as much info as possible. Thank you."
+        "Mandanos sus comentarios y/o reporta un inconveniente. Queremos mejorar la plataforma para vos. Gracias"
     )
-    subject = _("Feedback Message")
+    subject = _("Mensaje")
     email = forms.EmailField(
         required=True,
         min_length=10,
@@ -54,7 +54,7 @@ class ContactForm(forms.Form):
         min_length=3,
         required=True,
         widget=forms.TextInput(
-            attrs={"placeholder": _("Name"), "class": "form-control"}
+            attrs={"placeholder": _("Nombre"), "class": "form-control"}
         ),
     )
     email = forms.EmailField(
@@ -68,7 +68,7 @@ class ContactForm(forms.Form):
         max_length=100,
         min_length=3,
         widget=forms.TextInput(
-            attrs={"placeholder": _("Subject"), "class": "form-control"}
+            attrs={"placeholder": _("Asunto"), "class": "form-control"}
         ),
     )
     message = forms.CharField(
@@ -79,7 +79,7 @@ class ContactForm(forms.Form):
             attrs={
                 "cols": 80,
                 "rows": 4,
-                "placeholder": _("Message"),
+                "placeholder": _("Mensaje"),
                 "class": "form-control",
             }
         ),

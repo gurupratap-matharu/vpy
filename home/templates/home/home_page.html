@@ -85,104 +85,15 @@
       </div>
     </section>
     <section class="py-3">
-      <h2 class="fs-5 pb-3">{% translate "Preguntas Frecuentes" %}</h2>
-      <div class="accordion accordion-flush" id="accordionFAQ">
-        <div class="accordion-item">
-          <h3 class="accordion-header">
-            <button class="accordion-button ps-0 collapsed font-weight-bold"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#collapse1"
-                    aria-expanded="false"
-                    aria-controls="collapse1">¿Qué es Ventanita y cómo funciona?</button>
-          </h3>
-          <div id="collapse1" class="accordion-collapse collapse" data-bs-parent="#accordionFAQ">
-            <div class="accordion-body ps-0">
-              Ventanita es una plataforma de viajes en línea que te permite buscar, comparar y reservar boletos de
-              micros de larga distancia en Paraguay. Nos asociamos con operadores de autobuses para ofrecerte las mejores rutas, horarios y precios.
-            </div>
-          </div>
-        </div>
-        <div class="accordion-item">
-          <h3 class="accordion-header">
-            <button class="accordion-button ps-0 collapsed font-weight-bold"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#collapse2"
-                    aria-expanded="false"
-                    aria-controls="collapse2">¿Por qué debería usar Ventanita para reservar pasajes de micros?</button>
-          </h3>
-          <div id="collapse2" class="accordion-collapse collapse" data-bs-parent="#accordionFAQ">
-            <div class="accordion-body ps-0">
-              Ventanita simplifica la planificación de tu viaje al brindar una plataforma fácil de usar para consultar rutas, comparar precios y comprar boletos, todo en un solo lugar.
-            </div>
-          </div>
-        </div>
-        <div class="accordion-item">
-          <h3 class="accordion-header">
-            <button class="accordion-button ps-0 collapsed font-weight-bold"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#collapse3"
-                    aria-expanded="false"
-                    aria-controls="collapse3">¿Ventanita es una empresa de micros oficial?</button>
-          </h3>
-          <div id="collapse3" class="accordion-collapse collapse" data-bs-parent="#accordionFAQ">
-            <div class="accordion-body ps-0">
-              No, Ventanita no es un operador de autobuses. Trabajamos como una agencia de viajes en línea,
-              conectándote con empresas de autobuses confiables en toda Paraguay.
-            </div>
-          </div>
-        </div>
-        <div class="accordion-item">
-          <h3 class="accordion-header">
-            <button class="accordion-button ps-0 collapsed font-weight-bold"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#collapse4"
-                    aria-expanded="false"
-                    aria-controls="collapse4">¿Cómo reservo un pasaje de micro en Ventanita?</button>
-          </h3>
-          <div id="collapse4" class="accordion-collapse collapse" data-bs-parent="#accordionFAQ">
-            <div class="accordion-body ps-0">
-              Para reservar un pasaje, ingresa las ciudades de salida y llegada, selecciona la fecha de viaje y elige entre las opciones de autobús disponibles. Completa el pago y recibirás tu boleto por correo electrónico.
-            </div>
-          </div>
-        </div>
-        <div class="accordion-item">
-          <h3 class="accordion-header">
-            <button class="accordion-button ps-0 collapsed font-weight-bold"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#collapse5"
-                    aria-expanded="false"
-                    aria-controls="collapse5">
-              ¿Puedo cancelar o modificar mi pasaje de micro después de la reserva?
-            </button>
-          </h3>
-          <div id="collapse5" class="accordion-collapse collapse" data-bs-parent="#accordionFAQ">
-            <div class="accordion-body ps-0">
-              La cancelación y modificación de pasajes depende de las políticas del operador de micro. Consulta la política de cancelación al momento de realizar la reserva o contáctanos para recibir asistencia.
-            </div>
-          </div>
-        </div>
-        <div class="accordion-item">
-          <h3 class="accordion-header">
-            <button class="accordion-button ps-0 collapsed font-weight-bold"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#collapse6"
-                    aria-expanded="false"
-                    aria-controls="collapse6">¿Qué métodos de pago acepta Ventanita?</button>
-          </h3>
-          <div id="collapse6" class="accordion-collapse collapse" data-bs-parent="#accordionFAQ">
-            <div class="accordion-body ps-0">
-              Aceptamos varios métodos de pago, incluidas tarjetas de crédito, tarjetas de débito y opciones de pago en
-              línea comunes en Paraguay.
-            </div>
-          </div>
-        </div>
-      </div>
+      {{ page.faq }}
+    </section>
+    <section class="py-3">
+      {{ page.links }}
+    </section>
+    <section class="py-3 py-md-5">
+
+      {% include 'includes/company-logos.html' %}
+
     </section>
     <section class="py-3">
       <h2 class="fs-5 pb-3 text-center">Ventanita - Tu Travel Partner</h2>
