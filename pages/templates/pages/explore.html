@@ -1,0 +1,36 @@
+{% extends "layouts/base.html" %}
+
+{% load static i18n %}
+
+{% block title %}
+  Explore
+{% endblock title %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'assets/vendor/leaflet/leaflet.css' %}" />
+  <link rel="stylesheet" href="{% static 'assets/vendor/leaflet-fullscreen/leaflet.fullscreen.css' %}" />
+{% endblock extra_css %}
+
+{% block content %}
+  <article class="container col-12 col-xl-9 mt-3 min-vh-75">
+    <section class="pb-5">
+
+      {% include 'includes/search_form.html' %}
+
+    </section>
+    <section class="rounded-3 shadow-xl min-vh-75" id="map">
+    </section>
+  </article>
+{% endblock content %}
+
+{% block footer %}
+
+  {% include "includes/footer-grand.html" %}
+
+{% endblock footer %}
+
+{% block extra_js %}
+  <script defer src="{% static 'assets/vendor/leaflet/leaflet.js' %}"></script>
+  <script defer src="{% static 'assets/vendor/leaflet-fullscreen/Leaflet.fullscreen.min.js' %}"></script>
+  <script defer src="{% static 'assets/js/explore.js' %}"></script>
+{% endblock extra_js %}
