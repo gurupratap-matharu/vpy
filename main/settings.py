@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     "trips.apps.TripsConfig",
     "locations.apps.LocationsConfig",
     "partners.apps.PartnersConfig",
+    "help.apps.HelpConfig",
     # Wagtail
     "wagtail_localize",
     "wagtail_localize.locales",

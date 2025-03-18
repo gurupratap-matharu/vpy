@@ -278,6 +278,13 @@ class FormPage(AbstractEmailForm):
     )
     body = StreamField(BaseStreamBlock(), use_json_field=True, blank=True)
     thank_you_text = RichTextField(blank=True)
+    thank_you_page = models.ForeignKey(
+        "wagtailcore.Page",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
+    )
 
     # Veer note how we include the FormField obj via an InlinePanel using the
     # related_name value
@@ -287,6 +294,7 @@ class FormPage(AbstractEmailForm):
         FieldPanel("body"),
         InlinePanel("form_fields", heading="Form fields", label="Field"),
         FieldPanel("thank_you_text"),
+        FieldPanel("thank_you_page"),
         MultiFieldPanel(
             [
                 FieldRowPanel(
@@ -346,11 +354,11 @@ class FormPage(AbstractEmailForm):
         Redirect user to home page after successful submission.
         """
 
-        url = "/"
+        url = self.thank_you_page.url if self.thank_you_page else "/"
         # if a form_submission instance is available, append the id to URL
         # when previewing landing page, there will not be a form_submission instance
         if form_submission:
             url += "?id=%s" % form_submission.id
 
-        messages.success(request, _("Message sent successfully! 🙌"))
+        messages.success(request, _("Mensaje enviado exitosamente! 🙌"))
         return redirect(url, permanent=False)

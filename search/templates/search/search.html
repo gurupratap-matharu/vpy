@@ -7,14 +7,14 @@
 {% endblock body_class %}
 
 {% block title %}
-  {% translate "Search" %}
+  {% translate "Buscar" %}
 {% endblock title %}
 
 {% block content %}
   <div class="container">
     <div class="row">
       <div class="col col-sm-10 col-md-8 col-lg-6 mx-auto">
-        <h1 class="h3 text-center">{% translate "How can we help?" %}</h1>
+        <h1 class="fs-2 text-center">{% translate "¿En que te podemos ayudar?" %}</h1>
         <form action="{% url 'search' %}" method="get" class="mb-3">
           <div class="input-group">
             <span class="input-group-text" id="basic-addon1">🔍</span>
