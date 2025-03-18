@@ -22,21 +22,21 @@
       </svg>
       <a href="#" class="text-sm" data-bs-toggle="modal" data-bs-target="#feedbackModal">{% translate "Envía tus comentarios sobre este artículo" %}</a>
     </section>
+    {% if page.get_related_articles %}
+      <section class="py-3">
+        <h2 class="fs-4 pb-3">{% translate "Relacionados" %}</h2>
+        <ul>
+          {% for sibling in page.get_related_articles %}
+            {% with sibling=sibling.specific %}
+              <li>
+                <a href="{% pageurl sibling %}">{{ sibling.title }}</a>
+              </li>
+            {% endwith %}
+          {% endfor %}
+        </ul>
+      </section>
+    {% endif %}
   </article>
-  {% if page.get_related_articles %}
-    <section class="py-3">
-      <h2 class="fs-4 pb-3">{% translate "Relacionados" %}</h2>
-      <ul>
-        {% for sibling in page.get_related_articles %}
-          {% with sibling=sibling.specific %}
-            <li>
-              <a href="{% pageurl sibling %}">{{ sibling.title }}</a>
-            </li>
-          {% endwith %}
-        {% endfor %}
-      </ul>
-    </section>
-  {% endif %}
 {% endblock content %}
 
 {% block modal %}
