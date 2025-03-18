@@ -118,9 +118,12 @@ class HelpArticlePage(BasePage):
         context = super().get_context(request, *args, **kwargs)
 
         try:
-            feedback_page = FormPage.objects.get(slug="article-feedback-form")
+            feedback_page = FormPage.objects.get(
+                slug="article-feedback-form", locale__language_code="es"
+            )
             form = feedback_page.get_form(initial={"url": self.full_url})
-        except FormPage.DoesNotExists as e:
+
+        except FormPage.DoesNotExist as e:
             logger.warning("%s article feedback form page not linked..." % e)
             form = None
 
