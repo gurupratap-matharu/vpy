@@ -20,69 +20,7 @@
 
     </section>
     <section class="py-3">
-      <h2 class="fs-5 pb-3">Destinos Populares</h2>
-      <div class="row row-cols-2 row-cols-sm-3 row-cols-md-6">
-        <div class="col">
-          <div class="card card-plain">
-            <img src="{% static 'assets/img/stock/encarnacion.avif' %}"
-                 alt="Encarnación"
-                 loading="lazy"
-                 class="img-fluid shadow-xl rounded" />
-            <div class="ps-1 pt-1">
-              <a href="#" class="card-title text-sm stretched-link">Encarnación</a>
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="card card-plain">
-            <img src="{% static 'assets/img/stock/asuncion.avif' %}" alt="Asunción" loading="lazy" class="img-fluid shadow-xl rounded" />
-            <div class="ps-1 pt-1">
-              <a href="#" class="card-title text-sm stretched-link">Asunción</a>
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="card card-plain">
-            <img src="{% static 'assets/img/stock/buenos-aires.avif' %}"
-                 alt="Buenos Aires"
-                 loading="lazy"
-                 class="img-fluid shadow-xl rounded" />
-            <div class="ps-1 pt-1">
-              <a href="#" class="card-title text-sm stretched-link">Buenos Aires</a>
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="card card-plain">
-            <img src="{% static 'assets/img/stock/ciudad-del-este.avif' %}"
-                 alt="Ciudad Del Este"
-                 loading="lazy"
-                 class="img-fluid shadow-xl rounded" />
-            <div class="ps-1 pt-1">
-              <a href="#" class="card-title text-sm stretched-link">Ciudad Del Este</a>
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="card card-plain">
-            <img src="{% static 'assets/img/stock/pedro-juan-caballero.avif' %}"
-                 alt="Pedro Juan Caballero"
-                 loading="lazy"
-                 class="img-fluid shadow-xl rounded" />
-            <div class="ps-1 pt-1">
-              <a href="#" class="card-title text-sm stretched-link">Pedro Juan Caballero</a>
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="card card-plain">
-            <img src="{% static 'assets/img/stock/iguazu.avif' %}" alt="Iguazu" loading="lazy" class="img-fluid shadow-xl rounded" />
-            <div class="ps-1 pt-1">
-              <a href="#" class="card-title text-sm stretched-link">Iguazu</a>
-            </div>
-          </div>
-        </div>
-      </div>
+      {{ page.featured_pages }}
     </section>
     <section class="py-3">
       {{ page.faq }}
