@@ -2,7 +2,9 @@
 
 {% load static i18n %}
 
-{% block title %}Page not found{% endblock %}
+{% block title %}
+  {% translate "Pagina no encontrada" %}
+{% endblock title %}
 
 {% block header %}
 
@@ -20,11 +22,11 @@
           <svg class="bi flex-shrink-0 me-2" width="24" height="24" fill="currentColor" aria-label="Info:">
             <use xlink:href="{% static 'assets/icons/icons.svg' %}#bell" />
           </svg>
-          {% translate "Well this is awkward, looks like that page doesn't exist anymore. Try searching for something similar below." %}
+          {% translate "Bueno, esto es incómodo. Parece que esa página ya no existe. Intenta buscar algo similar abajo." %}
           <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
         <div class="d-flex flex-column text-center gap-3">
-          <h3>{% translate "Hi, How can we help?" %}</h3>
+          <h3>{% translate "¿Como podemos ayudarte?" %}</h3>
           <form action="{% url 'search' %}" method="get" class="mb-3">
             <div class="input-group">
               <span class="input-group-text" id="basic-addon1">🔍</span>
@@ -32,15 +34,15 @@
                      class="form-control"
                      name="query"
                      value="{{ search_query }}"
-                     placeholder="Search for articles"
+                     placeholder="Buscar articulos"
                      aria-label="search"
                      aria-describedby="basic-addon1" />
             </div>
           </form>
           {% if not user.is_authenticated %}
-            <h5>{% translate "Login for personalised support" %}</h5>
+            <h6>{% translate "Logueate para una experencia personalizada" %}</h6>
             <a href="{% url 'account_login' %}" class="btn w-50 mx-auto btn-round bg-gradient-primary">Log in</a>
-            <a href="{% url 'account_reset_password' %}" class="text-sm link-dark">{% translate "Trouble logging in?" %}</a>
+            <a href="{% url 'account_reset_password' %}" class="text-sm link-dark">{% translate "¿Problemas con login?" %}</a>
           {% endif %}
         </div>
       </div>
