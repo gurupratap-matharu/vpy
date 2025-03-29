@@ -1,0 +1,640 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-03-29 16:08-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? "
+"1 : 2;\n"
+#: templates/404.html:6
+msgid "Pagina no encontrada"
+msgstr ""
+
+#: templates/404.html:25
+msgid ""
+"Bueno, esto es incómodo. Parece que esa página ya no existe. Intenta buscar "
+"algo similar abajo."
+msgstr ""
+
+#: templates/404.html:29
+msgid "¿Como podemos ayudarte?"
+msgstr ""
+
+#: templates/404.html:43
+msgid "Logueate para una experencia personalizada"
+msgstr ""
+
+#: templates/404.html:45
+msgid "¿Problemas con login?"
+msgstr ""
+
+#: templates/500.html:6
+msgid "Error de Plataforma 500"
+msgstr ""
+
+#: templates/500.html:27
+msgid "Uh Oh! Tenemos una problema. Lo estamos resolviendo"
+msgstr ""
+
+#: templates/500.html:31
+msgid ""
+"\n"
+"          Si deseas dejarnos un mensaje por favor <a href=\"/contact/"
+"\">escribinos aquí</a> o ir al <a href=\"/\">home</a>\n"
+"          "
+msgstr ""
+
+#: templates/account/account_inactive.html:6
+msgid "Account Inactive"
+msgstr "Cuenta Inactiva"
+
+#: templates/account/account_inactive.html:10
+msgid "Account Inactive!"
+msgstr "¡Cuenta Inactiva!"
+
+#: templates/account/account_inactive.html:12
+msgid "This account is inactive."
+msgstr "Esta cuenta está inactiva."
+
+#: templates/account/email/email_confirmation_message.txt:7
+#, python-format
+msgid ""
+"\n"
+"Hello from %(site_name)s!\n"
+"\n"
+"You're receiving this e-mail because user %(user_display)s has given yours "
+"as an e-mail address to connect their account.\n"
+"\n"
+"To confirm this is correct, go to %(activate_url)s\n"
+msgstr ""
+"\n"
+"Hola desde %(site_name)s!\n"
+"\n"
+"Estas recibiendo este e-mail porque el usuario %(user_display)s has dado su "
+"correo electrónico para vincular a su cuenta.\n"
+"\n"
+"Para confirmar si esto es corecto, entrá este link %(activate_url)s\n"
+
+#: templates/account/email/email_confirmation_message.txt:16
+#, python-format
+msgid ""
+"\n"
+"Thank you from %(site_name)s!\n"
+"%(site_domain)s\n"
+msgstr ""
+"\n"
+"¡Gracias Totales desde %(site_name)s!\n"
+"%(site_domain)s\n"
+
+#: templates/account/email/email_confirmation_subject.txt:3
+msgid "Confirm Sign Up"
+msgstr "Confirmar Sign Up"
+
+#: templates/account/email_confirm.html:6
+#: templates/account/email_confirm.html:17
+msgid "Confirm E-mail Address"
+msgstr "Confirm Correo Electrónico"
+
+#: templates/account/email_confirm.html:23
+#, python-format
+msgid ""
+"\n"
+"        Please confirm that <a href=\"mailto:%(email)s\">%(email)s</a> is an "
+"e-mail address for user\n"
+"        %(user_display)s.\n"
+"        "
+msgstr ""
+"\n"
+"        Por favor confirmar que <a href=\"mailto:%(email)s\">%(email)s</a> es un "
+"correo electrónico para el usuario\n"
+"        %(user_display)s.\n"
+"        "
+
+#: templates/account/email_confirm.html:30
+msgid "Confirm"
+msgstr "Confirmar"
+
+#: templates/account/email_confirm.html:36
+#, python-format
+msgid ""
+"\n"
+"        This e-mail confirmation link expired or is invalid.\n"
+"        Please <a href=\"%(email_url)s\">issue a new e-mail confirmation "
+"request</a>.\n"
+"        "
+msgstr ""
+"\n"
+"        Este enlace ya no es valido.\n"
+"        Por favor <a href=\"%(email_url)s\">solicitar uno nuevo "
+"enlace</a>.\n"
+"        "
+
+#: templates/account/login.html:6 templates/account/login.html:69
+#: templates/account/signup.html:80
+msgid "Sign in"
+msgstr "Sign in"
+
+#: templates/account/login.html:17
+msgid "Welcome Back"
+msgstr "Bienvenido"
+
+#: templates/account/login.html:26
+msgid "Login with Facebook"
+msgstr "Login con Facebook"
+
+#: templates/account/login.html:37
+msgid "Login with Google"
+msgstr "Login con Google"
+
+#: templates/account/login.html:74
+msgid "New to Ventanita?"
+msgstr "¿No tenés cuenta en Ventanita?"
+
+#: templates/account/login.html:75
+msgid "Sign up"
+msgstr "Sign up"
+
+#: templates/account/logout.html:6
+msgid "Log out"
+msgstr "Log out"
+
+#: templates/account/logout.html:18
+msgid "Are you sure you wish to sign out?"
+msgstr "¿Estás seguro que deseas hacer sign out?"
+
+#: templates/account/password_change.html:6
+#: templates/account/password_change.html:12
+#: templates/account/password_change.html:25
+#: templates/account/password_reset_from_key.html:6
+#: templates/account/password_reset_from_key.html:21
+msgid "Change Password"
+msgstr "Cambirar Contraseña"
+
+#: templates/account/password_change.html:31
+msgid "Forgot Password?"
+msgstr "¿Olvidaste Contraseña?"
+
+#: templates/account/password_reset.html:6
+#: templates/account/password_reset.html:17
+#: templates/account/password_reset_done.html:8
+msgid "Password Reset"
+msgstr "Resetear Contraseña"
+
+#: templates/account/password_reset.html:18
+msgid ""
+"Enter your e-mail address below, and we'll send you an e-mail allowing you "
+"to reset it."
+msgstr ""
+"Escribi tu correo electrónico abajo y te mandamos para que podas "
+"resetearlo."
+
+#: templates/account/password_reset.html:36
+msgid "Reset My Password"
+msgstr "Resetear mi contraseña"
+
+#: templates/account/password_reset.html:42
+msgid "Incase of trouble you can"
+msgstr "Encase de inconveniente podés"
+
+#: templates/account/password_reset.html:43
+msgid "contact us here"
+msgstr "escribirnos aquí"
+
+#: templates/account/password_reset_done.html:28
+msgid ""
+"\n"
+"            We have sent you an e-mail!<br /><br />\n"
+"\n"
+"            If you have not received it please check your spam folder.\n"
+"            Otherwise contact us if you do not receive it in a few minutes.\n"
+"            "
+msgstr ""
+"\n"
+"            Te mandamos un correo electrónico!<br /><br />\n"
+"\n"
+"            Si no lo recibiste fijate la carpeta de spam.\n"
+"            En caso no, contactanos en unos minutos.\n"
+"            "
+
+#: templates/account/password_reset_from_key.html:19
+msgid "Bad Token"
+msgstr "Token invalido"
+
+#: templates/account/password_reset_from_key.html:29
+#, python-format
+msgid ""
+"\n"
+"            The password reset link was invalid, possibly because it has "
+"already been used. Please\n"
+"            request a <a href=\"%(passwd_reset_url)s\">new password reset</"
+"a>.\n"
+"            "
+msgstr ""
+"\n"
+"            El enlace de la contraseña es invalido, probablemente porque ya "
+"fue usado. Por favor\n"
+"            <a href=\"%(passwd_reset_url)s\">solicitar de vuelta</"
+"a>.\n"
+"            "
+
+#: templates/account/password_reset_from_key.html:47
+msgid "change password"
+msgstr "cambiar contraseña"
+
+#: templates/account/password_reset_from_key_done.html:6
+msgid "Password Changed"
+msgstr "La contraseña fue cambiada"
+
+#: templates/account/password_reset_from_key_done.html:20
+msgid "Your password is now changed. Please login"
+msgstr "Su contraseña fue cambiada. Por favor logueate de vuelta"
+
+#: templates/account/password_set.html:6 templates/account/password_set.html:12
+#: templates/account/password_set.html:24
+msgid "Set Password"
+msgstr "Setear Contraseña"
+
+#: templates/account/signup.html:6 templates/socialaccount/signup.html:6
+msgid "Signup"
+msgstr ""
+
+#: templates/account/signup.html:17 templates/socialaccount/signup.html:17
+#: templates/socialaccount/signup.html:41
+msgid "Sign Up"
+msgstr ""
+
+#: templates/account/signup.html:34
+msgid "Signup with Facebook"
+msgstr "Signup con Facebook"
+
+#: templates/account/signup.html:56
+msgid "Signup with Google"
+msgstr "Signup con Google"
+
+#: templates/account/signup.html:74
+msgid "SignUp"
+msgstr ""
+
+#: templates/account/signup.html:80
+msgid "Already have an account?"
+msgstr "¿Ya tenés cuenta?"
+
+#: templates/account/verification_sent.html:6
+#: templates/account/verification_sent.html:15
+msgid "Verify Your E-mail Address"
+msgstr "Verificar su correo electrónico"
+
+#: templates/account/verification_sent.html:19
+msgid ""
+"\n"
+"        We have sent an e-mail to you for verification. Follow the link "
+"provided to finalize the signup process.<br /><br />\n"
+"        If you do not see the verification e-mail in your main inbox, check "
+"your spam folder.\n"
+"        "
+msgstr ""
+"\n"
+"        Te mandamos un correo de verificación. Seguí el enlace "
+"para finalizar el proceso.<br /><br />\n"
+"        Si no recibiste el correo electrónico recordate de fijar su carpeta "
+"de spam.\n"
+"        "
+
+#: templates/blocks/further_reading_block.html:4
+msgid "Para leer"
+msgstr ""
+
+#: templates/includes/advice.html:3
+msgid "Consejos a pasajeros"
+msgstr ""
+
+#: templates/includes/advice.html:5
+msgid ""
+"Compra tu pasaje con anticipación, especialmente en temporada alta y "
+"feriados."
+msgstr ""
+
+#: templates/includes/advice.html:6
+msgid ""
+"Preséntate en la terminal al menos 30 minutos antes de la salida del bus"
+msgstr ""
+
+#: templates/includes/advice.html:7
+msgid ""
+"Lleva tu documentación en regla si viajas a Argentina u otros destinos "
+"internacionales."
+msgstr ""
+
+#: templates/includes/advice.html:8
+msgid "Consulta los horarios actualizados en Ventanita antes de viajar."
+msgstr ""
+
+#: templates/includes/advice.html:9
+msgid "Mantén una copia digital de tus documentos importantes"
+msgstr ""
+
+#: templates/includes/company-logos.html:3
+msgid "Empresas destacadas"
+msgstr ""
+
+#: templates/includes/footer-grand.html:74 trips/templates/trips/order.html:172
+msgid "Empresa"
+msgstr ""
+
+#: templates/includes/footer-grand.html:77
+msgid "Sobre Ventanita"
+msgstr ""
+
+#: templates/includes/footer-grand.html:80
+msgid "Trabaja con nosotros"
+msgstr ""
+
+#: templates/includes/footer-grand.html:83
+msgid "Blog"
+msgstr ""
+
+#: templates/includes/footer-grand.html:90
+msgid "Info Útil"
+msgstr ""
+
+#: templates/includes/footer-grand.html:93
+msgid "Terminales"
+msgstr ""
+
+#: templates/includes/footer-grand.html:96
+msgid "Empresas de Bus"
+msgstr ""
+
+#: templates/includes/footer-grand.html:103
+msgid "Soporte y Ayuda"
+msgstr ""
+
+#: templates/includes/footer-grand.html:106
+msgid "Contacto"
+msgstr ""
+
+#: templates/includes/footer-grand.html:109
+msgid "Ayuda"
+msgstr ""
+
+#: templates/includes/footer-grand.html:112
+msgid "Comentarios"
+msgstr ""
+
+#: templates/includes/footer-grand.html:119
+msgid "Enlaces Útiles"
+msgstr ""
+
+#: templates/includes/footer-grand.html:122
+#: trips/templates/trips/order.html:110
+msgid "Condiciones Generales"
+msgstr ""
+
+#: templates/includes/footer-grand.html:125
+msgid "Politicas de Privacidad"
+msgstr ""
+
+#: templates/includes/footer-grand.html:128
+msgid "Sitemap"
+msgstr ""
+
+#: templates/includes/footer-grand.html:136
+msgid "Todos los derechos reservados. Copyright ©"
+msgstr ""
+
+#: templates/includes/footer-grand.html:140
+msgid "Made with ❤️ in Paraguay 🇵🇾"
+msgstr ""
+
+#: templates/includes/mission.html:3
+msgid "¿Por que Ventanita?"
+msgstr ""
+
+#: templates/includes/mission.html:6
+msgid ""
+"Nuestra misión es brindarles a todos la oportunidad de viajar y mostrarles "
+"el mundo. Creemos que todos merecen viajar y que el mundo es un lugar mejor "
+"cuando experimentamos, compartimos y construimos una vida a través de "
+"nuestras historias."
+msgstr ""
+
+#: templates/includes/search_form.html:9
+msgid "Solo Ida"
+msgstr ""
+
+#: templates/includes/search_form.html:10
+msgid "Ida y Vuelta"
+msgstr ""
+
+#: templates/includes/search_form.html:28
+msgid "Origen"
+msgstr ""
+
+#: templates/includes/search_form.html:39
+msgid "¿Desde Donde?"
+msgstr ""
+
+#: templates/includes/search_form.html:45
+msgid "Destino"
+msgstr ""
+
+#: templates/includes/search_form.html:56
+msgid "¿A donde queres ir?"
+msgstr ""
+
+#: templates/includes/search_form.html:62
+#: templates/includes/search_form.html:63
+msgid "Salida"
+msgstr ""
+
+#: templates/includes/search_form.html:79
+#: templates/includes/search_form.html:80
+msgid "Retorno (Opcional)"
+msgstr ""
+
+#: templates/includes/search_form.html:109
+#: templates/includes/search_form.html:116
+msgid "Buscar"
+msgstr ""
+
+#: templates/socialaccount/connections.html:6
+#: templates/socialaccount/connections.html:15
+msgid "Account Connections"
+msgstr "Conexiones"
+
+#: templates/socialaccount/connections.html:19
+msgid ""
+"You can sign in to your account using any of the following third party "
+"accounts"
+msgstr ""
+"Podes loguearte a la plataforma usando las siguientes"
+"cuentas"
+
+#: templates/socialaccount/connections.html:35
+msgid "Remove"
+msgstr "Eliminar"
+
+#: templates/socialaccount/connections.html:39
+msgid ""
+"You currently have no social network accounts connected to this account."
+msgstr ""
+"Aún no tenés una cuenta externa vinculada a la plataforma."
+
+#: templates/socialaccount/connections.html:42
+msgid "Add a 3rd Party Account"
+msgstr "Conectar su cuenta externa"
+
+#: templates/socialaccount/login.html:6
+msgid "Sign In"
+msgstr ""
+
+#: templates/socialaccount/login.html:19
+#, python-format
+msgid ""
+"Connect\n"
+"      %(provider)s"
+msgstr ""
+"Vincular\n"
+"      %(provider)s"
+
+#: templates/socialaccount/login.html:23
+#, python-format
+msgid ""
+"You are about to connect a new third party account from\n"
+"      %(provider)s."
+msgstr ""
+"Vas a vincular a la plataforma su cuenta de\n"
+"      %(provider)s."
+
+#: templates/socialaccount/login.html:28
+#, python-format
+msgid ""
+"Sign In Via\n"
+"      %(provider)s"
+msgstr ""
+"Sign In con\n"
+"      %(provider)s"
+
+#: templates/socialaccount/login.html:32
+#, python-format
+msgid ""
+"You are about to sign in using a third party account from\n"
+"      %(provider)s."
+msgstr ""
+"Vas a loguear a la plataforma usando su cuenta de"
+"      %(provider)s."
+
+#: templates/socialaccount/signup.html:19
+#, python-format
+msgid ""
+"You are about to use your\n"
+"      %(provider_name)s account to login to\n"
+"      %(site_name)s."
+msgstr ""
+"Vas a usar su cuenta de\n"
+"      %(provider_name)s para loguear en\n"
+"      %(site_name)s."
+
+#: templates/socialaccount/signup.html:46
+msgid "Go back Home"
+msgstr "Ir al Home"
+
+#: trips/templates/trips/order.html:13 trips/templates/trips/order.html:196
+msgid "Pasajero"
+msgstr ""
+
+#: trips/templates/trips/order.html:96
+msgid "Sus Datos"
+msgstr ""
+
+#: trips/templates/trips/order.html:110
+msgid "Estoy de acuerdo con los"
+msgstr ""
+
+#: trips/templates/trips/order.html:115
+msgid "Checkout"
+msgstr ""
+
+#: trips/templates/trips/order.html:128
+msgid "Resumen de viaje"
+msgstr ""
+
+#: trips/templates/trips/order.html:161
+msgid "Duración"
+msgstr ""
+
+#: trips/templates/trips/order.html:183
+msgid "Precio"
+msgstr ""
+
+#: trips/templates/trips/order.html:192
+msgid "Tarifa"
+msgstr ""
+
+#: trips/templates/trips/order.html:200
+msgid "Total"
+msgstr ""
+
+#: trips/templates/trips/payment-success.html:20
+msgid "Pago Exitoso!"
+msgstr ""
+
+#: trips/templates/trips/payment-success.html:24
+msgid "Pasajes Reservados!"
+msgstr ""
+
+#: trips/templates/trips/payment-success.html:25
+msgid "Hemos enviados los pasajes a "
+msgstr ""
+
+#: trips/templates/trips/payment-success.html:37
+msgid "Descargar PDF"
+msgstr ""
+
+#: trips/templates/trips/payment-success.html:51
+msgid "Agregar al calendario"
+msgstr ""
+
+#: trips/templates/trips/payment-success.html:59
+msgid "Reserva otro pasaje"
+msgstr ""
+
+#: trips/templates/trips/search_results.html:28
+#: trips/templates/trips/search_results.html:98
+#: trips/templates/trips/search_results.html:168
+#: trips/templates/trips/search_results.html:238
+msgid "Podes pagar con todas las tarjetas"
+msgstr ""
+
+#: trips/templates/trips/search_results.html:33
+#: trips/templates/trips/search_results.html:103
+#: trips/templates/trips/search_results.html:173
+#: trips/templates/trips/search_results.html:243
+msgid "Acepta efectivo"
+msgstr ""
+
+#: trips/templates/trips/search_results.html:38
+#: trips/templates/trips/search_results.html:108
+#: trips/templates/trips/search_results.html:178
+#: trips/templates/trips/search_results.html:248
+msgid "Butacas disponibles"
+msgstr ""
+
+#: trips/templates/trips/search_results.html:42
+#: trips/templates/trips/search_results.html:112
+#: trips/templates/trips/search_results.html:182
+#: trips/templates/trips/search_results.html:252
+msgid "Seat Type"
+msgstr ""
