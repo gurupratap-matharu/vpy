@@ -324,7 +324,7 @@ class StationPage(RoutablePageMixin, BasePage):
             "@context": "https://schema.org",
             "@type": "ImageObject",
             "contentUrl": f"https://ventanita.com.py{image_url}",
-            "license": "https://ventanita.com.py/terms/",
+            "license": "https://ventanita.com.py/condiciones-generales/",
             "acquireLicensePage": "https://ventanita.com.py/contact/",
             "creditText": self.listing_title or self.social_text,
             "creator": {"@type": "Person", "name": "Ventanita"},
