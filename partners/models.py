@@ -1,7 +1,9 @@
+import json
 import logging
 
 from django import forms
 from django.db import models
+from django.utils.html import mark_safe
 
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from wagtail.fields import StreamField
@@ -58,6 +60,47 @@ class PartnerIndexPage(BasePage):
 
     def children(self):
         return self.get_children().specific().live()
+
+    def ld_entity(self):
+        image = self.listing_image or self.social_image
+        image_url = image.file.url if image else ""
+        image_schema = {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "contentUrl": f"https://ventanita.com.py{image_url}",
+            "license": "https://ventanita.com.py/condiciones-generales/",
+            "acquireLicensePage": "https://ventanita.com.py/contact/",
+            "creditText": self.listing_title or self.social_text,
+            "creator": {"@type": "Person", "name": "Ventanita"},
+            "copyrightNotice": "Ventanita",
+        }
+
+        breadcrumb_schema = {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+                {
+                    "@type": "ListItem",
+                    "position": 1,
+                    "name": "Paraguay",
+                    "item": "https://ventanita.com.py/",
+                },
+                {
+                    "@type": "ListItem",
+                    "position": 2,
+                    "name": self.title,
+                    "item": self.full_url,
+                },
+            ],
+        }
+
+        page_schema = json.dumps(
+            {
+                "@context": "http://schema.org",
+                "@graph": [breadcrumb_schema, image_schema],
+            }
+        )
+        return mark_safe(page_schema)
 
 
 class PartnerPage(BasePage):
@@ -158,6 +201,59 @@ class PartnerPage(BasePage):
             tag.url = f"{base_url}tags/{tag.slug}/"
 
         return tags
+
+    def ld_entity(self):
+        image = self.listing_image or self.social_image
+        image_url = image.file.url if image else ""
+        image_schema = {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "contentUrl": f"https://ventanita.com.py{image_url}",
+            "license": "https://ventanita.com.py/condiciones-generales/",
+            "acquireLicensePage": "https://ventanita.com.py/contact/",
+            "creditText": self.listing_title or self.social_text,
+            "creator": {"@type": "Person", "name": "Ventanita"},
+            "copyrightNotice": "Ventanita",
+        }
+
+        breadcrumb_schema = {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+                {
+                    "@type": "ListItem",
+                    "position": 1,
+                    "name": "Pasajes de Micro",
+                    "item": "https://ventanita.com.py/",
+                },
+                {
+                    "@type": "ListItem",
+                    "position": 2,
+                    "name": "Paraguay",
+                    "item": self.get_parent().get_parent().full_url,
+                },
+                {
+                    "@type": "ListItem",
+                    "position": 3,
+                    "name": self.get_parent().title,
+                    "item": self.get_parent().full_url,
+                },
+                {
+                    "@type": "ListItem",
+                    "position": 4,
+                    "name": self.title,
+                    "item": self.full_url,
+                },
+            ],
+        }
+
+        page_schema = json.dumps(
+            {
+                "@context": "http://schema.org",
+                "@graph": [breadcrumb_schema, image_schema],
+            }
+        )
+        return mark_safe(page_schema)
 
 
 class Amenity(models.Model):

@@ -224,6 +224,47 @@ class StationIndexPage(BasePage):
         """
         return self.get_children().specific().live()
 
+    def ld_entity(self):
+        image = self.listing_image or self.social_image
+        image_url = image.file.url if image else ""
+        image_schema = {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "contentUrl": f"https://ventanita.com.py{image_url}",
+            "license": "https://ventanita.com.py/condiciones-generales/",
+            "acquireLicensePage": "https://ventanita.com.py/contact/",
+            "creditText": self.listing_title or self.social_text,
+            "creator": {"@type": "Person", "name": "Ventanita"},
+            "copyrightNotice": "Ventanita",
+        }
+
+        breadcrumb_schema = {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+                {
+                    "@type": "ListItem",
+                    "position": 1,
+                    "name": "Paraguay",
+                    "item": "https://ventanita.com.py/",
+                },
+                {
+                    "@type": "ListItem",
+                    "position": 2,
+                    "name": self.title,
+                    "item": self.full_url,
+                },
+            ],
+        }
+
+        page_schema = json.dumps(
+            {
+                "@context": "http://schema.org",
+                "@graph": [breadcrumb_schema, image_schema],
+            }
+        )
+        return mark_safe(page_schema)
+
 
 class StationPage(RoutablePageMixin, BasePage):
     """
