@@ -3,7 +3,7 @@ import logging
 
 from django.core.validators import RegexValidator
 from django.db import models
-from django.utils.html import mark_safe
+from django.utils.html import mark_safe, strip_tags
 
 from wagtail.admin.panels import FieldPanel
 from wagtail.contrib.routable_page.models import RoutablePageMixin
@@ -12,6 +12,7 @@ from wagtail.search import index
 
 from base.blocks import BaseStreamBlock, FAQBlock, LinkBlock, NavTabLinksBlock
 from base.models import BasePage
+from base.schemas import organisation_schema
 
 logger = logging.getLogger(__name__)
 
@@ -156,7 +157,7 @@ class CityPage(BasePage):
             "@context": "https://schema.org",
             "@type": "ImageObject",
             "contentUrl": f"https://ventanita.com.py{image_url}",
-            "license": "https://ventanita.com.py/terms/",
+            "license": "https://ventanita.com.py/condiciones-generales/",
             "acquireLicensePage": "https://ventanita.com.py/contact/",
             "creditText": self.listing_title or self.social_text,
             "creator": {"@type": "Person", "name": "Ventanita"},
@@ -187,14 +188,67 @@ class CityPage(BasePage):
                 },
             ],
         }
+        faq_schema = {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": self.get_faq_entities(),
+        }
+
+        article_schema = {
+            "@context": "https://schema.org",
+            "@type": "Article",
+            "headline": self.title,
+            "image": [f"https://ventanita.com.py{image_url}"],
+            "datePublished": self.first_published_at.isoformat(),
+            "dateModified": self.last_published_at.isoformat(),
+            "author": [
+                {
+                    "@type": "Organization",
+                    "name": "Ventanita",
+                    "url": "https://ventanita.com.py",
+                }
+            ],
+            "publisher": {
+                "@type": "Organization",
+                "name": "Ventanita",
+                "url": "https://ventanita.com.py",
+            },
+        }
 
         page_schema = json.dumps(
             {
                 "@context": "http://schema.org",
-                "@graph": [breadcrumb_schema, image_schema],
-            }
+                "@graph": [
+                    breadcrumb_schema,
+                    image_schema,
+                    faq_schema,
+                    article_schema,
+                    organisation_schema,
+                ],
+            },
+            ensure_ascii=False,
         )
         return mark_safe(page_schema)
+
+    def get_faq_entities(self):
+
+        entities = []
+
+        for block in self.faq:
+            for item in block.value["item"]:
+                question = item.get("question")
+                answer_html = item.get("answer")
+                answer_text = strip_tags(answer_html.source)
+
+                entity = {
+                    "@type": "Question",
+                    "name": question.strip(),
+                    "acceptedAnswer": {"@type": "Answer", "text": answer_text.strip()},
+                }
+
+                entities.append(entity)
+
+        return entities
 
 
 class StationIndexPage(BasePage):
@@ -403,10 +457,64 @@ class StationPage(RoutablePageMixin, BasePage):
             ],
         }
 
+        faq_schema = {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": self.get_faq_entities(),
+        }
+
+        article_schema = {
+            "@context": "https://schema.org",
+            "@type": "Article",
+            "headline": self.title,
+            "image": [f"https://ventanita.com.py{image_url}"],
+            "datePublished": self.first_published_at.isoformat(),
+            "dateModified": self.last_published_at.isoformat(),
+            "author": [
+                {
+                    "@type": "Organization",
+                    "name": "Ventanita",
+                    "url": "https://ventanita.com.py",
+                }
+            ],
+            "publisher": {
+                "@type": "Organization",
+                "name": "Ventanita",
+                "url": "https://ventanita.com.py",
+            },
+        }
+
         page_schema = json.dumps(
             {
                 "@context": "http://schema.org",
-                "@graph": [breadcrumb_schema, image_schema],
-            }
+                "@graph": [
+                    breadcrumb_schema,
+                    image_schema,
+                    article_schema,
+                    faq_schema,
+                    organisation_schema,
+                ],
+            },
+            ensure_ascii=False,
         )
         return mark_safe(page_schema)
+
+    def get_faq_entities(self):
+
+        entities = []
+
+        for block in self.faq:
+            for item in block.value["item"]:
+                question = item.get("question")
+                answer_html = item.get("answer")
+                answer_text = strip_tags(answer_html.source)
+
+                entity = {
+                    "@type": "Question",
+                    "name": question.strip(),
+                    "acceptedAnswer": {"@type": "Answer", "text": answer_text.strip()},
+                }
+
+                entities.append(entity)
+
+        return entities
