@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.db import models
 from django.forms import widgets
 from django.shortcuts import redirect
+from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 
 from wagtail.admin.panels import (
@@ -32,6 +33,8 @@ from wagtail.models.i18n import Locale
 
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
+
+from base.cache import get_default_cache_control_decorator
 
 from .blocks import BaseStreamBlock
 
@@ -176,7 +179,7 @@ class ListingFields(models.Model):
     ]
 
 
-# @method_decorator(get_cache_control_kwargs(), name="serve")
+@method_decorator(get_default_cache_control_decorator(), name="serve")
 class BasePage(SocialFields, ListingFields, Page):
     """
     An abstract base page which is optimised and can be inherited by any content page in our project.

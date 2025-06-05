@@ -19,8 +19,6 @@ def get_cache_control_kwargs():
         "public": True,
     }
 
-    print(f"cache_control_kwargs:{cache_control_kwargs}")
-
     return {k: v for k, v in cache_control_kwargs.items() if v is not None}
 
 
@@ -30,5 +28,6 @@ def get_default_cache_control_decorator():
     default for normal content pages.
     """
 
-    cache_control_kwargs = get_cache_control_kwargs()
-    return cache_control(**cache_control_kwargs)
+    # cache_control_kwargs = get_cache_control_kwargs()
+    # return cache_control(**cache_control_kwargs)
+    return cache_control(max_age=60 * 60 * 24, immutable=True, public=True)  # one day
