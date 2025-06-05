@@ -1,7 +1,70 @@
 {% load static i18n wagtailcore_tags %}
 
-<footer class="footer mt-5">
+<footer class="footer">
   <div class="container">
+    <div class="row py-5">
+      <div class="col-12 col-md-10 mx-auto">
+        <h2 class="fs-5 pb-3">Explorá Micros</h2>
+        <div class="accordion accordion-flush" id="accordionLinks">
+          <div class="accordion-item">
+            <h3 class="accordion-header">
+              <button class="accordion-button collapsed fw-bold ps-0"
+                      type="button"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#flush-collapseRoutes"
+                      aria-expanded="false"
+                      aria-controls="flush-collapseRoutes">Rutas Populares en Paraguay</button>
+            </h3>
+            <div id="flush-collapseRoutes" class="accordion-collapse collapse" data-bs-parent="#accordionLinks">
+              <div class="accordion-body ps-0">
+                <div class="row row-cols-1 row-cols-md-4 g-2 text-sm">
+                  <div class="col">
+                    <a href="#">Micro de Asunción a Encarnación</a>
+                  </div>
+                  <div class="col">
+                    <a href="#">Micro de Asunción a Ciudad Del Este</a>
+                  </div>
+                  <div class="col">
+                    <a href="#">Micro de Asunción a Buenos Aires</a>
+                  </div>
+                  <div class="col">
+                    <a href="#">Micro de Asunción a Concepción</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="accordion-item">
+            <h3 class="accordion-header">
+              <button class="accordion-button collapsed fw-bold ps-0"
+                      type="button"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#flush-collapseDestinations"
+                      aria-expanded="false"
+                      aria-controls="flush-collapseDestinations">Destinos Populares en Paraguay</button>
+            </h3>
+            <div id="flush-collapseDestinations" class="accordion-collapse collapse" data-bs-parent="#accordionLinks">
+              <div class="accordion-body ps-0">
+                <div class="row row-cols-1 row-cols-md-4 g-2 text-sm">
+                  <div class="col">
+                    <a href="/pasajes-de-micro/pasajes-a-asuncion/">Pasajes a Asunción</a>
+                  </div>
+                  <div class="col">
+                    <a href="/pasajes-de-micro/pasajes-a-ciudad-del-este/">Pasajes a Ciudad Del Este</a>
+                  </div>
+                  <div class="col">
+                    <a href="/pasajes-de-micro/pasajes-a-encarnacion/">Pasajes a Encarnación</a>
+                  </div>
+                  <div class="col">
+                    <a href="/pasajes-de-micro/pasajes-a-concepcion/">Pasajes a Concepción</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="row">
       <div class="col-md-2 mb-4 ms-auto">
         <a href="/" class="h6 text-primary text-gradient">Ventanita</a>
@@ -67,6 +130,10 @@
               </div>
             </form>
           </div>
+          <p class="text-sm">
+            <a href="https://ventanita.com.ar" class="me-2">Argentina</a>
+            <a href="https://ventanita.com.py">Paraguay</a>
+          </p>
         </div>
       </div>
       <div class="col-md-2 col-sm-6 col-6 mb-4">
@@ -75,9 +142,6 @@
           <ul class="flex-column ms-n3 nav">
             <li class="nav-item">
               <a class="nav-link" href="/about/">{% translate "Sobre Ventanita" %}</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="https://forms.gle/mMAoc95hbJoF76hUA" target="_blank">{% translate "Trabaja con nosotros" %}</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="/blog/">{% translate "Blog" %}</a>
@@ -90,10 +154,10 @@
           <h6 class="text-gradient text-primary text-sm">{% translate "Info Útil" %}</h6>
           <ul class="flex-column ms-n3 nav">
             <li class="nav-item">
-              <a class="nav-link" href="{% slugurl 'terminales-de-omnibus' %}">{% translate "Terminales" %}</a>
+              <a class="nav-link" href="/terminales-de-omnibus/">{% translate "Terminales" %}</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{% slugurl 'empresas-de-bus' %}">{% translate "Empresas de Bus" %}</a>
+              <a class="nav-link" href="/empresas-de-bus/">{% translate "Empresas de Bus" %}</a>
             </li>
           </ul>
         </div>
@@ -103,13 +167,13 @@
           <h6 class="text-gradient text-primary text-sm">{% translate "Soporte y Ayuda" %}</h6>
           <ul class="flex-column ms-n3 nav">
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'pages:contact' %}">{% translate "Contacto" %}</a>
+              <a class="nav-link" href="/contact/">{% translate "Contacto" %}</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{% slugurl 'ayuda' %}">{% translate "Ayuda" %}</a>
+              <a class="nav-link" href="/ayuda/">{% translate "Ayuda" %}</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'pages:feedback' %}">{% translate "Comentarios" %}</a>
+              <a class="nav-link" href="/feedback/">{% translate "Comentarios" %}</a>
             </li>
           </ul>
         </div>
@@ -119,13 +183,13 @@
           <h6 class="text-gradient text-primary text-sm">{% translate "Enlaces Útiles" %}</h6>
           <ul class="flex-column ms-n3 nav">
             <li class="nav-item">
-              <a class="nav-link" href="{% slugurl 'condiciones-generales' %}">{% translate "Condiciones Generales" %}</a>
+              <a class="nav-link" href="/condiciones-generales/">{% translate "Condiciones Generales" %}</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{% slugurl 'politicas-de-privacidad' %}">{% translate "Politicas de Privacidad" %}</a>
+              <a class="nav-link" href="/politicas-de-privacidad/">{% translate "Politicas de Privacidad" %}</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{% slugurl 'sitemap' %}">{% translate "Sitemap" %}</a>
+              <a class="nav-link" href="/sitemap/">{% translate "Sitemap" %}</a>
             </li>
           </ul>
         </div>
