@@ -62,19 +62,23 @@ class PartnerIndexPage(BasePage):
         return self.get_children().specific().live()
 
     def ld_entity(self):
-        image = self.listing_image or self.social_image
-        image_url = image.file.url if image else ""
-        image_schema = {
-            "@context": "https://schema.org",
-            "@type": "ImageObject",
-            "contentUrl": f"https://ventanita.com.py{image_url}",
-            "license": "https://ventanita.com.py/condiciones-generales/",
-            "acquireLicensePage": "https://ventanita.com.py/contact/",
-            "creditText": self.listing_title or self.social_text,
-            "creator": {"@type": "Person", "name": "Ventanita"},
-            "copyrightNotice": "Ventanita",
-        }
 
+        page_schema = json.dumps(
+            {
+                "@context": "http://schema.org",
+                "@graph": [
+                    self._get_breadcrumb_schema(),
+                    self._get_image_schema(),
+                    self._get_faq_schema(),
+                    self._get_article_schema(),
+                    self._get_organisation_schema(),
+                ],
+            },
+            ensure_ascii=False,
+        )
+        return mark_safe(page_schema)
+
+    def _get_breadcrumb_schema(self):
         breadcrumb_schema = {
             "@context": "https://schema.org",
             "@type": "BreadcrumbList",
@@ -88,19 +92,13 @@ class PartnerIndexPage(BasePage):
                 {
                     "@type": "ListItem",
                     "position": 2,
-                    "name": self.title,
+                    "name": "Empresas de Micro",
                     "item": self.full_url,
                 },
             ],
         }
 
-        page_schema = json.dumps(
-            {
-                "@context": "http://schema.org",
-                "@graph": [breadcrumb_schema, image_schema],
-            }
-        )
-        return mark_safe(page_schema)
+        return breadcrumb_schema
 
 
 class PartnerPage(BasePage):
@@ -203,19 +201,23 @@ class PartnerPage(BasePage):
         return tags
 
     def ld_entity(self):
-        image = self.listing_image or self.social_image
-        image_url = image.file.url if image else ""
-        image_schema = {
-            "@context": "https://schema.org",
-            "@type": "ImageObject",
-            "contentUrl": f"https://ventanita.com.py{image_url}",
-            "license": "https://ventanita.com.py/condiciones-generales/",
-            "acquireLicensePage": "https://ventanita.com.py/contact/",
-            "creditText": self.listing_title or self.social_text,
-            "creator": {"@type": "Person", "name": "Ventanita"},
-            "copyrightNotice": "Ventanita",
-        }
 
+        page_schema = json.dumps(
+            {
+                "@context": "http://schema.org",
+                "@graph": [
+                    self._get_breadcrumb_schema(),
+                    self._get_image_schema(),
+                    self._get_article_schema(),
+                    self._get_faq_schema(),
+                    self._get_organisation_schema(),
+                ],
+            },
+            ensure_ascii=False,
+        )
+        return mark_safe(page_schema)
+
+    def _get_breadcrumb_schema(self):
         breadcrumb_schema = {
             "@context": "https://schema.org",
             "@type": "BreadcrumbList",
@@ -223,37 +225,25 @@ class PartnerPage(BasePage):
                 {
                     "@type": "ListItem",
                     "position": 1,
-                    "name": "Pasajes de Micro",
+                    "name": "Paraguay",
                     "item": "https://ventanita.com.py/",
                 },
                 {
                     "@type": "ListItem",
                     "position": 2,
-                    "name": "Paraguay",
-                    "item": self.get_parent().get_parent().full_url,
-                },
-                {
-                    "@type": "ListItem",
-                    "position": 3,
-                    "name": self.get_parent().title,
+                    "name": "Empresas de Micro",
                     "item": self.get_parent().full_url,
                 },
                 {
                     "@type": "ListItem",
-                    "position": 4,
+                    "position": 3,
                     "name": self.title,
                     "item": self.full_url,
                 },
             ],
         }
 
-        page_schema = json.dumps(
-            {
-                "@context": "http://schema.org",
-                "@graph": [breadcrumb_schema, image_schema],
-            }
-        )
-        return mark_safe(page_schema)
+        return breadcrumb_schema
 
 
 class Amenity(models.Model):

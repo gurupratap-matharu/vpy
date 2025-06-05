@@ -3,7 +3,7 @@ import logging
 
 from django.core.validators import RegexValidator
 from django.db import models
-from django.utils.html import mark_safe, strip_tags
+from django.utils.html import mark_safe
 
 from wagtail.admin.panels import FieldPanel
 from wagtail.contrib.routable_page.models import RoutablePageMixin
@@ -12,7 +12,6 @@ from wagtail.search import index
 
 from base.blocks import BaseStreamBlock, FAQBlock, LinkBlock, NavTabLinksBlock
 from base.models import BasePage
-from base.schemas import organisation_schema
 
 logger = logging.getLogger(__name__)
 
@@ -53,6 +52,45 @@ class CityIndexPage(BasePage):
         context = super().get_context(request, *args, **kwargs)
         context["cities"] = self.get_children().live().order_by("title")
         return context
+
+    def ld_entity(self):
+
+        page_schema = json.dumps(
+            {
+                "@context": "http://schema.org",
+                "@graph": [
+                    self._get_breadcrumb_schema(),
+                    self._get_image_schema(),
+                    self._get_faq_schema(),
+                    self._get_article_schema(),
+                    self._get_organisation_schema(),
+                ],
+            },
+            ensure_ascii=False,
+        )
+        return mark_safe(page_schema)
+
+    def _get_breadcrumb_schema(self):
+        breadcrumb_schema = {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+                {
+                    "@type": "ListItem",
+                    "position": 1,
+                    "name": "Pasajes de Micro",
+                    "item": "https://ventanita.com.py/",
+                },
+                {
+                    "@type": "ListItem",
+                    "position": 2,
+                    "name": "Paraguay",
+                    "item": self.full_url,
+                },
+            ],
+        }
+
+        return breadcrumb_schema
 
 
 class CityPage(BasePage):
@@ -151,19 +189,23 @@ class CityPage(BasePage):
         return context
 
     def ld_entity(self):
-        image = self.listing_image or self.social_image
-        image_url = image.file.url if image else ""
-        image_schema = {
-            "@context": "https://schema.org",
-            "@type": "ImageObject",
-            "contentUrl": f"https://ventanita.com.py{image_url}",
-            "license": "https://ventanita.com.py/condiciones-generales/",
-            "acquireLicensePage": "https://ventanita.com.py/contact/",
-            "creditText": self.listing_title or self.social_text,
-            "creator": {"@type": "Person", "name": "Ventanita"},
-            "copyrightNotice": "Ventanita",
-        }
 
+        page_schema = json.dumps(
+            {
+                "@context": "http://schema.org",
+                "@graph": [
+                    self._get_breadcrumb_schema(),
+                    self._get_image_schema(),
+                    self._get_faq_schema(),
+                    self._get_article_schema(),
+                    self._get_organisation_schema(),
+                ],
+            },
+            ensure_ascii=False,
+        )
+        return mark_safe(page_schema)
+
+    def _get_breadcrumb_schema(self):
         breadcrumb_schema = {
             "@context": "https://schema.org",
             "@type": "BreadcrumbList",
@@ -188,67 +230,8 @@ class CityPage(BasePage):
                 },
             ],
         }
-        faq_schema = {
-            "@context": "https://schema.org",
-            "@type": "FAQPage",
-            "mainEntity": self.get_faq_entities(),
-        }
 
-        article_schema = {
-            "@context": "https://schema.org",
-            "@type": "Article",
-            "headline": self.title,
-            "image": [f"https://ventanita.com.py{image_url}"],
-            "datePublished": self.first_published_at.isoformat(),
-            "dateModified": self.last_published_at.isoformat(),
-            "author": [
-                {
-                    "@type": "Organization",
-                    "name": "Ventanita",
-                    "url": "https://ventanita.com.py",
-                }
-            ],
-            "publisher": {
-                "@type": "Organization",
-                "name": "Ventanita",
-                "url": "https://ventanita.com.py",
-            },
-        }
-
-        page_schema = json.dumps(
-            {
-                "@context": "http://schema.org",
-                "@graph": [
-                    breadcrumb_schema,
-                    image_schema,
-                    faq_schema,
-                    article_schema,
-                    organisation_schema,
-                ],
-            },
-            ensure_ascii=False,
-        )
-        return mark_safe(page_schema)
-
-    def get_faq_entities(self):
-
-        entities = []
-
-        for block in self.faq:
-            for item in block.value["item"]:
-                question = item.get("question")
-                answer_html = item.get("answer")
-                answer_text = strip_tags(answer_html.source)
-
-                entity = {
-                    "@type": "Question",
-                    "name": question.strip(),
-                    "acceptedAnswer": {"@type": "Answer", "text": answer_text.strip()},
-                }
-
-                entities.append(entity)
-
-        return entities
+        return breadcrumb_schema
 
 
 class StationIndexPage(BasePage):
@@ -279,19 +262,23 @@ class StationIndexPage(BasePage):
         return self.get_children().specific().live()
 
     def ld_entity(self):
-        image = self.listing_image or self.social_image
-        image_url = image.file.url if image else ""
-        image_schema = {
-            "@context": "https://schema.org",
-            "@type": "ImageObject",
-            "contentUrl": f"https://ventanita.com.py{image_url}",
-            "license": "https://ventanita.com.py/condiciones-generales/",
-            "acquireLicensePage": "https://ventanita.com.py/contact/",
-            "creditText": self.listing_title or self.social_text,
-            "creator": {"@type": "Person", "name": "Ventanita"},
-            "copyrightNotice": "Ventanita",
-        }
 
+        page_schema = json.dumps(
+            {
+                "@context": "http://schema.org",
+                "@graph": [
+                    self._get_breadcrumb_schema(),
+                    self._get_image_schema(),
+                    self._get_faq_schema(),
+                    self._get_article_schema(),
+                    self._get_organisation_schema(),
+                ],
+            },
+            ensure_ascii=False,
+        )
+        return mark_safe(page_schema)
+
+    def _get_breadcrumb_schema(self):
         breadcrumb_schema = {
             "@context": "https://schema.org",
             "@type": "BreadcrumbList",
@@ -305,19 +292,13 @@ class StationIndexPage(BasePage):
                 {
                     "@type": "ListItem",
                     "position": 2,
-                    "name": self.title,
+                    "name": "Terminales De Micro",
                     "item": self.full_url,
                 },
             ],
         }
 
-        page_schema = json.dumps(
-            {
-                "@context": "http://schema.org",
-                "@graph": [breadcrumb_schema, image_schema],
-            }
-        )
-        return mark_safe(page_schema)
+        return breadcrumb_schema
 
 
 class StationPage(RoutablePageMixin, BasePage):
@@ -413,19 +394,23 @@ class StationPage(RoutablePageMixin, BasePage):
         return context
 
     def ld_entity(self):
-        image = self.listing_image or self.social_image
-        image_url = image.file.url if image else ""
-        image_schema = {
-            "@context": "https://schema.org",
-            "@type": "ImageObject",
-            "contentUrl": f"https://ventanita.com.py{image_url}",
-            "license": "https://ventanita.com.py/condiciones-generales/",
-            "acquireLicensePage": "https://ventanita.com.py/contact/",
-            "creditText": self.listing_title or self.social_text,
-            "creator": {"@type": "Person", "name": "Ventanita"},
-            "copyrightNotice": "Ventanita",
-        }
 
+        page_schema = json.dumps(
+            {
+                "@context": "http://schema.org",
+                "@graph": [
+                    self._get_breadcrumb_schema(),
+                    self._get_image_schema(),
+                    self._get_article_schema(),
+                    self._get_faq_schema(),
+                    self._get_organisation_schema(),
+                ],
+            },
+            ensure_ascii=False,
+        )
+        return mark_safe(page_schema)
+
+    def _get_breadcrumb_schema(self):
         breadcrumb_schema = {
             "@context": "https://schema.org",
             "@type": "BreadcrumbList",
@@ -457,64 +442,4 @@ class StationPage(RoutablePageMixin, BasePage):
             ],
         }
 
-        faq_schema = {
-            "@context": "https://schema.org",
-            "@type": "FAQPage",
-            "mainEntity": self.get_faq_entities(),
-        }
-
-        article_schema = {
-            "@context": "https://schema.org",
-            "@type": "Article",
-            "headline": self.title,
-            "image": [f"https://ventanita.com.py{image_url}"],
-            "datePublished": self.first_published_at.isoformat(),
-            "dateModified": self.last_published_at.isoformat(),
-            "author": [
-                {
-                    "@type": "Organization",
-                    "name": "Ventanita",
-                    "url": "https://ventanita.com.py",
-                }
-            ],
-            "publisher": {
-                "@type": "Organization",
-                "name": "Ventanita",
-                "url": "https://ventanita.com.py",
-            },
-        }
-
-        page_schema = json.dumps(
-            {
-                "@context": "http://schema.org",
-                "@graph": [
-                    breadcrumb_schema,
-                    image_schema,
-                    article_schema,
-                    faq_schema,
-                    organisation_schema,
-                ],
-            },
-            ensure_ascii=False,
-        )
-        return mark_safe(page_schema)
-
-    def get_faq_entities(self):
-
-        entities = []
-
-        for block in self.faq:
-            for item in block.value["item"]:
-                question = item.get("question")
-                answer_html = item.get("answer")
-                answer_text = strip_tags(answer_html.source)
-
-                entity = {
-                    "@type": "Question",
-                    "name": question.strip(),
-                    "acceptedAnswer": {"@type": "Answer", "text": answer_text.strip()},
-                }
-
-                entities.append(entity)
-
-        return entities
+        return breadcrumb_schema

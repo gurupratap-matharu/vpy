@@ -1,4 +1,7 @@
+import json
+
 from django.db import models
+from django.utils.html import mark_safe
 
 from wagtail.admin.panels import FieldPanel
 from wagtail.fields import StreamField
@@ -87,3 +90,19 @@ class HomePage(BasePage):
 
     def __str__(self):
         return self.title
+
+    def ld_entity(self):
+
+        page_schema = json.dumps(
+            {
+                "@context": "http://schema.org",
+                "@graph": [
+                    self._get_image_schema(),
+                    self._get_article_schema(),
+                    self._get_faq_schema(),
+                    self._get_organisation_schema(),
+                ],
+            },
+            ensure_ascii=False,
+        )
+        return mark_safe(page_schema)

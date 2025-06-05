@@ -1,3 +1,4 @@
+import json
 import logging
 
 from django import forms
@@ -7,6 +8,7 @@ from django.db import models
 from django.db.models import Count
 from django.shortcuts import redirect, render
 from django.utils.functional import cached_property
+from django.utils.html import mark_safe
 
 from wagtail.admin.panels import FieldPanel, InlinePanel, MultiFieldPanel
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
@@ -144,6 +146,44 @@ class BlogIndexPage(RoutablePageMixin, BasePage):
         posts = BlogPage.objects.live().descendant_of(self)
         posts = posts.filter(tags=tag) if tag else posts
         return posts
+
+    def ld_entity(self):
+
+        page_schema = json.dumps(
+            {
+                "@context": "http://schema.org",
+                "@graph": [
+                    self._get_breadcrumb_schema(),
+                    self._get_image_schema(),
+                    self._get_article_schema(),
+                    self._get_faq_schema(),
+                    self._get_organisation_schema(),
+                ],
+            },
+            ensure_ascii=False,
+        )
+        return mark_safe(page_schema)
+
+    def _get_breadcrumb_schema(self):
+        breadcrumb_schema = {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+                {
+                    "@type": "ListItem",
+                    "position": 1,
+                    "name": "Ventanita",
+                    "item": "https://ventanita.com.py/",
+                },
+                {
+                    "@type": "ListItem",
+                    "position": 2,
+                    "name": "Blog",
+                    "item": self.full_url,
+                },
+            ],
+        }
+        return breadcrumb_schema
 
 
 class BlogPageTag(TaggedItemBase):
@@ -285,6 +325,50 @@ class BlogPage(BasePage):
                 person__live=True
             ).select_related("person")
         ]
+
+    def ld_entity(self):
+
+        page_schema = json.dumps(
+            {
+                "@context": "http://schema.org",
+                "@graph": [
+                    self._get_breadcrumb_schema(),
+                    self._get_image_schema(),
+                    self._get_article_schema(),
+                    self._get_faq_schema(),
+                    self._get_organisation_schema(),
+                ],
+            },
+            ensure_ascii=False,
+        )
+        return mark_safe(page_schema)
+
+    def _get_breadcrumb_schema(self):
+        breadcrumb_schema = {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+                {
+                    "@type": "ListItem",
+                    "position": 1,
+                    "name": "Ventanita",
+                    "item": "https://ventanita.com.py/",
+                },
+                {
+                    "@type": "ListItem",
+                    "position": 2,
+                    "name": "Blog",
+                    "item": "https://ventanita.com.py/blog/",
+                },
+                {
+                    "@type": "ListItem",
+                    "position": 3,
+                    "name": self.title,
+                    "item": self.full_url,
+                },
+            ],
+        }
+        return breadcrumb_schema
 
 
 class BlogPageGalleryImage(Orderable):
