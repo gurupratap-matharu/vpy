@@ -1,0 +1,25 @@
+organisation_schema = {
+    "@context": "http://schema.org",
+    "@type": "Organization",
+    "name": "Ventanita",
+    "url": "https://ventanita.com.py",
+    "logo": "https://ventanita.com.py/static/assets/img/logos/ventanita.avif",
+    "image": "https://ventanita.com.py/static/assets/img/logos/ventanita.avif",
+    "description": "Plataforma de viajes en Paraguay",
+    "email": "support@ventanita.com.py",
+    "telephone": "+54-11-5025-4191",
+    "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Uspallata 471",
+        "addressLocality": "Buenos Aires",
+        "addressCountry": "AR",
+        "addressRegion": "CABA",
+        "postalCode": "1143",
+    },
+    "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+54-911-5025-4191",
+        "email": "support@ventanita.com.py",
+    },
+    "sameAs": [],
+}
