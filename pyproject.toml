@@ -24,6 +24,7 @@ djlint = "^1.36.4"
 black = "^25.1.0"
 isort = "^6.0.1"
 ruff = "^0.9.8"
+ipython = "^9.3.0"
 
 [build-system]
 requires = ["poetry-core"]
