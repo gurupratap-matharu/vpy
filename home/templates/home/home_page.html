@@ -68,4 +68,7 @@
   <script defer src="{% static 'assets/js/flatpickr.min.js' %}"></script>
   <script defer src="{% static 'assets/js/es.js' %}"></script>
   <script defer src="{% static 'assets/js/search.js' %}"></script>
+  {# djlint:off #}
+  <script type="application/ld+json">{{ page.ld_entity }}</script>
+  {# djlint:on #}
 {% endblock extra_js %}
