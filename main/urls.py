@@ -9,18 +9,22 @@ from wagtail.admin import urls as wagtailadmin_urls
 from wagtail.contrib.sitemaps.views import sitemap
 from wagtail.documents import urls as wagtaildocs_urls
 
-from base.views import RobotsView, favicon
+from debug_toolbar.toolbar import debug_toolbar_urls
+
+from base.views import IndexNow, RobotsView, favicon
 from search import views as search_views
 
 urlpatterns = [
-    path("favicon.ico", favicon),
-    path("robots.txt", RobotsView.as_view()),
-    path("admin/", include(wagtailadmin_urls)),
+    path("private/", include(wagtailadmin_urls)),
     path("accounts/", include("allauth.urls")),
     path("i18n/", include("django.conf.urls.i18n")),
     path("documents/", include(wagtaildocs_urls)),
-    path("sitemap.xml", sitemap),
     path("django-admin/", admin.site.urls),
+    path("sitemap.xml", sitemap),
+    path("favicon.ico", favicon),
+    path("robots.txt", RobotsView.as_view()),
+    path("06e73a54f66e48ed921bebd971345b7d.txt", IndexNow.as_view(), name="indexnow"),
+    path("styleguide/", TemplateView.as_view(template_name="styleguide.html")),
     path("", include("pages.urls")),
     path("", include("trips.urls")),
 ]
@@ -39,6 +43,10 @@ if settings.DEBUG:
         path("test404/", TemplateView.as_view(template_name="404.html")),
         path("test500/", TemplateView.as_view(template_name="500.html")),
     ]
+
+
+if not settings.TESTING:
+    urlpatterns = [*urlpatterns] + debug_toolbar_urls()
 
 
 urlpatterns += i18n_patterns(

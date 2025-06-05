@@ -42,3 +42,8 @@ class RobotsView(TemplateView):
         request = context["view"].request
         context["wagtail_site"] = Site.find_for_request(request)
         return context
+
+
+class IndexNow(TemplateView):
+    template_name = "06e73a54f66e48ed921bebd971345b7d.txt"
+    content_type = "text/plain"

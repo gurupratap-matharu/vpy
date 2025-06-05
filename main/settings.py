@@ -1,4 +1,5 @@
 import os
+import sys
 from pathlib import Path
 
 from django.contrib import messages
@@ -89,7 +90,13 @@ AUTHENTICATION_BACKENDS = [
 
 AUTH_USER_MODEL = "users.CustomUser"
 
+
+# Debug Toolbar
 INTERNAL_IPS = ["127.0.0.1"]
+TESTING = "test" in sys.argv
+if not TESTING:
+    INSTALLED_APPS = [*INSTALLED_APPS, "debug_toolbar"]
+    MIDDLEWARE = ["debug_toolbar.middleware.DebugToolbarMiddleware", *MIDDLEWARE]
 
 SITE_ID = 1
 
@@ -98,15 +105,13 @@ ROOT_URLCONF = "main.urls"
 # Django allauth
 ACCOUNT_LOGIN_METHODS = {"email"}
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
-ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*"]
 ACCOUNT_EMAIL_VERIFICATION = "optional"
 ACCOUNT_LOGOUT_ON_PASSWORD_CHANGE = True
 ACCOUNT_LOGOUT_REDIRECT = "/"
 ACCOUNT_PRESERVE_USERNAME_CASING = False
 ACCOUNT_SESSION_REMEMBER = True
-ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False
 ACCOUNT_UNIQUE_EMAIL = True
-ACCOUNT_USERNAME_REQUIRED = False
 
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
@@ -220,6 +225,13 @@ DATABASES = {
             ),
             "transaction_mode": "IMMEDIATE",
         },
+    }
+}
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.memcached.PyMemcacheCache",
+        "LOCATION": "127.0.0.1:11211",
     }
 }
 
