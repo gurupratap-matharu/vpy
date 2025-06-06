@@ -23,7 +23,7 @@ urlpatterns = [
     path("sitemap.xml", sitemap),
     path("favicon.ico", favicon),
     path("robots.txt", RobotsView.as_view()),
-    path("06e73a54f66e48ed921bebd971345b7d.txt", IndexNow.as_view(), name="indexnow"),
+    path(f"{settings.INDEXNOW_KEY}.txt", IndexNow.as_view(), name="indexnow"),
     path("styleguide/", TemplateView.as_view(template_name="styleguide.html")),
     path("", include("pages.urls")),
     path("", include("trips.urls")),

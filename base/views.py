@@ -45,5 +45,6 @@ class RobotsView(TemplateView):
 
 
 class IndexNow(TemplateView):
-    template_name = "06e73a54f66e48ed921bebd971345b7d.txt"
+    template_name = "indexnow_key.txt"
     content_type = "text/plain"
+    extra_context = {"key": settings.INDEXNOW_KEY}

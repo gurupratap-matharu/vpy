@@ -358,6 +358,7 @@ WAGTAILDOCS_EXTENSIONS = [
 DEFAULT_PER_PAGE = 8
 ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "changeme")
 
+INDEXNOW_KEY = os.getenv("INDEXNOW_KEY")
 
 LOGGING = {
     "version": 1,
