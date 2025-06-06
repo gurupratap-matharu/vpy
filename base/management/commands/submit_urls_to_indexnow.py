@@ -1,5 +1,6 @@
 import logging
 
+from django.conf import settings
 from django.core.management.base import BaseCommand
 
 import requests
@@ -13,7 +14,8 @@ class Command(BaseCommand):
     Command that submits all the urls of our sitemap to index now via post request.
     """
 
-    SITEMAP_URL = "https://ventanita.com.py/sitemap.xml"
+    BASE_URL = "https://ventanita.com.py"
+    SITEMAP_URL = f"{BASE_URL}/sitemap.xml"
     INDEXNOW_URL = "https://api.indexnow.org/IndexNow"
 
     def handle(self, *args, **kwargs):
@@ -39,10 +41,11 @@ class Command(BaseCommand):
         self.stdout.write("All Done.")
 
     def submit_urls(self, urls):
+
         payload = {
-            "host": "ventanita.com.py",
-            "key": "06e73a54f66e48ed921bebd971345b7d",
-            "keyLocation": "https://ventanita.com.py/06e73a54f66e48ed921bebd971345b7d.txt",
+            "host": self.BASE_URL,
+            "key": settings.INDEXNOW_KEY,
+            "keyLocation": f"{self.BASE_URL}/{settings.INDEXNOW_KEY}.txt",
             "urlList": urls,
         }
 
