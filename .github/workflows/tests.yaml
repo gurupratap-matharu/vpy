@@ -79,6 +79,7 @@ jobs:
         if: always()
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+          slug: gurupratap-matharu/vpy
           files: coverage.xml
           flags: unittests
           name: Ventanita Paraguay coverage
