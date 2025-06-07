@@ -12,7 +12,6 @@ class FeedbackForm(forms.Form):
     placeholder = _(
         "Mandanos sus comentarios y/o reporta un inconveniente. Queremos mejorar la plataforma para vos. Gracias"
     )
-    subject = _("Mensaje")
     email = forms.EmailField(
         required=True,
         min_length=10,
@@ -35,14 +34,13 @@ class FeedbackForm(forms.Form):
     )
 
     def send_mail(self):
-        from_email = self.cleaned_data["email"]
         message = "Email: {email}\n\n{message}".format(**self.cleaned_data)
 
         logger.info("sending feedback...")
         send_mail(
-            subject=self.subject,
+            subject="[VentanitaPY Feedback]",
             message=message,
-            from_email=from_email,
+            from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[settings.DEFAULT_TO_EMAIL],
             fail_silently=False,
         )
@@ -86,9 +84,8 @@ class ContactForm(forms.Form):
     )
 
     def send_mail(self):
-        subject = self.cleaned_data["subject"]
-        from_email = self.cleaned_data["email"]
-        message = "From: {name}\nEmail: {email}\n\n{message}".format(
+        subject = f"[VentanitaPY Contact] {self.cleaned_data["subject"]}"
+        message = "From: {name}\nEmail: {email}\n\nMessage: {message}".format(
             **self.cleaned_data
         )
 
@@ -96,7 +93,7 @@ class ContactForm(forms.Form):
         send_mail(
             subject=subject,
             message=message,
-            from_email=from_email,
+            from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[settings.DEFAULT_TO_EMAIL],
             fail_silently=False,
         )
