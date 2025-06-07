@@ -1,6 +1,8 @@
 from django.conf import settings
 from django.views.decorators.cache import cache_control
 
+DUMMY_CACHE = {"default": {"BACKEND": "django.core.cache.backends.dummy.DummyCache"}}
+
 
 def get_cache_control_kwargs():
     """
