@@ -1,20 +1,17 @@
 import logging
 
-from django.test import override_settings
 from django.utils import timezone
 
 from wagtail.models import Page, Site
 from wagtail.test.utils import WagtailPageTestCase
 from wagtail.test.utils.form_data import nested_form_data, streamfield
 
-from base.cache import DUMMY_CACHE
 from home.models import HomePage
 from locations.models import CityIndexPage, CityPage, StationIndexPage, StationPage
 
 logger = logging.getLogger(__name__)
 
 
-@override_settings(CACHE=DUMMY_CACHE)
 class CityIndexPageTests(WagtailPageTestCase):
     """
     Test suite for the city index page
@@ -87,7 +84,6 @@ class CityIndexPageTests(WagtailPageTestCase):
         self.assertAllowedSubpageTypes(CityIndexPage, {CityPage})
 
 
-@override_settings(CACHE=DUMMY_CACHE)
 class CityPageTests(WagtailPageTestCase):
     """
     Test suite for City Page.
@@ -178,7 +174,6 @@ class CityPageTests(WagtailPageTestCase):
         self.assertCanNotCreateAt(StationPage, CityPage)
 
 
-@override_settings(CACHE=DUMMY_CACHE)
 class StationIndexPageTests(WagtailPageTestCase):
     """
     Test suite for the station index page
@@ -248,7 +243,6 @@ class StationIndexPageTests(WagtailPageTestCase):
         self.assertCanNotCreateAt(StationIndexPage, HomePage)
 
 
-@override_settings(CACHE=DUMMY_CACHE)
 class StationPageTests(WagtailPageTestCase):
     """
     Test suite for Station Page.
