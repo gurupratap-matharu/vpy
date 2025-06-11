@@ -8,7 +8,7 @@ from django.db import models
 from django.db.models import Count
 from django.shortcuts import redirect, render
 from django.utils.functional import cached_property
-from django.utils.html import mark_safe
+from django.utils.html import mark_safe, strip_tags
 
 from wagtail.admin.panels import FieldPanel, InlinePanel, MultiFieldPanel
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
@@ -325,6 +325,15 @@ class BlogPage(BasePage):
                 person__live=True
             ).select_related("person")
         ]
+
+    @cached_property
+    def reading_time(self):
+        """
+        Divide the word count by avg reading speed of 200 words per minute.
+        """
+        text = strip_tags(self.body.raw_data)
+        words = len(text.split(" "))
+        return round(words / 200)
 
     def ld_entity(self):
 

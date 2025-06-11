@@ -1,38 +1,49 @@
 {% extends "layouts/base.html" %}
 
-{% load static wagtailcore_tags wagtailimages_tags %}
+{% load static i18n wagtailcore_tags wagtailimages_tags %}
 
 {% block title %}
   {{ page.title }}
 {% endblock title %}
 
-{% block header %}
-{% endblock header %}
-
 {% block content %}
   <div class="container">
     <div class="row">
-      <div class="col col-lg-8 col-xl-6 mx-auto">
-        <h1 class="display-3 text-center">{{ page.title }}</h1>
+      <div class="col col-lg-6 mx-auto">
+        <h1 class="text-center">{{ page.title }}</h1>
         {% for author in page.authors %}
-          <div class="d-flex justify-content-center align-items-center my-3">
-            {% image author.image fill-50x50-c100 class="avatar rounded-circle" %}
-            <div class="name ps-3 pt-3">
-              <p>{{ author.first_name }} {{ author.last_name }}</p>
+          <div class="author justify-content-center align-items-center py-3 py-md-5">
+            {% image author.image width-200 class="avatar avatar-xl rounded-circle" %}
+            <div class="name ps-2">
+              <p class="h6 mb-0">Por: {{ author.first_name }} {{ author.last_name }}</p>
+              <div class="stats">
+                <small class="text-sm text-secondary">Actualizado: {{ page.date }}</small>
+                <svg class="mx-1" width="8" height="8" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <circle cx="32" cy="32" r="30" fill="#054ada" />
+                </svg>
+                <small class="text-sm text-secondary">{{ page.reading_time }} min de lectura</small>
+              </div>
             </div>
           </div>
         {% endfor %}
-        <p class="text-center my-3">Updated: {{ page.date }}</p>
-        <p class="lead">{{ page.subtitle }}</p>
-        {{ page.intro }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col col-lg-6 mx-auto">
+        {% if page.subtitle %}<p class="lead">{{ page.subtitle }}</p>{% endif %}
+        {% if page.intro %}<p class="lead">{{ page.intro }}</p>{% endif %}
         {{ page.body }}
       </div>
     </div>
   </div>
 {% endblock content %}
 
+{% block footer %}
+
+  {% include "includes/footer-grand.html" %}
+
+{% endblock footer %}
+
 {% block extra_js %}
-  {# djlint:off #}
-  <script type="application/ld+json">{{ page.ld_entity }}</script>
-  {# djlint:on #}
+  {# djlint:off #}<script type="application/ld+json">{{ page.ld_entity }}</script>{# djlint:on #}
 {% endblock extra_js %}
