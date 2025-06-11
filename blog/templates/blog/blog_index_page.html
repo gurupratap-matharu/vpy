@@ -1,6 +1,6 @@
 {% extends "layouts/base.html" %}
 
-{% load static wagtailcore_tags wagtailimages_tags %}
+{% load static i18n wagtailcore_tags wagtailimages_tags %}
 
 {% block title %}
   {{ page.title }}
@@ -9,15 +9,28 @@
 {% block content %}
   <div class="container">
     <div class="row">
-      <div class="col col-lg-8 col-xl-6 mx-auto">
-        <ul>
-          {% for post in posts %}
-            <li>
-              <a href={{ post.url }}>{{ post.title }}</a>
-            </li>
-          {% endfor %}
-        </ul>
-      </div>
+      {% for post in posts %}
+        {% with post=post.specific %}
+          <div class="col-md-4 mt-4">
+            <div class="card h-100">
+              {% image post.image fill-400x300 class="card-img-top" %}
+              <div class="card-body">
+                <h5 class="card-title">
+                  <a href="{% pageurl post %}">{{ post.title }}</a>
+                </h5>
+                <p class="card-text">{{ post.intro|truncatechars:120 }}</p>
+                <a href="{% pageurl post %}" class="card-link icon-link icon-link-hover">{% translate "Leer" %}
+                  <svg class="bi" width="16" height="16" fill="currentColor" aria-hidden="true">
+                    <use xlink:href="{% static 'assets/icons/icons.svg' %}#chevron-right" />
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </div>
+        {% endwith %}
+      {% empty %}
+        <p class="display-6">{% translate "Aún no tenemos posts" %}"</p>
+      {% endfor %}
     </div>
   </div>
 {% endblock content %}
