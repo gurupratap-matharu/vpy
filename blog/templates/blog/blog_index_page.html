@@ -35,6 +35,12 @@
   </div>
 {% endblock content %}
 
+{% block footer %}
+
+  {% include "includes/footer-grand.html" %}
+
+{% endblock footer %}
+
 {% block extra_js %}
   {# djlint:off #}
   <script type="application/ld+json">{{ page.ld_entity }}</script>
