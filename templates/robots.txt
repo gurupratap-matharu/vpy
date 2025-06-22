@@ -1,5 +1,18 @@
 User-Agent: *
+User-agent: AdsBot-Google
 Disallow: /admin/
+Disallow: /captcha/
+Disallow: /cart/
+Disallow: /coupons/
+Disallow: /django-admin/
+Disallow: /orders/
+Disallow: /payments/
+Disallow: /private/
+Disallow: /trips/
+Disallow: /cdn-cgi/
+
+User-agent: GPTBot
+Disallow: /
 
 # Sitemap files
 Sitemap: {{ wagtail_site.root_url }}/sitemap.xml
