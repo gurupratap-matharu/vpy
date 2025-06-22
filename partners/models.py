@@ -2,6 +2,7 @@ import json
 import logging
 
 from django import forms
+from django.conf import settings
 from django.db import models
 from django.utils.html import mark_safe
 
@@ -262,6 +263,14 @@ class PartnerPage(BasePage):
         image = self.logo or self.listing_image or self.social_image
         image_url = image.file.url if image else ""
 
+        contact = dict()
+        if self.contact:
+            contact.update(self.contact.raw_data[0]["value"])
+
+        email = contact.get("email", settings.SUPPORT_EMAIL)
+        telephone = contact.get("phone", settings.SUPPORT_PHONE)
+        address = contact.get("address", settings.SUPPORT_ADDRESS)
+
         if self.ratings:
             obj = self.ratings[0].value
             rating_value = str(obj.get_score())
@@ -277,20 +286,20 @@ class PartnerPage(BasePage):
             "logo": f"https://ventanita.com.py{image_url}",
             "image": f"https://ventanita.com.py{image_url}",
             "description": self.search_description,
-            "email": "support@ventanita.com.py",
-            "telephone": "+595(0)992090983",
+            "email": email,
+            "telephone": telephone,
             "address": {
                 "@type": "PostalAddress",
-                "streetAddress": "Uspallata 471",
-                "addressLocality": "",
+                "streetAddress": address,
+                "addressLocality": "Asunción",
                 "addressCountry": "PY",
                 "addressRegion": "Paraguay",
-                "postalCode": "1143",
+                "postalCode": "001424",
             },
             "contactPoint": {
                 "@type": "ContactPoint",
-                "telephone": "+54-911-5025-4191",
-                "email": "support@ventanita.com.py",
+                "telephone": telephone,
+                "email": email,
             },
             "sameAs": [],
             "aggregateRating": {

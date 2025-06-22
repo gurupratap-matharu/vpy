@@ -173,6 +173,11 @@ EMAIL_PORT = 1025
 DEFAULT_FROM_EMAIL = "'Ventanita' <noreply@ventanita.com.py>"
 DEFAULT_TO_EMAIL = "gurupratap.matharu@gmail.com"
 SERVER_EMAIL = "wagtail@ventanita.com.py"
+
+SUPPORT_EMAIL = "'Soporte' <support@ventanita.com.py>"
+SUPPORT_PHONE = "+595 (0) 992090983"
+SUPPORT_ADDRESS = "MCF3+JH4, Av. Dr. Fernando de la Mora, Asunción 001424, Paraguay"
+
 RECIPIENT_LIST = [
     "gurupratap.matharu@gmail.com",
     "veerplaying@gmail.com",
