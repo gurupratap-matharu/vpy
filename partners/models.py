@@ -13,7 +13,15 @@ from modelcluster.contrib.taggit import ClusterTaggableManager
 from modelcluster.models import ParentalKey, ParentalManyToManyField
 from taggit.models import TaggedItemBase
 
-from base.blocks import BaseStreamBlock, ContactBlock, FAQBlock, NavTabLinksBlock
+from base.blocks import (
+    BaseStreamBlock,
+    ContactBlock,
+    FAQBlock,
+    ImageLinkBlock,
+    NavTabBlock,
+    NavTabLinksBlock,
+    RatingsBlock,
+)
 from base.models import BasePage
 
 logger = logging.getLogger(__name__)
@@ -133,22 +141,35 @@ class PartnerPage(BasePage):
         verbose_name="Contact Information",
         blank=True,
         max_num=1,
-        use_json_field=True,
+        collapsed=True,
+    )
+
+    destinations = StreamField(
+        [("destinations", ImageLinkBlock())],
+        verbose_name="Destinations where this operator has presence",
+        blank=True,
+        max_num=1,
+        collapsed=True,
+    )
+
+    info = StreamField(
+        [("Info", NavTabBlock())],
+        verbose_name="Info Section",
+        blank=True,
+        max_num=1,
+        collapsed=True,
     )
 
     body = StreamField(
-        BaseStreamBlock(), verbose_name="Page body", blank=True, use_json_field=True
+        BaseStreamBlock(), verbose_name="Page body", blank=True, collapsed=True
     )
 
-    tags = ClusterTaggableManager(through="partners.PartnerPageTag", blank=True)
-
-    amenities = ParentalManyToManyField("partners.Amenity", blank=True)
     faq = StreamField(
         [("faq", FAQBlock())],
         verbose_name="FAQ Section",
         blank=True,
         max_num=1,
-        use_json_field=True,
+        collapsed=True,
     )
 
     links = StreamField(
@@ -156,8 +177,20 @@ class PartnerPage(BasePage):
         verbose_name="Links Section",
         blank=True,
         max_num=1,
-        use_json_field=True,
+        collapsed=True,
     )
+
+    ratings = StreamField(
+        [("Ratings", RatingsBlock())],
+        verbose_name="Ratings",
+        blank=True,
+        max_num=1,
+        collapsed=True,
+    )
+
+    tags = ClusterTaggableManager(through="partners.PartnerPageTag", blank=True)
+
+    amenities = ParentalManyToManyField("partners.Amenity", blank=True)
 
     search_fields = BasePage.search_fields + [
         index.SearchField("body"),
@@ -168,9 +201,12 @@ class PartnerPage(BasePage):
         FieldPanel("intro"),
         FieldPanel("hero_image"),
         FieldPanel("contact"),
+        FieldPanel("destinations"),
+        FieldPanel("info"),
         FieldPanel("body"),
         FieldPanel("faq"),
         FieldPanel("links"),
+        FieldPanel("ratings"),
         MultiFieldPanel(
             [
                 FieldPanel("tags"),
@@ -179,8 +215,8 @@ class PartnerPage(BasePage):
             heading="Partner Information",
         ),
     ]
+
     parent_page_types = ["partners.PartnerIndexPage"]
-    subpage_types = []
 
     class Meta:
         verbose_name = "partnerpage"
@@ -217,6 +253,57 @@ class PartnerPage(BasePage):
         )
         return mark_safe(page_schema)
 
+    def _get_organisation_schema(self):
+        """
+        This method is overwritten since operator landing pages should have details about the
+        bus operator in the organisation schema markup with aggregated Ratings.
+        """
+
+        image = self.logo or self.listing_image or self.social_image
+        image_url = image.file.url if image else ""
+
+        if self.ratings:
+            obj = self.ratings[0].value
+            rating_value = str(obj.get_score())
+            rating_count = str(obj.get_total_ratings())
+        else:
+            rating_value = rating_count = 0
+
+        org_schema = {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": self.title,
+            "url": self.full_url,
+            "logo": f"https://ventanita.com.py{image_url}",
+            "image": f"https://ventanita.com.py{image_url}",
+            "description": self.search_description,
+            "email": "support@ventanita.com.py",
+            "telephone": "+595(0)992090983",
+            "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "Uspallata 471",
+                "addressLocality": "",
+                "addressCountry": "PY",
+                "addressRegion": "Paraguay",
+                "postalCode": "1143",
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+54-911-5025-4191",
+                "email": "support@ventanita.com.py",
+            },
+            "sameAs": [],
+            "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": rating_value,
+                "ratingCount": rating_count,
+                "bestRating": "5",
+                "worstRating": "1",
+            },
+        }
+
+        return org_schema
+
     def _get_breadcrumb_schema(self):
         breadcrumb_schema = {
             "@context": "https://schema.org",
@@ -231,7 +318,7 @@ class PartnerPage(BasePage):
                 {
                     "@type": "ListItem",
                     "position": 2,
-                    "name": "Empresas de Micro",
+                    "name": "Empresas de Omnibus",
                     "item": self.get_parent().full_url,
                 },
                 {
