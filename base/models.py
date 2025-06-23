@@ -314,7 +314,7 @@ class StandardPage(BasePage):
     )
 
     body = StreamField(
-        BaseStreamBlock(), verbose_name="Page body", blank=True, use_json_field=True
+        BaseStreamBlock(), verbose_name="Page body", blank=True, collapsed=True
     )
 
     content_panels = BasePage.content_panels + [
@@ -354,7 +354,7 @@ class FormPage(AbstractEmailForm):
         on_delete=models.SET_NULL,
         related_name="+",
     )
-    body = StreamField(BaseStreamBlock(), use_json_field=True, blank=True)
+    body = StreamField(BaseStreamBlock(), collapsed=True, blank=True)
     thank_you_text = RichTextField(blank=True)
     thank_you_page = models.ForeignKey(
         "wagtailcore.Page",

@@ -26,7 +26,7 @@ class HelpIndexPage(BasePage):
     )
 
     body = StreamField(
-        BaseStreamBlock(), verbose_name="Page Body", blank=True, use_json_field=True
+        BaseStreamBlock(), verbose_name="Page Body", blank=True, collapsed=True
     )
 
     content_panels = BasePage.content_panels + [
@@ -53,7 +53,7 @@ class HelpCategoryPage(BasePage):
     subtitle = models.CharField(max_length=255, blank=True)
 
     body = StreamField(
-        BaseStreamBlock(), verbose_name="Page Body", blank=True, use_json_field=True
+        BaseStreamBlock(), verbose_name="Page Body", blank=True, collapsed=True
     )
 
     content_panels = BasePage.content_panels + [
@@ -82,7 +82,7 @@ class HelpArticlePage(BasePage):
     subtitle = models.CharField(max_length=255, blank=True)
 
     body = StreamField(
-        BaseStreamBlock(), verbose_name="Page Body", blank=True, use_json_field=True
+        BaseStreamBlock(), verbose_name="Page Body", blank=True, collapsed=True
     )
     date = models.DateField("Post date", blank=True, null=True)
 
