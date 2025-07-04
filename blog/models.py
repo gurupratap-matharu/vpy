@@ -147,6 +147,7 @@ class BlogIndexPage(RoutablePageMixin, BasePage):
         posts = posts.filter(tags=tag) if tag else posts
         return posts
 
+    @cached_property
     def ld_entity(self):
 
         page_schema = json.dumps(
@@ -335,6 +336,7 @@ class BlogPage(BasePage):
         words = len(text.split(" "))
         return round(words / 200)
 
+    @cached_property
     def ld_entity(self):
 
         page_schema = json.dumps(
