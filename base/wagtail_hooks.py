@@ -9,6 +9,7 @@ from wagtail.snippets.models import register_snippet
 from wagtail.snippets.views.snippets import SnippetViewSet, SnippetViewSetGroup
 
 from base.models import Person
+from blog.models import BlogCategory
 
 
 class PersonViewSet(SnippetViewSet):
@@ -21,11 +22,17 @@ class PersonViewSet(SnippetViewSet):
     list_display = ("first_name", "last_name", "job_title", "thumb_image")
 
 
+class BlogCategoryViewSet(SnippetViewSet):
+    model = BlogCategory
+    icon = "tag"
+    search_fields = ("name",)
+
+
 class MiscSnippetViewSetGroup(SnippetViewSetGroup):
     menu_label = "Misc"
     menu_icon = "list-ul"
     menu_order = 300
-    items = (PersonViewSet,)
+    items = (PersonViewSet, BlogCategoryViewSet)
 
 
 register_snippet(MiscSnippetViewSetGroup)
