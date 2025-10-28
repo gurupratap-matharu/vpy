@@ -409,7 +409,8 @@ LOGGING = {
             "propagate": False,
         },
         "django.security": {
-            "handlers": ["file", "mail_admins"],
+            # removed mail_admins due to bot noise
+            "handlers": ["file"],
             "level": "WARNING",
             "propagate": False,
         },
