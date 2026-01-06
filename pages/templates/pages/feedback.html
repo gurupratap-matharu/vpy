@@ -1,6 +1,6 @@
 {% extends "layouts/base.html" %}
 
-{% load i18n %}
+{% load i18n static %}
 
 {% block title %}
   {% translate "Comentarios" %}
@@ -9,9 +9,9 @@
 {% block content %}
   <div class="row">
     <div class="col col-sm-8 col-md-6 col-lg-4 mx-auto">
-      <div class="card card-plain">
+      <div class="card">
         <div class="card-header pb-0">
-          <h1 class="h5 text-center">{% translate "Comentarios" %}</h1>
+          <h1 class="h5">{% translate "Comentarios" %}</h1>
         </div>
         <div class="card-body">
           <form method="post">
@@ -30,7 +30,12 @@
             {% endfor %}
             <div class="d-flex justify-content-between">
               <a href="/" class="btn btn-link text-dark">{% translate "Cancelar" %}</a>
-              <button type="submit" class="btn bg-gradient-primary">{% translate "Enviar" %}</button>
+              <button type="submit" class="btn bg-gradient-primary icon-link icon-link-hover">
+                {% translate "Enviar" %}
+                <svg class="bi" width="16" height="16" fill="currentColor" aria-hidden="true">
+                  <use xlink:href="{% static 'assets/icons/icons.svg' %}#chevron-right" />
+                </svg>
+              </button>
             </div>
           </form>
         </div>
@@ -38,3 +43,7 @@
     </div>
   </div>
 {% endblock content %}
+
+{% block footer %}
+  {% include "includes/footer-grand.html" %}
+{% endblock footer %}
