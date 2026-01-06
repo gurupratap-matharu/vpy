@@ -8,6 +8,7 @@ from .views import (
     SeatsView,
 )
 
+
 app_name = "trips"
 
 urlpatterns = [

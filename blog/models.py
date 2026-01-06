@@ -9,19 +9,18 @@ from django.db.models import Count
 from django.shortcuts import redirect, render
 from django.utils.functional import cached_property
 from django.utils.html import mark_safe, strip_tags
-
+from modelcluster.contrib.taggit import ClusterTaggableManager
+from modelcluster.fields import ParentalKey, ParentalManyToManyField
+from taggit.models import Tag, TaggedItemBase
 from wagtail.admin.panels import FieldPanel, InlinePanel, MultiFieldPanel
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.fields import StreamField
 from wagtail.models import Orderable
 from wagtail.search import index
 
-from modelcluster.contrib.taggit import ClusterTaggableManager
-from modelcluster.fields import ParentalKey, ParentalManyToManyField
-from taggit.models import Tag, TaggedItemBase
-
 from base.blocks import BaseStreamBlock
 from base.models import BasePage
+
 
 logger = logging.getLogger(__name__)
 
@@ -35,13 +34,9 @@ class BlogPersonRelationship(Orderable, models.Model):
     the ParentalKey and ForeignKey
     """
 
-    page = ParentalKey(
-        "BlogPage", related_name="blog_person_relationship", on_delete=models.CASCADE
-    )
+    page = ParentalKey("BlogPage", related_name="blog_person_relationship", on_delete=models.CASCADE)
 
-    person = models.ForeignKey(
-        "base.Person", related_name="person_blog_relationship", on_delete=models.CASCADE
-    )
+    person = models.ForeignKey("base.Person", related_name="person_blog_relationship", on_delete=models.CASCADE)
 
     panels = [FieldPanel("person")]
 
@@ -149,7 +144,6 @@ class BlogIndexPage(RoutablePageMixin, BasePage):
 
     @cached_property
     def ld_entity(self):
-
         page_schema = json.dumps(
             {
                 "@context": "http://schema.org",
@@ -194,9 +188,7 @@ class BlogPageTag(TaggedItemBase):
     https://docs.wagtail.org/en/stable/reference/pages/model_recipes.html#tagging
     """
 
-    content_object = ParentalKey(
-        "BlogPage", related_name="tagged_items", on_delete=models.CASCADE
-    )
+    content_object = ParentalKey("BlogPage", related_name="tagged_items", on_delete=models.CASCADE)
 
 
 class BlogPage(BasePage):
@@ -211,9 +203,7 @@ class BlogPage(BasePage):
     page_description = "Use this page to write a single blog post"
 
     subtitle = models.CharField(max_length=255, blank=True)
-    intro = models.CharField(
-        help_text="Text to describe the page", max_length=500, blank=True
-    )
+    intro = models.CharField(help_text="Text to describe the page", max_length=500, blank=True)
     image = models.ForeignKey(
         "wagtailimages.Image",
         null=True,
@@ -222,9 +212,7 @@ class BlogPage(BasePage):
         related_name="+",
         help_text="Landscape mode only; horizontal width between 1000px to 3000px",
     )
-    body = StreamField(
-        BaseStreamBlock(), verbose_name="Page body", blank=True, use_json_field=True
-    )
+    body = StreamField(BaseStreamBlock(), verbose_name="Page body", blank=True, use_json_field=True)
 
     tags = ClusterTaggableManager(through=BlogPageTag, blank=True)
     date = models.DateField("Post date", blank=True, null=True)
@@ -302,12 +290,8 @@ class BlogPage(BasePage):
         """
 
         post_tags_ids = self.tags.values_list("id", flat=True)
-        similar_posts = BlogPage.objects.filter(tags__in=post_tags_ids).exclude(
-            id=self.id
-        )
-        similar_posts = similar_posts.annotate(same_tags=Count("tags")).order_by(
-            "-same_tags"
-        )[:3]
+        similar_posts = BlogPage.objects.filter(tags__in=post_tags_ids).exclude(id=self.id)
+        similar_posts = similar_posts.annotate(same_tags=Count("tags")).order_by("-same_tags")[:3]
         return similar_posts
 
     def authors(self):
@@ -320,12 +304,7 @@ class BlogPage(BasePage):
         If we tried to access the blog_person_relationship directly we'd print `blog.BlogPersonRelationship.None`
         """
         # Only return authors that are not in draft
-        return [
-            n.person
-            for n in self.blog_person_relationship.filter(
-                person__live=True
-            ).select_related("person")
-        ]
+        return [n.person for n in self.blog_person_relationship.filter(person__live=True).select_related("person")]
 
     @cached_property
     def reading_time(self):
@@ -338,7 +317,6 @@ class BlogPage(BasePage):
 
     @cached_property
     def ld_entity(self):
-
         page_schema = json.dumps(
             {
                 "@context": "http://schema.org",
@@ -383,12 +361,8 @@ class BlogPage(BasePage):
 
 
 class BlogPageGalleryImage(Orderable):
-    page = ParentalKey(
-        BlogPage, on_delete=models.CASCADE, related_name="gallery_images"
-    )
-    image = models.ForeignKey(
-        "wagtailimages.Image", on_delete=models.CASCADE, related_name="+"
-    )
+    page = ParentalKey(BlogPage, on_delete=models.CASCADE, related_name="gallery_images")
+    image = models.ForeignKey("wagtailimages.Image", on_delete=models.CASCADE, related_name="+")
     caption = models.CharField(blank=True, max_length=250)
     panels = [
         FieldPanel("image"),

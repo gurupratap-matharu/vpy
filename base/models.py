@@ -7,7 +7,8 @@ from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 from django.utils.html import strip_tags
 from django.utils.translation import gettext_lazy as _
-
+from modelcluster.fields import ParentalKey
+from modelcluster.models import ClusterableModel
 from wagtail.admin.panels import (
     FieldPanel,
     FieldRowPanel,
@@ -32,13 +33,11 @@ from wagtail.models import (
 )
 from wagtail.models.i18n import Locale
 
-from modelcluster.fields import ParentalKey
-from modelcluster.models import ClusterableModel
-
 from base.cache import get_default_cache_control_decorator
 from base.schemas import organisation_schema
 
 from .blocks import BaseStreamBlock
+
 
 logger = logging.getLogger(__name__)
 
@@ -271,7 +270,6 @@ class BasePage(SocialFields, ListingFields, Page):
         return faq_schema
 
     def _get_faq_entities(self):
-
         entities = []
         for block in self.faq:
             for item in block.value["item"]:
@@ -313,9 +311,7 @@ class StandardPage(BasePage):
         help_text="Landscape mode only; horizontal width between 1000px to 3000px.",
     )
 
-    body = StreamField(
-        BaseStreamBlock(), verbose_name="Page body", blank=True, collapsed=True
-    )
+    body = StreamField(BaseStreamBlock(), verbose_name="Page body", blank=True, collapsed=True)
 
     content_panels = BasePage.content_panels + [
         FieldPanel("introduction"),
@@ -337,9 +333,7 @@ class FormField(AbstractFormField):
     for our form.
     """
 
-    field_type = models.CharField(
-        verbose_name="field type", max_length=16, choices=list(FORM_FIELD_CHOICES)
-    )
+    field_type = models.CharField(verbose_name="field type", max_length=16, choices=list(FORM_FIELD_CHOICES))
 
     page = ParentalKey("FormPage", related_name="form_fields", on_delete=models.CASCADE)
 
@@ -415,9 +409,7 @@ class FormPage(AbstractEmailForm):
         """
 
         cleaned_data = form.cleaned_data
-        submission = self.get_submission_class().objects.create(
-            form_data=cleaned_data, page=self
-        )
+        submission = self.get_submission_class().objects.create(form_data=cleaned_data, page=self)
 
         logger.info("submission:%s" % submission)
 

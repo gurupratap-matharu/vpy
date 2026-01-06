@@ -5,6 +5,7 @@
 # import multiprocessing
 import gunicorn
 
+
 # Replace gunicorn server http header to avoid leaking info to attackers
 gunicorn.SERVER = ""
 

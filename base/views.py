@@ -3,7 +3,6 @@ from django.http import FileResponse, HttpRequest
 from django.views.decorators.cache import cache_control
 from django.views.decorators.http import require_GET
 from django.views.generic import TemplateView
-
 from wagtail.models.sites import Site
 
 
@@ -23,9 +22,7 @@ def favicon(request: HttpRequest) -> FileResponse:
     This endpoint acts as a fall back to supply the necessary icon at /favicon.ico
     """
 
-    file = (
-        settings.BASE_DIR / "staticfiles" / "assets" / "icons" / "favicon.ico"
-    ).open("rb")
+    file = (settings.BASE_DIR / "staticfiles" / "assets" / "icons" / "favicon.ico").open("rb")
     return FileResponse(file, headers={"Content-Type": "image/x-icon"})
 
 

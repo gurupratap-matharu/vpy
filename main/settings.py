@@ -4,8 +4,8 @@ from pathlib import Path
 
 from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
-
 from dotenv import load_dotenv
+
 
 load_dotenv()
 

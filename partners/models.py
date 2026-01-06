@@ -5,14 +5,12 @@ from django import forms
 from django.conf import settings
 from django.db import models
 from django.utils.html import mark_safe
-
-from wagtail.admin.panels import FieldPanel, MultiFieldPanel
-from wagtail.fields import StreamField
-from wagtail.search import index
-
 from modelcluster.contrib.taggit import ClusterTaggableManager
 from modelcluster.models import ParentalKey, ParentalManyToManyField
 from taggit.models import TaggedItemBase
+from wagtail.admin.panels import FieldPanel, MultiFieldPanel
+from wagtail.fields import StreamField
+from wagtail.search import index
 
 from base.blocks import (
     BaseStreamBlock,
@@ -24,6 +22,7 @@ from base.blocks import (
     RatingsBlock,
 )
 from base.models import BasePage
+
 
 logger = logging.getLogger(__name__)
 
@@ -37,9 +36,7 @@ class PartnerPageTag(TaggedItemBase):
 
     """
 
-    content_object = ParentalKey(
-        "PartnerPage", related_name="tagged_items", on_delete=models.CASCADE
-    )
+    content_object = ParentalKey("PartnerPage", related_name="tagged_items", on_delete=models.CASCADE)
 
 
 class PartnerIndexPage(BasePage):
@@ -71,7 +68,6 @@ class PartnerIndexPage(BasePage):
         return self.get_children().specific().live()
 
     def ld_entity(self):
-
         page_schema = json.dumps(
             {
                 "@context": "http://schema.org",
@@ -125,9 +121,7 @@ class PartnerPage(BasePage):
         related_name="+",
     )
 
-    intro = models.TextField(
-        help_text="A brief introduction about the company", blank=True
-    )
+    intro = models.TextField(help_text="A brief introduction about the company", blank=True)
 
     hero_image = models.ForeignKey(
         "wagtailimages.Image",
@@ -161,9 +155,7 @@ class PartnerPage(BasePage):
         collapsed=True,
     )
 
-    body = StreamField(
-        BaseStreamBlock(), verbose_name="Page body", blank=True, collapsed=True
-    )
+    body = StreamField(BaseStreamBlock(), verbose_name="Page body", blank=True, collapsed=True)
 
     faq = StreamField(
         [("faq", FAQBlock())],
@@ -238,7 +230,6 @@ class PartnerPage(BasePage):
         return tags
 
     def ld_entity(self):
-
         page_schema = json.dumps(
             {
                 "@context": "http://schema.org",
@@ -357,9 +348,7 @@ class Amenity(models.Model):
         related_name="+",
     )
 
-    icon_name = models.CharField(
-        max_length=20, help_text="Name of the bootstrap icon", blank=True, null=True
-    )
+    icon_name = models.CharField(max_length=20, help_text="Name of the bootstrap icon", blank=True, null=True)
 
     panels = [
         FieldPanel("name"),

@@ -4,7 +4,6 @@ import logging
 from django.core.validators import RegexValidator
 from django.db import models
 from django.utils.html import mark_safe
-
 from wagtail.admin.panels import FieldPanel
 from wagtail.contrib.routable_page.models import RoutablePageMixin
 from wagtail.fields import StreamField
@@ -12,6 +11,7 @@ from wagtail.search import index
 
 from base.blocks import BaseStreamBlock, FAQBlock, LinkBlock, NavTabLinksBlock
 from base.models import BasePage
+
 
 logger = logging.getLogger(__name__)
 
@@ -54,7 +54,6 @@ class CityIndexPage(BasePage):
         return context
 
     def ld_entity(self):
-
         page_schema = json.dumps(
             {
                 "@context": "http://schema.org",
@@ -124,9 +123,7 @@ class CityPage(BasePage):
         ],
     )
 
-    body = StreamField(
-        BaseStreamBlock(), verbose_name="Page body", blank=True, collapsed=True
-    )
+    body = StreamField(BaseStreamBlock(), verbose_name="Page body", blank=True, collapsed=True)
 
     faq = StreamField(
         [("faq", FAQBlock())],
@@ -189,7 +186,6 @@ class CityPage(BasePage):
         return context
 
     def ld_entity(self):
-
         page_schema = json.dumps(
             {
                 "@context": "http://schema.org",
@@ -262,7 +258,6 @@ class StationIndexPage(BasePage):
         return self.get_children().specific().live()
 
     def ld_entity(self):
-
         page_schema = json.dumps(
             {
                 "@context": "http://schema.org",
@@ -319,9 +314,7 @@ class StationPage(RoutablePageMixin, BasePage):
         help_text="Landscape mode only; horizontal width between 1000px and 3000px.",
     )
 
-    body = StreamField(
-        BaseStreamBlock(), verbose_name="Page body", blank=True, collapsed=True
-    )
+    body = StreamField(BaseStreamBlock(), verbose_name="Page body", blank=True, collapsed=True)
     address = models.TextField()
     lat_long = models.CharField(
         max_length=36,
@@ -385,7 +378,6 @@ class StationPage(RoutablePageMixin, BasePage):
         return self.title
 
     def get_context(self, request, *args, **kwargs):
-
         context = super().get_context(request, *args, **kwargs)
 
         lat, long = self.lat_long.split(",")
@@ -394,7 +386,6 @@ class StationPage(RoutablePageMixin, BasePage):
         return context
 
     def ld_entity(self):
-
         page_schema = json.dumps(
             {
                 "@context": "http://schema.org",

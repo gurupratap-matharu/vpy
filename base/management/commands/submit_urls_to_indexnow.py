@@ -1,10 +1,10 @@
 import logging
 
+import requests
+from bs4 import BeautifulSoup
 from django.conf import settings
 from django.core.management.base import BaseCommand
 
-import requests
-from bs4 import BeautifulSoup
 
 logger = logging.getLogger(__name__)
 
@@ -41,7 +41,6 @@ class Command(BaseCommand):
         self.stdout.write("All Done.")
 
     def submit_urls(self, urls):
-
         payload = {
             "host": self.BASE_URL,
             "key": settings.INDEXNOW_KEY,
@@ -56,9 +55,7 @@ class Command(BaseCommand):
         }
 
         try:
-            response = requests.post(
-                url=self.INDEXNOW_URL, headers=headers, json=payload, timeout=10
-            )
+            response = requests.post(url=self.INDEXNOW_URL, headers=headers, json=payload, timeout=10)
             response.raise_for_status()
 
         except requests.exceptions.RequestException as e:

@@ -8,6 +8,7 @@ from .views import (
     StyleGuideView,
 )
 
+
 app_name = "pages"
 
 urlpatterns = [

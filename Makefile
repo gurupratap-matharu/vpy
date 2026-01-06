@@ -59,15 +59,13 @@ runserver:
 build: install makemigrations migrate runserver
 
 format:
-	poetry run black .
-	poetry run isort . --profile black
-	poetry run ruff check --fix .
-	djlint --reformat .
+	poetry run ruff check --select I --fix
+	poetry run ruff format .
+	poetry run djlint --reformat .
 
 lint:
-	poetry run black --check --diff .
-	poetry run isort . --check-only --profile black
-	poetry run ruff check --fix .
+	ruff check .
+	djlint --lint .
 	djlint --check .
 
 test: check migrations-check

@@ -1,18 +1,17 @@
+from debug_toolbar.toolbar import debug_toolbar_urls
 from django.conf import settings
 from django.conf.urls.i18n import i18n_patterns
 from django.contrib import admin
 from django.urls import include, path
 from django.views.generic import TemplateView
-
 from wagtail import urls as wagtail_urls
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail.contrib.sitemaps.views import sitemap
 from wagtail.documents import urls as wagtaildocs_urls
 
-from debug_toolbar.toolbar import debug_toolbar_urls
-
 from base.views import IndexNow, RobotsView, favicon
 from search import views as search_views
+
 
 urlpatterns = [
     path("private/", include(wagtailadmin_urls)),

@@ -19,7 +19,6 @@
     <meta name="author" content="Ventanita Team" />
     <meta name="color-scheme" content="light dark" />
     <meta property="theme-color" content="#ffffff" />
-
     {% block og_tags %}
       <meta property="og:title" content="{% firstof page.seo_title page.title "Pasajes de Micro" %}" />
       <meta property="og:url" content="{{ page.get_full_url }}" />
@@ -69,7 +68,6 @@
     {% endif %}
     {# Global stylesheets #}
     <link rel="stylesheet" type="text/css" href="{% static 'assets/css/styles.min.css' %}" />
-
     {% block extra_css %}
     {% endblock extra_css %}
 

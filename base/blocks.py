@@ -188,9 +188,7 @@ class LinkBlock(StructBlock):
 
 class NavTabItemBlock(StructBlock):
     title = CharBlock(required=True)
-    content = RichTextBlock(
-        required=True, icon="pilcrow", template="blocks/paragraph_block.html"
-    )
+    content = RichTextBlock(required=True, icon="pilcrow", template="blocks/paragraph_block.html")
 
     class Meta:
         label = "Section"
@@ -275,6 +273,4 @@ class BaseStreamBlock(StreamBlock):
     image_block = ImageBlock()
     link = LinkStreamBlock()
     nav_tab = NavTabBlock()
-    paragraph_block = RichTextBlock(
-        icon="pilcrow", template="blocks/paragraph_block.html"
-    )
+    paragraph_block = RichTextBlock(icon="pilcrow", template="blocks/paragraph_block.html")

@@ -1,13 +1,13 @@
 import logging
 
 from django.utils import timezone
-
 from wagtail.models import Page, Site
 from wagtail.test.utils import WagtailPageTestCase
 from wagtail.test.utils.form_data import nested_form_data, streamfield
 
 from home.models import HomePage
 from locations.models import CityIndexPage, CityPage, StationIndexPage, StationPage
+
 
 logger = logging.getLogger(__name__)
 

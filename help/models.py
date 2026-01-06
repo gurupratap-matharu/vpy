@@ -2,13 +2,13 @@ import logging
 
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-
 from wagtail.admin.panels import FieldPanel
 from wagtail.fields import StreamField
 from wagtail.search import index
 
 from base.blocks import BaseStreamBlock
 from base.models import BasePage, FormPage
+
 
 logger = logging.getLogger(__name__)
 
@@ -18,16 +18,10 @@ class HelpIndexPage(BasePage):
     The main help center of our project.
     """
 
-    page_description = (
-        "Use this page to create the main help center page which shows sub categories"
-    )
-    subtitle = models.CharField(
-        max_length=255, blank=True, default=_("En que te podemos ayudar?")
-    )
+    page_description = "Use this page to create the main help center page which shows sub categories"
+    subtitle = models.CharField(max_length=255, blank=True, default=_("En que te podemos ayudar?"))
 
-    body = StreamField(
-        BaseStreamBlock(), verbose_name="Page Body", blank=True, collapsed=True
-    )
+    body = StreamField(BaseStreamBlock(), verbose_name="Page Body", blank=True, collapsed=True)
 
     content_panels = BasePage.content_panels + [
         FieldPanel("subtitle"),
@@ -46,15 +40,11 @@ class HelpCategoryPage(BasePage):
     A collection of help article pages under the same topic.
     """
 
-    page_description = (
-        "Use this page to show a list of help articles under the same topic"
-    )
+    page_description = "Use this page to show a list of help articles under the same topic"
 
     subtitle = models.CharField(max_length=255, blank=True)
 
-    body = StreamField(
-        BaseStreamBlock(), verbose_name="Page Body", blank=True, collapsed=True
-    )
+    body = StreamField(BaseStreamBlock(), verbose_name="Page Body", blank=True, collapsed=True)
 
     content_panels = BasePage.content_panels + [
         FieldPanel("subtitle"),
@@ -81,9 +71,7 @@ class HelpArticlePage(BasePage):
     page_description = "Use this page to write a single help article"
     subtitle = models.CharField(max_length=255, blank=True)
 
-    body = StreamField(
-        BaseStreamBlock(), verbose_name="Page Body", blank=True, collapsed=True
-    )
+    body = StreamField(BaseStreamBlock(), verbose_name="Page Body", blank=True, collapsed=True)
     date = models.DateField("Post date", blank=True, null=True)
 
     search_fields = BasePage.search_fields + [
@@ -118,9 +106,7 @@ class HelpArticlePage(BasePage):
         context = super().get_context(request, *args, **kwargs)
 
         try:
-            feedback_page = FormPage.objects.get(
-                slug="article-feedback-form", locale__language_code="es"
-            )
+            feedback_page = FormPage.objects.get(slug="article-feedback-form", locale__language_code="es")
             form = feedback_page.get_form(initial={"url": self.full_url})
 
         except FormPage.DoesNotExist as e:

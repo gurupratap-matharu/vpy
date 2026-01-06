@@ -9,9 +9,7 @@ def get_cache_control_kwargs():
     """
 
     s_max_age = getattr(settings, "CACHE_CONTROL_S_MAX_AGE", None)
-    stale_while_revalidate = getattr(
-        settings, "CACHE_CONTROL_STALE_WHILE_REVALIDATE", None
-    )
+    stale_while_revalidate = getattr(settings, "CACHE_CONTROL_STALE_WHILE_REVALIDATE", None)
 
     cache_control_kwargs = {
         "s_max_age": s_max_age,
