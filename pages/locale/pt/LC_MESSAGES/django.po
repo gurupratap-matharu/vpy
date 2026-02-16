@@ -1,0 +1,102 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-03-29 16:08-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+#: pages/forms.py:13
+msgid ""
+"Mandanos sus comentarios y/o reporta un inconveniente. Queremos mejorar la "
+"plataforma para vos. Gracias"
+msgstr ""
+
+#: pages/forms.py:15 pages/forms.py:82
+msgid "Mensaje"
+msgstr ""
+
+#: pages/forms.py:20 pages/forms.py:64
+msgid "Email"
+msgstr ""
+
+#: pages/forms.py:57
+msgid "Nombre"
+msgstr ""
+
+#: pages/forms.py:71
+msgid "Asunto"
+msgstr ""
+
+#: pages/templates/pages/company_landing.html:14
+msgid "Tu partner"
+msgstr ""
+
+#: pages/templates/pages/company_landing.html:15
+msgid "tecnológico"
+msgstr ""
+
+#: pages/templates/pages/company_landing.html:17
+msgid ""
+"Escala tu negocio gestionando tus rutas, horarios y precios en una "
+"plataforma sencilla, aceptando pagos en línea, integrando reservas en tu "
+"propio sitio y analizando datos para construir un negocio más rentable."
+msgstr ""
+
+#: pages/templates/pages/company_landing.html:20
+msgid "Contacto Commercial "
+msgstr ""
+
+#: pages/templates/pages/company_landing.html:403
+msgid "Solicitar"
+msgstr ""
+
+#: pages/templates/pages/company_landing.html:404
+msgid "Free Demo"
+msgstr ""
+
+#: pages/templates/pages/company_landing.html:406
+msgid ""
+"¿Quieres probar y experimentar los beneficios de Ventanita para ver si se "
+"adapta a tus necesidades? ¡Cuenta con un flujo de principio a fin de cómo "
+"puedes comercializar tus rutas, horarios y precios, todo en tiempo real!"
+msgstr ""
+
+#: pages/templates/pages/company_landing.html:408
+msgid "Reservar mi demo"
+msgstr ""
+
+#: pages/templates/pages/contact.html:14
+msgid "Contacto"
+msgstr ""
+
+#: pages/templates/pages/contact.html:32 pages/templates/pages/feedback.html:32
+msgid "Cancelar"
+msgstr ""
+
+#: pages/templates/pages/contact.html:33 pages/templates/pages/feedback.html:33
+msgid "Enviar"
+msgstr ""
+
+#: pages/templates/pages/feedback.html:6 pages/templates/pages/feedback.html:14
+msgid "Comentarios"
+msgstr ""
+
+#: pages/views.py:12
+msgid "Message sent successfully."
+msgstr ""
+
+#: pages/views.py:23
+msgid "Thank you for your feedback 💗"
+msgstr ""

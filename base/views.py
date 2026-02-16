@@ -3,6 +3,7 @@ from django.http import FileResponse, HttpRequest
 from django.views.decorators.cache import cache_control
 from django.views.decorators.http import require_GET
 from django.views.generic import TemplateView
+
 from wagtail.models.sites import Site
 
 

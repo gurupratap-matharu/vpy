@@ -4,6 +4,7 @@ import logging
 from django.core.validators import RegexValidator
 from django.db import models
 from django.utils.html import mark_safe
+
 from wagtail.admin.panels import FieldPanel
 from wagtail.contrib.routable_page.models import RoutablePageMixin
 from wagtail.fields import StreamField

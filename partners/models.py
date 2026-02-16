@@ -5,12 +5,14 @@ from django import forms
 from django.conf import settings
 from django.db import models
 from django.utils.html import mark_safe
-from modelcluster.contrib.taggit import ClusterTaggableManager
-from modelcluster.models import ParentalKey, ParentalManyToManyField
-from taggit.models import TaggedItemBase
+
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from wagtail.fields import StreamField
 from wagtail.search import index
+
+from modelcluster.contrib.taggit import ClusterTaggableManager
+from modelcluster.models import ParentalKey, ParentalManyToManyField
+from taggit.models import TaggedItemBase
 
 from base.blocks import (
     BaseStreamBlock,

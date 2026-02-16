@@ -2,6 +2,7 @@ import json
 
 from django.db import models
 from django.utils.html import mark_safe
+
 from wagtail.admin.panels import FieldPanel
 from wagtail.fields import StreamField
 

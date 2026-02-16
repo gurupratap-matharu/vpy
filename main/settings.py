@@ -4,6 +4,7 @@ from pathlib import Path
 
 from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
+
 from dotenv import load_dotenv
 
 
@@ -112,6 +113,8 @@ ACCOUNT_LOGOUT_REDIRECT = "/"
 ACCOUNT_PRESERVE_USERNAME_CASING = False
 ACCOUNT_SESSION_REMEMBER = True
 ACCOUNT_UNIQUE_EMAIL = True
+
+ALLAUTH_TRUSTED_CLIENT_IP_HEADER = "CF-Connecting-IP"
 
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"

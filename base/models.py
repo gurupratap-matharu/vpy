@@ -7,8 +7,7 @@ from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 from django.utils.html import strip_tags
 from django.utils.translation import gettext_lazy as _
-from modelcluster.fields import ParentalKey
-from modelcluster.models import ClusterableModel
+
 from wagtail.admin.panels import (
     FieldPanel,
     FieldRowPanel,
@@ -32,6 +31,9 @@ from wagtail.models import (
     WorkflowMixin,
 )
 from wagtail.models.i18n import Locale
+
+from modelcluster.fields import ParentalKey
+from modelcluster.models import ClusterableModel
 
 from base.cache import get_default_cache_control_decorator
 from base.schemas import organisation_schema

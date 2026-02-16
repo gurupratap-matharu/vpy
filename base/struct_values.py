@@ -2,6 +2,7 @@ import logging
 
 from django.template.defaultfilters import filesizeformat
 from django.utils.functional import cached_property
+
 from wagtail.blocks import StructValue
 
 

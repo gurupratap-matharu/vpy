@@ -9,14 +9,16 @@ from django.db.models import Count
 from django.shortcuts import redirect, render
 from django.utils.functional import cached_property
 from django.utils.html import mark_safe, strip_tags
-from modelcluster.contrib.taggit import ClusterTaggableManager
-from modelcluster.fields import ParentalKey, ParentalManyToManyField
-from taggit.models import Tag, TaggedItemBase
+
 from wagtail.admin.panels import FieldPanel, InlinePanel, MultiFieldPanel
 from wagtail.contrib.routable_page.models import RoutablePageMixin, route
 from wagtail.fields import StreamField
 from wagtail.models import Orderable
 from wagtail.search import index
+
+from modelcluster.contrib.taggit import ClusterTaggableManager
+from modelcluster.fields import ParentalKey, ParentalManyToManyField
+from taggit.models import Tag, TaggedItemBase
 
 from base.blocks import BaseStreamBlock
 from base.models import BasePage
