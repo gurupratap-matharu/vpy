@@ -1,5 +1,5 @@
 [project]
-name = "Ventanita for Paraguay"
+name = "Ventanita-Paraguay"
 version = "0.1.0"
 description = "Intercity bus ticketing platform in Paraguay"
 readme = "README.md"
