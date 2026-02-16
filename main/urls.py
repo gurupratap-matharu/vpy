@@ -13,7 +13,20 @@ from base.views import IndexNow, RobotsView, favicon
 from search import views as search_views
 
 
+def debug_ip(request):
+    from django.http import JsonResponse
+
+    return JsonResponse(
+        {
+            "REMOTE_ADDR": request.META.get("REMOTE_ADDR"),
+            "HTTP_X_FORWARDED_FOR": request.META.get("HTTP_X_FORWARDED_FOR"),
+            "HTTP_CF_CONNECTING_IP": request.META.get("HTTP_CF_CONNECTING_IP"),
+        }
+    )
+
+
 urlpatterns = [
+    path("debugip/", debug_ip),
     path("private/", include(wagtailadmin_urls)),
     path("accounts/", include("allauth.urls")),
     path("i18n/", include("django.conf.urls.i18n")),
