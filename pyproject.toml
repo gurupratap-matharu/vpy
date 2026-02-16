@@ -1,32 +1,23 @@
-[tool.poetry]
-name = "vpy"
+[project]
+name = "Ventanita for Paraguay"
 version = "0.1.0"
-description = "Ventanita for Paraguay"
-authors = ["Gurupratap Matharu <gurupratap.matharu@gmail.com>"]
+description = "Intercity bus ticketing platform in Paraguay"
 readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "django-allauth[socialaccount]>=65.14.3",
+    "gunicorn>=25.1.0",
+    "lxml>=6.0.2",
+    "python-dotenv>=1.2.1",
+    "wagtail>=7.3",
+    "wagtail-localize>=1.13",
+]
 
-[tool.poetry.dependencies]
-python = "^3.12"
-dotenv = "^0.9.9"
-gunicorn = "^23.0.0"
-lxml = "^5.4.0"
-wagtail = "^7.2.1"
-wagtail-localize = "^1.12.2"
-django-allauth = {extras = ["socialaccount"], version = "^65.13.1"}
-
-
-[tool.poetry.group.dev.dependencies]
-djlint = "^1.36.4"
-isort = "^6.0.1"
-ruff = "^0.9.8"
-ipython = "^9.3.0"
-coverage = "^7.8.2"
-django-extensions = "^4.1"
-django-debug-toolbar = "^6.1.0"
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+[dependency-groups]
+dev = [
+    "django-debug-toolbar>=6.2.0",
+    "django-extensions>=4.1",
+]
 
 [tool.ruff]
 line-length = 120
@@ -34,13 +25,14 @@ exclude = ["*migrations*", "static"]
 
 [tool.ruff.lint.isort]
 combine-as-imports=true
-known-first-party=["blog"]
-known-third-party=["wagtail", "rest_framework"]
+known-first-party=["blog", "base", "help", "home", "search", "users", "trips", "pages"]
+known-third-party=["rest_framework"]
 lines-after-imports=2
-section-order=["future", "standard-library", "third-party", "first-party", "local-folder"]
+section-order=["future", "standard-library", "django", "wagtail",  "third-party", "first-party", "local-folder"]
 
 [tool.ruff.lint.isort.sections]
 "django"=["django"]
+"wagtail"=["wagtail"]
 
 [tool.djlint]
 blank_line_before_tag="load,extends"

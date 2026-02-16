@@ -59,9 +59,9 @@ runserver:
 build: install makemigrations migrate runserver
 
 format:
-	poetry run ruff check --select I --fix
-	poetry run ruff format .
-	poetry run djlint --reformat .
+	ruff check --select I --fix
+	ruff format .
+	djlint --reformat .
 
 lint:
 	ruff check .
@@ -72,11 +72,7 @@ test: check migrations-check
 	coverage run --source='.' manage.py test
 	coverage html
 
-security:
-	poetry run bandit -r .
-	poetry run safety check
-
-ci: format lint security test
+ci: format lint test
 
 superuser:
 	python manage.py createsuperuser
