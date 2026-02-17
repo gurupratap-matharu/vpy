@@ -23,12 +23,11 @@ jobs:
       matrix:
         database: [postgres]
         os: [ubuntu-latest]
-        python-version: ["3.12"]
-        poetry-version: ["1.7.1"]
+        python-version: ["3.14"]
 
     steps:
       - name: Checkout git repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Add environment variables to .env file
         run: |
@@ -42,36 +41,25 @@ jobs:
           echo WAGTAILADMIN_BASE_URL=ventanita.com.py >> .env
           echo CSRF_TRUSTED_ORIGINS=https://ventanita.com.py >> .env
 
-      - name: Setup postgres database
-        uses: harmon758/postgresql-action@v1
-        if: matrix.database == 'postgres'
-        with:
-          postgresql version: "14.6"
-          postgresql db: "postgres"
-          postgresql user: "postgres"
-          postgresql password: "postgres"
-
       - name: Setup Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install Poetry
-        uses: abatilo/actions-poetry@v2
-        with:
-          poetry-version: ${{ matrix.poetry-version }}
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
 
       - name: Install the dependencies
-        run: poetry install
+        run: uv sync --locked --all-extras --dev
 
       - name: Run tests
-        run: poetry run coverage run --source='.' manage.py test -v 2
+        run: make test
 
       # run the next steps even if some tests fail. see `if: always()`
       # we do this to upload the coverage report to codecov
 
       - name: Generate xml report
-        run: poetry run coverage xml
+        run: uv run coverage xml
         if: always()
 
       - name: Upload coverage to codecov
