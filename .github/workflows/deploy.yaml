@@ -16,8 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.13"]
-        poetry-version: ["1.7.1"]
+        python-version: ["3.14"]
 
     steps:
       - name: Deploy to server
@@ -32,28 +31,28 @@ jobs:
           script: |
             cd ${{ secrets.PROJECT_PATH }}
 
-            echo "Veer: running git pull..."
+            echo "Running git pull..."
             git pull origin master
 
-            echo "Veer: collecting static..."
-            /home/veer/.pyenv/versions/vpy/bin/python manage.py collectstatic --noinput
+            echo "Activating venv..."
+            source .venv/bin/activate
 
-            echo "Veer: showing migrations..."
-            /home/veer/.pyenv/versions/vpy/bin/python manage.py showmigrations
+            echo "Collecting static..."
+            python manage.py collectstatic --noinput
 
-            echo "Veer: applying migrations..."
-            /home/veer/.pyenv/versions/vpy/bin/python manage.py migrate
+            echo "Showing migrations..."
+            python manage.py showmigrations
 
-            echo "Veer: compiling translations..."
-            /home/veer/.pyenv/versions/vpy/bin/django-admin compilemessages
+            echo "Applying migrations..."
+            python manage.py migrate
 
-            echo "Veer: reloading daemon..."
+            echo "Reloading daemon..."
             sudo systemctl daemon-reload
 
-            echo "Veer: restarting gunicorn..."
+            echo "Restarting gunicorn..."
             sudo systemctl restart vpy.service
 
-            echo "Veer: reloading nginx..."
+            echo "Reloading nginx..."
             sudo nginx -s reload
 
-            echo "Veer: All done! 💅💫💖"
+            echo "All done! 💅💫💖"
