@@ -9,7 +9,6 @@ from wagtail.admin import urls as wagtailadmin_urls
 from wagtail.contrib.sitemaps.views import sitemap
 from wagtail.documents import urls as wagtaildocs_urls
 
-
 from base.views import IndexNow, RobotsView, favicon
 from search import views as search_views
 

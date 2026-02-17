@@ -2,12 +2,13 @@ import logging
 import string
 import typing
 
-from allauth.account.adapter import DefaultAccountAdapter
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.utils.crypto import get_random_string
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
+
+from allauth.account.adapter import DefaultAccountAdapter
 
 
 logger = logging.getLogger(__name__)
@@ -27,11 +28,7 @@ class AccountAdapter(DefaultAccountAdapter):
         return None
 
     def get_user_by_phone(self, phone):
-        return (
-            User.objects.filter(phone=phone)
-            .order_by("-phone_verified")
-            .first()
-        )
+        return User.objects.filter(phone=phone).order_by("-phone_verified").first()
 
     def generate_phone_verification_code(self, *, user, phone: str) -> str:
         """Overwrite allauth method to generate a numeric OTP code."""
@@ -41,9 +38,7 @@ class AccountAdapter(DefaultAccountAdapter):
     def set_phone_verified(self, user, phone):
         self.set_phone(user, phone, True)
 
-    def send_verification_code_sms(
-        self, user, phone: str, code: str, **kwargs
-    ):
+    def send_verification_code_sms(self, user, phone: str, code: str, **kwargs):
         messages.warning(
             self.request,
             f"⚠️ SMS demo stub: assume code {code} was sent to {phone}.",
@@ -64,8 +59,9 @@ class AccountAdapter(DefaultAccountAdapter):
         """
         Overrode this to change placeholder
         """
-        from allauth.account.fields import PhoneField
         from django import forms
+
+        from allauth.account.fields import PhoneField
 
         widget = forms.TextInput(
             attrs={
