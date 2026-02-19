@@ -7,14 +7,14 @@
 {% endblock title %}
 
 {% block content %}
-  <div class="container col-12 col-xl-9 mt-3 min-vh-75">
+  <div class="container">
     <h1 class="fs-2">
       <span class="text-primary text-gradient">{% translate "Busca pasajes baratos de micro" %}</span>
       <br />
       en Paraguay
     </h1>
     <section class="py-3 py-md-5">
-      {% include 'includes/search_form.html' %}
+      {% include "includes/search_form.html" %}
     </section>
     <section class="py-3">
       {% breadcrumbs %}

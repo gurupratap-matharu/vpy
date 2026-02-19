@@ -88,7 +88,7 @@
     {% block header %}{% include "includes/navigation.html" %}{% endblock header %}
     {% block messages %}{% include "includes/messages.html" %}{% endblock messages %}
 
-    <main class="mt-6 min-vh-75">{% block content %}{% endblock content %}</main>
+    <main class="min-vh-75" id="main-content">{% block content %}{% endblock content %}</main>
 
     {% block modal %}{% endblock modal %}
     {% block footer %}{% endblock footer %}

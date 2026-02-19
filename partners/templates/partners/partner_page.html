@@ -3,14 +3,14 @@
 {% load i18n static wagtailcore_tags wagtailimages_tags navigation_tags %}
 
 {% block content %}
-  <article class="container col-12 col-xl-9 mt-3 min-vh-75" id="content">
+  <article class="container" id="content">
     <h1 class="fs-2">
       <span class="text-primary text-gradient">{% translate "Guía Completa" %}</span>
       <br />
       {{ page.title }}
     </h1>
     <section class="py-3 py-md-5">
-      {% include 'includes/search_form.html' %}
+      {% include "includes/search_form.html" %}
     </section>
     <section class="py-3">
       {% breadcrumbs %}
