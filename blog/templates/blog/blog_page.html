@@ -13,16 +13,16 @@
             top: 0;
             left: 0;
             width: 0%;
-            height: 4px;
+            height: 3px;
             z-index: 9999;
-            background: linear-gradient(90deg, #0d6efd, #20c997);
+            background: linear-gradient(310deg, #7928ca, #ff0080);
             transition: width 0.2s ease;
        }
 
 
        #toc .nav-link {
             color: #6c757d;
-            padding: 4px 0;
+            padding: 3px 0;
        }
 
        #toc .nav-link.active {
@@ -37,7 +37,7 @@
   <section class="container">
     <div class="row">
       <div class="col col-lg-6 mx-auto">
-        <h1 class="text-center">{{ page.title }}</h1>
+        <h1 class="display-4 text-center">{{ page.title }}</h1>
         {% for author in page.authors %}
           <div class="author justify-content-center align-items-center py-3 py-md-5">
             {% image author.image width-200 class="avatar avatar-xl rounded-circle" %}
