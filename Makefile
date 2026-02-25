@@ -9,6 +9,12 @@ help:
 	@echo "lint - check style with black, flake8, sort python with isort, and indent html"
 	@echo "format - enforce a consistent code style across the codebase and sort python files with isort"
 
+pullmedia:
+	rsync -azP DO:/home/veer/code/vpy/media .
+
+pulldb:
+	rsync -azP DO:/home/veer/code/vpy/db.sqlite3 .
+
 tags:
 	ctags --recurse=yes --exclude=.git --exclude=docs --exclude=static --exclude=staticfiles
 

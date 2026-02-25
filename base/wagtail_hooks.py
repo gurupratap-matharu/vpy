@@ -10,6 +10,13 @@ from wagtail.snippets.views.snippets import SnippetViewSet, SnippetViewSetGroup
 
 from base.models import Person
 from blog.models import BlogCategory
+from locations.models import Service
+
+
+class ServiceViewSet(SnippetViewSet):
+    model = Service
+    icon = "tag"
+    list_display = ("name", "icon")
 
 
 class PersonViewSet(SnippetViewSet):
@@ -32,7 +39,7 @@ class MiscSnippetViewSetGroup(SnippetViewSetGroup):
     menu_label = "Misc"
     menu_icon = "list-ul"
     menu_order = 300
-    items = (PersonViewSet, BlogCategoryViewSet)
+    items = (PersonViewSet, BlogCategoryViewSet, ServiceViewSet)
 
 
 register_snippet(MiscSnippetViewSetGroup)

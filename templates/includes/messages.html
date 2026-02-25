@@ -1,7 +1,7 @@
 {% load static %}
 
 {% if messages %}
-  <div class="container-xl mt-7">
+  <div class="container-xl">
     {% for message in messages %}
       {% with klass=message.tags %}
         <div class="alert alert-{{ klass }} alert-dismissible fade show" role="alert">

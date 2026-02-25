@@ -31,9 +31,5 @@ class CompanyLandingView(TemplateView):
     template_name = "pages/company_landing.html"
 
 
-class StyleGuideView(TemplateView):
-    template_name = "pages/styleguide.html"
-
-
 class ExploreView(TemplateView):
     template_name = "pages/explore.html"

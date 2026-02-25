@@ -1,17 +1,26 @@
 import json
 import logging
+from datetime import time
 
+from django import forms
 from django.core.validators import RegexValidator
 from django.db import models
+from django.utils import timezone
 from django.utils.html import mark_safe
+from django.utils.translation import gettext_lazy as _
 
-from wagtail.admin.panels import FieldPanel
+from wagtail.admin.panels import FieldPanel, InlinePanel, MultiFieldPanel, MultipleChooserPanel, PageChooserPanel
 from wagtail.contrib.routable_page.models import RoutablePageMixin
 from wagtail.fields import StreamField
+from wagtail.models import Orderable
 from wagtail.search import index
 
-from base.blocks import BaseStreamBlock, FAQBlock, LinkBlock, NavTabLinksBlock
+from modelcluster.fields import ParentalKey, ParentalManyToManyField
+
+from base.blocks import BaseStreamBlock, FAQBlock, LinkBlock, NavTabLinksBlock, RatingsBlock
+from base.choices import Weekday
 from base.models import BasePage
+from base.validators import validate_phone
 
 
 logger = logging.getLogger(__name__)
@@ -315,8 +324,15 @@ class StationPage(RoutablePageMixin, BasePage):
         help_text="Landscape mode only; horizontal width between 1000px and 3000px.",
     )
 
-    body = StreamField(BaseStreamBlock(), verbose_name="Page body", blank=True, collapsed=True)
-    address = models.TextField()
+    address = models.TextField(_("Address"))
+    phone = models.CharField(_("Phone"), max_length=20, blank=True, validators=[validate_phone])
+    departamento = models.ForeignKey(
+        "wagtailcore.Page",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="terminales",
+    )
     lat_long = models.CharField(
         max_length=36,
         blank=True,
@@ -330,6 +346,9 @@ class StationPage(RoutablePageMixin, BasePage):
             ),
         ],
     )
+    services = ParentalManyToManyField("locations.Service", blank=True)
+    directions = StreamField(BaseStreamBlock(), verbose_name="Directions (Como llegar?)", blank=True, collapsed=True)
+    body = StreamField(BaseStreamBlock(), verbose_name="Page body", blank=True, collapsed=True)
 
     faq = StreamField(
         [("faq", FAQBlock())],
@@ -354,6 +373,13 @@ class StationPage(RoutablePageMixin, BasePage):
         max_num=1,
         collapsed=True,
     )
+    ratings = StreamField(
+        [("Ratings", RatingsBlock())],
+        verbose_name="Ratings",
+        blank=True,
+        max_num=1,
+        collapsed=True,
+    )
 
     search_fields = BasePage.search_fields + [
         index.SearchField("address"),
@@ -362,13 +388,32 @@ class StationPage(RoutablePageMixin, BasePage):
 
     content_panels = BasePage.content_panels + [
         FieldPanel("intro"),
-        FieldPanel("image"),
-        FieldPanel("lat_long"),
-        FieldPanel("address"),
+        MultiFieldPanel(
+            [
+                FieldPanel("phone"),
+                FieldPanel("address"),
+                FieldPanel("lat_long"),
+                FieldPanel("services", widget=forms.CheckboxSelectMultiple),
+                InlinePanel("opening_hours", label="Opening Hours"),
+                PageChooserPanel("departamento"),
+            ],
+            heading="Basic Info",
+            classname="collapsed",
+        ),
+        FieldPanel("directions"),
         FieldPanel("body"),
         FieldPanel("faq"),
         FieldPanel("links"),
         FieldPanel("companies"),
+        FieldPanel("ratings"),
+        MultiFieldPanel(
+            [
+                FieldPanel("image"),
+                MultipleChooserPanel("gallery_images", label="Gallery images", chooser_field_name="image"),
+            ],
+            heading="Media",
+            classname="collapsed",
+        ),
     ]
 
     class Meta:
@@ -380,11 +425,24 @@ class StationPage(RoutablePageMixin, BasePage):
 
     def get_context(self, request, *args, **kwargs):
         context = super().get_context(request, *args, **kwargs)
-
         lat, long = self.lat_long.split(",")
-        context["lat_long"] = {"lat": lat, "long": long}
-
+        options = {
+            "lat": lat,
+            "long": long,
+            "title": self.title,
+            "text": self.intro,
+            "url": self.get_full_url(),
+        }
+        context["options"] = options
+        context["today"] = timezone.now().weekday()
         return context
+
+    def post(self, request):
+        print("veer post received..")
+        return
+
+    def get_google_maps_directions_url(self):
+        return f"https://www.google.com/maps/dir/?api=1&destination={self.lat_long}"
 
     def ld_entity(self):
         page_schema = json.dumps(
@@ -435,3 +493,94 @@ class StationPage(RoutablePageMixin, BasePage):
         }
 
         return breadcrumb_schema
+
+    def _get_openinghours_schema(self):
+        """
+        Todo: proposed template
+        <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "BusStation",
+          "name": "{{ page.title }}",
+          "address": "{{ page.address }}",
+          "openingHoursSpecification": [
+            {% for hour in page.opening_hours.all %}
+            {
+              "@type": "OpeningHoursSpecification",
+              "dayOfWeek": "https://schema.org/{{ hour.get_day_display }}",
+              "opens": "{{ hour.open_time|time:'H:i' }}",
+              "closes": "{{ hour.close_time|time:'H:i' }}"
+            }{% if not forloop.last %},{% endif %}
+            {% endfor %}
+          ]
+        }
+        </script>
+        """
+        pass
+
+
+class StationPageGalleryImage(Orderable):
+    page = ParentalKey("locations.StationPage", on_delete=models.CASCADE, related_name="gallery_images")
+    image = models.ForeignKey("wagtailimages.Image", on_delete=models.CASCADE, related_name="+")
+    caption = models.CharField(_("caption"), max_length=250, blank=True)
+
+    panels = [
+        FieldPanel("image"),
+        FieldPanel("caption"),
+    ]
+
+    class Meta:
+        verbose_name = "stationpagegallery"
+        verbose_name_plural = "stationpagegallery"
+
+
+def default_open_time():
+    return time(hour=8)
+
+
+def default_close_time():
+    return time(hour=22)
+
+
+class OpeningHour(Orderable):
+    page = ParentalKey("locations.StationPage", on_delete=models.CASCADE, related_name="opening_hours")
+    weekday = models.PositiveIntegerField(_("weekday"), choices=Weekday)
+    open_time = models.TimeField(_("start"), default=default_open_time)
+    close_time = models.TimeField(_("end"), default=default_close_time)
+    closed = models.BooleanField(_("closed"), default=False)
+    panels = [
+        FieldPanel("weekday"),
+        FieldPanel("open_time"),
+        FieldPanel("close_time"),
+        FieldPanel("closed"),
+    ]
+
+    class Meta:
+        verbose_name = "openinghour"
+        verbose_name_plural = "openinghours"
+
+    def __str__(self):
+        return f"{self.get_weekday_display()} {self.open_time}:{self.close_time}"
+
+
+class Service(models.Model):
+    """
+    A service (amenity) that a station or terminal provides.
+    Typically represented in a badge with an icon and optional text for visual purposes
+    eg: Washrooms, Cafeteria, Waiting Room, Lockers, etc
+    """
+
+    name = models.CharField(_("name"), max_length=255)
+    icon = models.CharField(_("icon"), max_length=20, help_text="Only name of the icon")
+
+    panels = [
+        FieldPanel("name"),
+        FieldPanel("icon"),
+    ]
+
+    class Meta:
+        verbose_name = "Service"
+        verbose_name_plural = "Services"
+
+    def __str__(self):
+        return self.name
