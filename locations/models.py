@@ -9,7 +9,7 @@ from django.utils import timezone
 from django.utils.html import mark_safe
 from django.utils.translation import gettext_lazy as _
 
-from wagtail.admin.panels import FieldPanel, InlinePanel, MultiFieldPanel, MultipleChooserPanel, PageChooserPanel
+from wagtail.admin.panels import FieldPanel, FieldRowPanel, InlinePanel, MultiFieldPanel, PageChooserPanel
 from wagtail.contrib.routable_page.models import RoutablePageMixin
 from wagtail.fields import StreamField
 from wagtail.models import Orderable
@@ -394,22 +394,27 @@ class StationPage(RoutablePageMixin, BasePage):
                 FieldPanel("address"),
                 FieldPanel("lat_long"),
                 FieldPanel("services", widget=forms.CheckboxSelectMultiple),
-                InlinePanel("opening_hours", label="Opening Hours"),
+                InlinePanel(
+                    "opening_hours",
+                    label="Opening Hours",
+                    classname="collapsed",
+                    max_num=7,
+                ),
                 PageChooserPanel("departamento"),
             ],
             heading="Basic Info",
             classname="collapsed",
         ),
-        FieldPanel("directions"),
-        FieldPanel("body"),
-        FieldPanel("faq"),
-        FieldPanel("links"),
-        FieldPanel("companies"),
-        FieldPanel("ratings"),
+        FieldPanel("directions", classname="collapsed"),
+        FieldPanel("body", classname="collapsed"),
+        FieldPanel("faq", classname="collapsed"),
+        FieldPanel("links", classname="collapsed"),
+        FieldPanel("companies", classname="collapsed"),
+        FieldPanel("ratings", classname="collapsed"),
         MultiFieldPanel(
             [
                 FieldPanel("image"),
-                MultipleChooserPanel("gallery_images", label="Gallery images", chooser_field_name="image"),
+                InlinePanel("gallery_images", label="Gallery images"),
             ],
             heading="Media",
             classname="collapsed",
@@ -437,10 +442,6 @@ class StationPage(RoutablePageMixin, BasePage):
         context["today"] = timezone.now().weekday()
         return context
 
-    def post(self, request):
-        print("veer post received..")
-        return
-
     def get_google_maps_directions_url(self):
         return f"https://www.google.com/maps/dir/?api=1&destination={self.lat_long}"
 
@@ -449,16 +450,87 @@ class StationPage(RoutablePageMixin, BasePage):
             {
                 "@context": "http://schema.org",
                 "@graph": [
-                    self._get_breadcrumb_schema(),
+                    self._get_station_schema(),
                     self._get_image_schema(),
-                    self._get_article_schema(),
                     self._get_faq_schema(),
                     self._get_organisation_schema(),
+                    self._get_breadcrumb_schema(),
                 ],
             },
             ensure_ascii=False,
         )
         return mark_safe(page_schema)
+
+    def _get_station_schema(self):
+        return {
+            "@type": "BusStation",
+            "@id": f"{self.full_url}#busstation",
+            "name": self.title,
+            "description": self.search_description,
+            "url": self.full_url,
+            "telephone": self.phone,
+            "address": {
+                "@type": "PostalAddress",
+                "streetAddress": self.address,
+                #  "addressLocality": "{{ page.city }}",
+                #  "addressRegion": "{{ page.department }}",
+                # "postalCode": "{{ page.postal_code }}",
+                "addressCountry": "PY",
+            },
+            "geo": self._get_geo_schema(),
+            "openingHoursSpecification": "Mo-Su",
+            "image": self._get_image_schema(),
+            # Can't seem to pass ratings in google rich test results
+            # "aggregateRating": self._get_ratings_schema(),
+            "amenityFeature": self._get_services_schema(),
+        }
+
+    def _get_image_schema(self):
+        image = self.image or self.social_image
+        image_url = image.file.url if image else ""
+
+        image_schema = {
+            "@context": "https://schema.org",
+            "@type": "ImageObject",
+            "contentUrl": f"https://ventanita.com.py{image_url}",
+            "url": f"https://ventanita.com.py{image_url}",
+            "license": "https://ventanita.com.py/condiciones-generales/",
+            "acquireLicensePage": "https://ventanita.com.py/contact/",
+            "creditText": image.title,
+            "creator": {"@type": "Person", "name": "Ventanita"},
+            "copyrightNotice": "Ventanita",
+            "contentLocation": self.title,
+            "description": image.description,
+            "name": image.title,
+        }
+
+        return image_schema
+
+    def _get_geo_schema(self):
+        lat, long = self.lat_long.split(",")
+        return {"@type": "GeoCoordinates", "latitude": lat, "longitude": long}
+
+    def _get_ratings_schema(self):
+        if self.ratings:
+            obj = self.ratings[0].value
+            rating_value = str(obj.get_score())
+            rating_count = str(obj.get_total_ratings())
+        else:
+            rating_value = rating_count = 0
+
+        return {
+            "@type": "AggregateRating",
+            "ratingValue": rating_value,
+            "ratingCount": rating_count,
+            "bestRating": "5",
+            "worstRating": "1",
+        }
+
+    def _get_services_schema(self):
+        return [
+            {"@type": "LocationFeatureSpecification", "name": service.name, "value": True}
+            for service in self.services.all()
+        ]
 
     def _get_breadcrumb_schema(self):
         breadcrumb_schema = {
@@ -468,24 +540,18 @@ class StationPage(RoutablePageMixin, BasePage):
                 {
                     "@type": "ListItem",
                     "position": 1,
-                    "name": "Pasajes de Micro",
+                    "name": "Inicio",
                     "item": "https://ventanita.com.py/",
                 },
                 {
                     "@type": "ListItem",
                     "position": 2,
-                    "name": "Paraguay",
-                    "item": self.get_parent().get_parent().full_url,
+                    "name": "Terminales de Ómnibus",
+                    "item": "https://ventanita.com.py/terminales-de-omnibus/",
                 },
                 {
                     "@type": "ListItem",
                     "position": 3,
-                    "name": self.get_parent().title,
-                    "item": self.get_parent().full_url,
-                },
-                {
-                    "@type": "ListItem",
-                    "position": 4,
                     "name": self.title,
                     "item": self.full_url,
                 },
@@ -493,30 +559,6 @@ class StationPage(RoutablePageMixin, BasePage):
         }
 
         return breadcrumb_schema
-
-    def _get_openinghours_schema(self):
-        """
-        Todo: proposed template
-        <script type="application/ld+json">
-        {
-          "@context": "https://schema.org",
-          "@type": "BusStation",
-          "name": "{{ page.title }}",
-          "address": "{{ page.address }}",
-          "openingHoursSpecification": [
-            {% for hour in page.opening_hours.all %}
-            {
-              "@type": "OpeningHoursSpecification",
-              "dayOfWeek": "https://schema.org/{{ hour.get_day_display }}",
-              "opens": "{{ hour.open_time|time:'H:i' }}",
-              "closes": "{{ hour.close_time|time:'H:i' }}"
-            }{% if not forloop.last %},{% endif %}
-            {% endfor %}
-          ]
-        }
-        </script>
-        """
-        pass
 
 
 class StationPageGalleryImage(Orderable):
@@ -549,10 +591,14 @@ class OpeningHour(Orderable):
     close_time = models.TimeField(_("end"), default=default_close_time)
     closed = models.BooleanField(_("closed"), default=False)
     panels = [
-        FieldPanel("weekday"),
-        FieldPanel("open_time"),
-        FieldPanel("close_time"),
-        FieldPanel("closed"),
+        FieldRowPanel(
+            [
+                FieldPanel("weekday"),
+                FieldPanel("open_time"),
+                FieldPanel("close_time"),
+                FieldPanel("closed"),
+            ]
+        )
     ]
 
     class Meta:

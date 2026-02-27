@@ -218,6 +218,7 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "wagtail.contrib.settings.context_processors.settings",
+                "main.context_processors.branding",
             ],
         },
     },
@@ -337,6 +338,9 @@ DATA_UPLOAD_MAX_NUMBER_FIELDS = 10_000
 # Wagtail settings
 
 WAGTAIL_SITE_NAME = "Ventanita"
+SITE_ROOT = os.getenv("SITE_ROOT", "http://localhost:8000").removesuffix("/")
+SITE_NAME = os.getenv("SITE_NAME", "Ventanita")
+SITE_LOGO_URL = os.getenv("SITE_LOGO_URL")
 
 # Search
 # https://docs.wagtail.org/en/stable/topics/search/backends.html

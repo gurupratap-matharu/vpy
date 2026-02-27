@@ -336,7 +336,6 @@ class FormField(AbstractFormField):
     """
 
     field_type = models.CharField(verbose_name="field type", max_length=16, choices=list(FORM_FIELD_CHOICES))
-
     page = ParentalKey("FormPage", related_name="form_fields", on_delete=models.CASCADE)
 
 
