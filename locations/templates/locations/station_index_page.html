@@ -7,19 +7,13 @@
 {% endblock title %}
 
 {% block content %}
-  <article class="container mt-3">
-    <h1 class="fs-2">
-      <span class="text-primary text-gradient">{{ page.title }}</span>
-      <br />
-      en Paraguay
-    </h1>
+  <article class="container">
+    {% breadcrumbs %}
+    <h1 class="fs-2">{{ page.title }}</h1>
     <section class="py-3 py-md-5">
-      {% include 'includes/search_form.html' %}
+      {% include "includes/search_form.html" %}
     </section>
-    <section class="py-3">
-      {% breadcrumbs %}
-    </section>
-    <section class="py-3 py-md-5 row row-cols-2 row-cols-md-4">
+    <section class="py-3 py-md-5 row row-cols-1 row-cols-md-4">
       {% for station in page.children %}
         <div class="col p-1">
           <a href="{% pageurl station %}">{{ station }}</a>
@@ -40,7 +34,7 @@
       {% include "includes/mission.html" %}
     </section>
   </article>
-  {% include 'includes/seo_links.html' %}
+  {% include "includes/seo_links.html" %}
 {% endblock content %}
 
 {% block footer %}
