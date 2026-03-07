@@ -217,6 +217,16 @@ class PartnerPage(BasePage):
         verbose_name = "partnerpage"
         verbose_name_plural = "partnerpages"
 
+    def get_context(self, request, *args, **kwargs):
+        context = super().get_context(request, *args, **kwargs)
+        options = {
+            "title": self.title,
+            "text": self.intro,
+            "url": self.get_full_url(),
+        }
+        context["options"] = options
+        return context
+
     def get_tags(self):
         """
         Find all the tags that are related to the partner into a list we can access on the template.
@@ -236,11 +246,11 @@ class PartnerPage(BasePage):
             {
                 "@context": "http://schema.org",
                 "@graph": [
+                    self._get_organisation_schema(),
+                    self._get_faq_schema(),
                     self._get_breadcrumb_schema(),
                     self._get_image_schema(),
                     self._get_article_schema(),
-                    self._get_faq_schema(),
-                    self._get_organisation_schema(),
                 ],
             },
             ensure_ascii=False,
