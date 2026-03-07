@@ -6,8 +6,9 @@ from django.conf import settings
 from django.db import models
 from django.utils.html import mark_safe
 
-from wagtail.admin.panels import FieldPanel, MultiFieldPanel
+from wagtail.admin.panels import FieldPanel, MultiFieldPanel, InlinePanel
 from wagtail.fields import StreamField
+from wagtail.models import Orderable
 from wagtail.search import index
 
 from modelcluster.contrib.taggit import ClusterTaggableManager
@@ -54,10 +55,30 @@ class PartnerIndexPage(BasePage):
         related_name="+",
         help_text="Landscape mode only; horizontal width between 1000px to 3000px.",
     )
+    body = StreamField(BaseStreamBlock(), verbose_name="Page body", blank=True, collapsed=True)
+
+    faq = StreamField(
+        [("faq", FAQBlock())],
+        verbose_name="FAQ Section",
+        blank=True,
+        max_num=1,
+        collapsed=True,
+    )
+
+    links = StreamField(
+        [("Links", NavTabLinksBlock())],
+        verbose_name="Links Section",
+        blank=True,
+        max_num=1,
+        collapsed=True,
+    )
 
     content_panels = BasePage.content_panels + [
         FieldPanel("intro"),
         FieldPanel("image"),
+        FieldPanel("body"),
+        FieldPanel("faq"),
+        FieldPanel("links"),
     ]
 
     subpage_types = ["PartnerPage"]
@@ -194,7 +215,13 @@ class PartnerPage(BasePage):
     content_panels = BasePage.content_panels + [
         FieldPanel("logo"),
         FieldPanel("intro"),
-        FieldPanel("hero_image"),
+        MultiFieldPanel(
+            [
+                FieldPanel("hero_image"),
+                InlinePanel("gallery_images", label="Gallery images"),
+            ],
+            heading="Media",
+        ),
         FieldPanel("contact"),
         FieldPanel("destinations"),
         FieldPanel("info"),
@@ -352,19 +379,10 @@ class Amenity(models.Model):
     """
 
     name = models.CharField(max_length=255)
-    icon = models.ForeignKey(
-        "wagtailimages.Image",
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name="+",
-    )
-
-    icon_name = models.CharField(max_length=20, help_text="Name of the bootstrap icon", blank=True, null=True)
+    icon_name = models.CharField(max_length=20, help_text="Name of the icon", blank=True, null=True)
 
     panels = [
         FieldPanel("name"),
-        FieldPanel("icon"),
         FieldPanel("icon_name"),
     ]
 
@@ -374,3 +392,17 @@ class Amenity(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class PartnerPageGalleryImage(Orderable):
+    page = ParentalKey("PartnerPage", on_delete=models.CASCADE, related_name="gallery_images")
+    image = models.ForeignKey("wagtailimages.Image", on_delete=models.CASCADE, related_name="+")
+    caption = models.CharField(blank=True, max_length=250)
+    panels = [
+        FieldPanel("image"),
+        FieldPanel("caption"),
+    ]
+
+    class Meta:
+        verbose_name = "partnerpagegallery"
+        verbose_name_plural = "partnerpagegalleries"
