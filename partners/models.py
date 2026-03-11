@@ -6,7 +6,7 @@ from django.conf import settings
 from django.db import models
 from django.utils.html import mark_safe
 
-from wagtail.admin.panels import FieldPanel, MultiFieldPanel, InlinePanel
+from wagtail.admin.panels import FieldPanel, InlinePanel, MultiFieldPanel
 from wagtail.fields import StreamField
 from wagtail.models import Orderable
 from wagtail.search import index
@@ -25,6 +25,8 @@ from base.blocks import (
     RatingsBlock,
 )
 from base.models import BasePage
+
+from .managers import PartnerPageManager
 
 
 logger = logging.getLogger(__name__)
@@ -213,32 +215,36 @@ class PartnerPage(BasePage):
     ]
 
     content_panels = BasePage.content_panels + [
-        FieldPanel("logo"),
-        FieldPanel("intro"),
+        FieldPanel("logo", classname="collapsed"),
+        FieldPanel("intro", classname="collapsed"),
         MultiFieldPanel(
             [
                 FieldPanel("hero_image"),
                 InlinePanel("gallery_images", label="Gallery images"),
             ],
             heading="Media",
+            classname="collapsed",
         ),
-        FieldPanel("contact"),
-        FieldPanel("destinations"),
-        FieldPanel("info"),
-        FieldPanel("body"),
-        FieldPanel("faq"),
-        FieldPanel("links"),
-        FieldPanel("ratings"),
+        FieldPanel("contact", classname="collapsed"),
+        FieldPanel("destinations", classname="collapsed"),
+        FieldPanel("info", classname="collapsed"),
+        FieldPanel("body", classname="collapsed"),
+        FieldPanel("faq", classname="collapsed"),
+        FieldPanel("links", classname="collapsed"),
+        FieldPanel("ratings", classname="collapsed"),
         MultiFieldPanel(
             [
                 FieldPanel("tags"),
                 FieldPanel("amenities", widget=forms.CheckboxSelectMultiple),
             ],
             heading="Partner Information",
+            classname="collapsed",
         ),
     ]
 
     parent_page_types = ["partners.PartnerIndexPage"]
+
+    objects = PartnerPageManager()
 
     class Meta:
         verbose_name = "partnerpage"
@@ -252,7 +258,11 @@ class PartnerPage(BasePage):
             "url": self.get_full_url(),
         }
         context["options"] = options
+        context["gallery"] = self.get_gallery()
         return context
+
+    def get_gallery(self):
+        return self.gallery_images.select_related("image")
 
     def get_tags(self):
         """

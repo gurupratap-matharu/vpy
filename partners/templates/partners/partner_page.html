@@ -12,7 +12,7 @@
            tabindex="0">
     {% breadcrumbs %}
     <h1 class="fs-2 mb-0">{{ page.title }}</h1>
-    <section class="mb-1 mb-sm-3" id="info">
+    <section class="mb-1 mb-sm-3">
       <div class="row g-0">
         {% if page.ratings %}
           <div class="col-sm-auto d-flex align-items-center">
@@ -64,27 +64,6 @@
         </div>
       </div>
     </section>
-    {% comment %}
-    <section class="sticky-top">
-      <ul class="nav nav-underline bg-white border-bottom" id="scrollnav">
-        <li class="nav-item">
-          <a class="nav-link" href="#info">{% translate "Info" %}</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#destinos">{% translate "Destinos" %}</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#faq">{% translate "Faq" %}</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#about">{% translate "Sobre" %}</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#ratings">{% translate "Opinión" %}</a>
-        </li>
-      </ul>
-    </section>
-    {% endcomment %}
     <section class="py-3 py-md-5">
       {% include "includes/search_form.html" %}
     </section>
@@ -107,13 +86,32 @@
         </div>
       </div>
     </section>
+    <section class="sticky-top">
+      <ul class="nav nav-underline bg-white border-bottom text-sm" id="scrollnav">
+        <li class="nav-item">
+          <a class="nav-link" href="#destinos">{% translate "Destinos" %}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#info">{% translate "Info" %}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#gallery">{% translate "Galería" %}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#about">{% translate "Sobre" %}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#faq">{% translate "Faq" %}</a>
+        </li>
+      </ul>
+    </section>
     {% if page.destinations %}
       <section class="py-3" id="destinos">
         {{ page.destinations }}
       </section>
     {% endif %}
     {% if page.info %}
-      <section class="py-3">
+      <section class="py-3" id="info">
         {{ page.info }}
       </section>
     {% endif %}
@@ -123,25 +121,38 @@
       </section>
     {% endif %}
     {% if page.hero_image %}
-      <section class="py-3">
-        <h2 class="fs-5">{% translate "Galería" %}</h2>
-        <div class="row">
-          <div class="col-sm-4 mb-3">
-            {% picture page.hero_image original format-avif loading="lazy" class="img-fluid border-radius-xl" %}
+      <section class="py-3" id="gallery">
+        <h2 class="fs-5 mb-3">{% translate "Galería" %}</h2>
+        <div class="row g-3">
+          <div class="col-sm-4">
+            {% image page.hero_image original format-avif loading="lazy" class="img-fluid shadow-xl rounded-3" %}
           </div>
-          {% for item in page.gallery_images.all %}
-            <div class="col-sm-4 mb-3">
-              {% picture item.image original format-avif loading="lazy" class="img-fluid border-radius-xl" %}
+          {% for item in gallery %}
+            <div class="col-sm-4">
+              {% image item.image original format-avif loading="lazy" class="img-fluid shadow-xl rounded-3" %}
             </div>
           {% endfor %}
         </div>
       </section>
     {% endif %}
+    <section class="py-3" id="servicios">
+      <h2 class="fs-5">{% translate "Comodidades" %}</h2>
+      <div class="row row-cols-1 row-cols-md-3">
+        {% for amenity in page.amenities.all %}
+          <div class="col p-2">
+            <svg class="me-2" width="24" height="24" fill="currentColor" aria-hidden="true">
+              <use xlink:href="{% static 'assets/icons/icons.svg' %}#{{ amenity.icon_name }}" />
+            </svg>
+            {{ amenity.name }}
+          </div>
+        {% endfor %}
+      </div>
+    </section>
     {% if page.body %}
       <section class="py-3" id="about">
         <h2 class="fs-5 pb-3">Sobre {{ page.title }}</h2>
         <div class="row">
-          <div class="col-12 col-md-7">{{ page.body }}</div>
+          <div class="col-12">{{ page.body }}</div>
         </div>
       </section>
     {% endif %}
