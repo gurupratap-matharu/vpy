@@ -12,7 +12,7 @@
               {% if forloop.first %}
                 <span>Home</span>
               {% else %}
-                {{ ancestor }}
+                {{ ancestor|truncatechars:10 }}
               {% endif %}
             </a>
           </li>

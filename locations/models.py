@@ -12,7 +12,7 @@ from django.utils.translation import gettext_lazy as _
 from wagtail.admin.panels import FieldPanel, FieldRowPanel, InlinePanel, MultiFieldPanel, PageChooserPanel
 from wagtail.contrib.routable_page.models import RoutablePageMixin
 from wagtail.fields import StreamField
-from wagtail.models import Orderable
+from wagtail.models import Orderable, PageManager
 from wagtail.search import index
 
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
@@ -306,6 +306,13 @@ class StationIndexPage(BasePage):
         return breadcrumb_schema
 
 
+class StationPageManager(PageManager):
+    def get_queryset(self):
+        logger.info("StationPageManager: get_queryset called...")
+        qs = super().get_queryset().select_related("locale")
+        return qs
+
+
 class StationPage(RoutablePageMixin, BasePage):
     """
     A station detail view which represent a stop | terminal | station
@@ -420,6 +427,8 @@ class StationPage(RoutablePageMixin, BasePage):
             classname="collapsed",
         ),
     ]
+
+    objects = StationPageManager()
 
     class Meta:
         verbose_name = "Station Page"

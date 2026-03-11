@@ -64,6 +64,7 @@
         </div>
       </div>
     </section>
+    {% comment %}
     <section class="sticky-top">
       <ul class="nav nav-underline bg-white border-bottom" id="scrollnav">
         <li class="nav-item">
@@ -83,6 +84,7 @@
         </li>
       </ul>
     </section>
+    {% endcomment %}
     <section class="py-3 py-md-5">
       {% include "includes/search_form.html" %}
     </section>
@@ -105,11 +107,6 @@
         </div>
       </div>
     </section>
-    {% if page.intro %}
-      <section class="py-3">
-        <h2 class="lead">{{ page.intro }}</h2>
-      </section>
-    {% endif %}
     {% if page.destinations %}
       <section class="py-3" id="destinos">
         {{ page.destinations }}
@@ -120,9 +117,24 @@
         {{ page.info }}
       </section>
     {% endif %}
-    {% if page.faq %}
-      <section class="py-3" id="faq">
-        {{ page.faq }}
+    {% if page.intro %}
+      <section class="py-3">
+        <h2 class="lead">{{ page.intro }}</h2>
+      </section>
+    {% endif %}
+    {% if page.hero_image %}
+      <section class="py-3">
+        <h2 class="fs-5">{% translate "Galería" %}</h2>
+        <div class="row">
+          <div class="col-sm-4 mb-3">
+            {% picture page.hero_image original format-avif loading="lazy" class="img-fluid border-radius-xl" %}
+          </div>
+          {% for item in page.gallery_images.all %}
+            <div class="col-sm-4 mb-3">
+              {% picture item.image original format-avif loading="lazy" class="img-fluid border-radius-xl" %}
+            </div>
+          {% endfor %}
+        </div>
       </section>
     {% endif %}
     {% if page.body %}
@@ -130,15 +142,12 @@
         <h2 class="fs-5 pb-3">Sobre {{ page.title }}</h2>
         <div class="row">
           <div class="col-12 col-md-7">{{ page.body }}</div>
-          {% if page.hero_image %}
-            <div class="col-12 col-md-5">
-              <figure class="figure">
-                {% image page.hero_image original format-avif loading="lazy" class="figure-img img-fluid d-block rounded-3 shadow-xl" %}
-                <figcaption class="figure-caption text-center text-xs">{{ page.image.caption }}</figcaption>
-              </figure>
-            </div>
-          {% endif %}
         </div>
+      </section>
+    {% endif %}
+    {% if page.faq %}
+      <section class="py-3" id="faq">
+        {{ page.faq }}
       </section>
     {% endif %}
     {% if page.ratings %}
