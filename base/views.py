@@ -1,10 +1,15 @@
 from django.conf import settings
-from django.http import FileResponse, HttpRequest
+from django.contrib import messages
+from django.http import FileResponse, HttpRequest, HttpResponse
+from django.shortcuts import redirect
+from django.utils.translation import gettext_lazy as _
 from django.views.decorators.cache import cache_control
-from django.views.decorators.http import require_GET
+from django.views.decorators.http import require_GET, require_POST
 from django.views.generic import TemplateView
 
 from wagtail.models.sites import Site
+
+from .forms import PageFeedbackForm
 
 
 @require_GET
@@ -46,3 +51,15 @@ class IndexNow(TemplateView):
     template_name = "indexnow_key.txt"
     content_type = "text/plain"
     extra_context = {"key": settings.INDEXNOW_KEY}
+
+
+@require_POST
+def page_feedback(request: HttpRequest) -> HttpResponse:
+    form = PageFeedbackForm(data=request.POST)
+
+    if form.is_valid():
+        cd = form.cleaned_data
+        form.send_mail()
+        msg = _("Mensaje enviado exitosamente.")
+        messages.success(request, msg)
+        return redirect(cd["url"])

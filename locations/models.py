@@ -19,6 +19,7 @@ from modelcluster.fields import ParentalKey, ParentalManyToManyField
 
 from base.blocks import BaseStreamBlock, FAQBlock, LinkBlock, NavTabLinksBlock, RatingsBlock
 from base.choices import Weekday
+from base.forms import PageFeedbackForm
 from base.models import BasePage
 from base.validators import validate_phone
 
@@ -449,7 +450,14 @@ class StationPage(RoutablePageMixin, BasePage):
         }
         context["options"] = options
         context["today"] = timezone.now().weekday()
+        context["page_feedback_form"] = self.get_page_feedback_form()
         return context
+
+    def get_page_feedback_form(self):
+        # prepopulate the hidden url field with page url
+        initial = {"url": self.url}
+        form = PageFeedbackForm(initial=initial)
+        return form
 
     def get_google_maps_directions_url(self):
         return f"https://www.google.com/maps/dir/?api=1&destination={self.lat_long}"

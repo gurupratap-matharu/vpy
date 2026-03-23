@@ -24,6 +24,7 @@ from base.blocks import (
     NavTabLinksBlock,
     RatingsBlock,
 )
+from base.forms import PageFeedbackForm
 from base.models import BasePage
 
 from .managers import PartnerPageManager
@@ -259,7 +260,14 @@ class PartnerPage(BasePage):
         }
         context["options"] = options
         context["gallery"] = self.get_gallery()
+        context["page_feedback_form"] = self.get_page_feedback_form()
         return context
+
+    def get_page_feedback_form(self):
+        # prepopulate the hidden url field with page url
+        initial = {"url": self.url}
+        form = PageFeedbackForm(initial=initial)
+        return form
 
     def get_gallery(self):
         return self.gallery_images.select_related("image")

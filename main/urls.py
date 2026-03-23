@@ -31,6 +31,7 @@ urlpatterns = [
     path("accounts/", include("allauth.urls")),
     path("i18n/", include("django.conf.urls.i18n")),
     path("documents/", include(wagtaildocs_urls)),
+    path("base/", include("base.urls")),
     path("django-admin/", admin.site.urls),
     path("sitemap.xml", sitemap),
     path("favicon.ico", favicon),

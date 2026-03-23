@@ -192,6 +192,44 @@
     <section class="py-3">
       {% include "includes/mission.html" %}
     </section>
+    <section class="py-3">
+      <div class="row">
+        <div class="col-md-3">
+          <p>
+            <strong>{% translate "¿Te fue útil esta página?" %}</strong>
+          </p>
+        </div>
+        <div class="col-md-auto">
+          <button class="btn btn-outline-dark me-2"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#feedbackFail"
+                  aria-expanded="false"
+                  aria-controls="feedbackFail">{% translate "No me sirvió" %}</button>
+          <button class="btn btn-outline-dark"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#feedbackSuccess"
+                  aria-expanded="false"
+                  aria-controls="feedbackSuccess">{% translate "Sí, me fue útil" %}</button>
+        </div>
+      </div>
+      <div class="collapse" id="feedbackFail">
+        <div class="row">
+          <div class="col-sm-6 py-3">
+            <p class="fw-bold">{% translate "¿En qué aspectos esta página no es útil?" %}</p>
+            <form method="post" action="{% url 'base:page-feedback' %}">
+              {% csrf_token %}
+              {{ page_feedback_form }}
+              <button type="submit" class="btn bg-gradient-primary">{% translate "Enviar" %}</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="collapse" id="feedbackSuccess">
+        <p>{% translate "Gracias por tus comentarios." %}</p>
+      </div>
+    </section>
   </article>
   {% include "includes/seo_links.html" %}
 {% endblock content %}

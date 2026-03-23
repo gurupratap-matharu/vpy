@@ -21,6 +21,7 @@ from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from taggit.models import Tag, TaggedItemBase
 
 from base.blocks import BaseStreamBlock
+from base.forms import PageFeedbackForm
 from base.models import BasePage
 
 
@@ -265,6 +266,17 @@ class BlogPage(BasePage):
     class Meta:
         verbose_name = "blogpage"
         verbose_name_plural = "blogpages"
+
+    def get_context(self, request, *args, **kwargs):
+        context = super().get_context(request, *args, **kwargs)
+        context["page_feedback_form"] = self.get_page_feedback_form()
+        return context
+
+    def get_page_feedback_form(self):
+        # prepopulate the hidden url field with page url
+        initial = {"url": self.url}
+        form = PageFeedbackForm(initial=initial)
+        return form
 
     def main_image(self):
         gallery_item = self.gallery_images.first()
