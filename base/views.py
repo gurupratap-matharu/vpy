@@ -9,7 +9,7 @@ from django.views.generic import TemplateView
 
 from wagtail.models.sites import Site
 
-from .forms import PageFeedbackForm
+from .forms import PageFeedbackForm, SuggestionForm
 
 
 @require_GET
@@ -57,6 +57,17 @@ class IndexNow(TemplateView):
 def page_feedback(request: HttpRequest) -> HttpResponse:
     form = PageFeedbackForm(data=request.POST)
 
+    if form.is_valid():
+        cd = form.cleaned_data
+        form.send_mail()
+        msg = _("Mensaje enviado exitosamente.")
+        messages.success(request, msg)
+        return redirect(cd["url"])
+
+
+@require_POST
+def suggestion(request: HttpRequest) -> HttpResponse:
+    form = SuggestionForm(data=request.POST)
     if form.is_valid():
         cd = form.cleaned_data
         form.send_mail()

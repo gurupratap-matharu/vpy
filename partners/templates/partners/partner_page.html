@@ -64,26 +64,9 @@
         </div>
       </div>
     </section>
-    <section class="py-3 py-md-5">
-      {% include "includes/search_form.html" %}
-    </section>
-    <section class="py-3 py-md-5">
-      <div class="row">
-        <div class="col-4 col-md-2 rounded-3 d-flex align-items-center">{% image page.logo original class="img-fluid" %}</div>
-        <div class="col-8 col-md-8 ps-3">
-          <div class="d-flex align-items-center">
-            <h2 class="fs-5 mb-0 me-1">{{ page.title }}</h2>
-            <img class="img-fluid" alt="blue-check-mark" src="{% static 'assets/icons/blue-check.svg' %}" />
-          </div>
-          {{ page.contact }}
-        </div>
-        <div class="col-6 col-md-2 mt-3 mt-md-0">
-          <a href="/cuentanos-como-fue-tu-experiencia/" target="_blank" class="text-sm">
-            <svg class="bi" width="16" height="16" fill="currentColor" aria-hidden="true">
-              <use xlink:href="{% static 'assets/icons/icons.svg' %}#chat-left-dots" />
-            </svg>
-          Escribí Opinion</a>
-        </div>
+    <section>
+      <div class="col-12 col-md-5">
+        {% image page.hero_image original format-avif loading="lazy" class="img-fluid d-block shadow-xl rounded-3" %}
       </div>
     </section>
     <section class="sticky-top">
@@ -98,12 +81,37 @@
           <a class="nav-link" href="#gallery">{% translate "Galería" %}</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#about">{% translate "Sobre" %}</a>
-        </li>
-        <li class="nav-item">
           <a class="nav-link" href="#faq">{% translate "Faq" %}</a>
         </li>
       </ul>
+    </section>
+    <section class="py-3">
+      <div class="row">
+        <div class="col-4 col-md-2 rounded-3 d-flex align-items-center">{% image page.logo original class="img-fluid" %}</div>
+        <div class="col-8 col-md-8 ps-3">
+          <div class="d-flex align-items-center">
+            <h2 class="fs-5 mb-0 me-1">{{ page.title }}</h2>
+            <svg class="bi" width="24" height="24" fill="currentColor" aria-hidden="true">
+              <use xlink:href="{% static 'assets/icons/icons.svg' %}#blue-check" />
+            </svg>
+          </div>
+          <ul class="text-sm list-unstyled">
+            <li>
+              <span class="text-secondary">Salidas</span> {{ page.daily_departures }} • <span class="text-secondary">Rutas</span> {{ page.num_routes }}
+            </li>
+            <li>
+              <span class="text-secondary">Destinos</span> {{ page.cities }} • <span class="text-secondary">Países</span> {{ page.countries }}
+            </li>
+          </ul>
+        </div>
+        <div class="col-6 col-md-2 mt-3 mt-md-0">
+          <a href="/cuentanos-como-fue-tu-experiencia/" target="_blank" class="text-sm">
+            <svg class="bi" width="16" height="16" fill="currentColor" aria-hidden="true">
+              <use xlink:href="{% static 'assets/icons/icons.svg' %}#chat-left-dots" />
+            </svg>
+          Escribí Opinion</a>
+        </div>
+      </div>
     </section>
     {% if page.destinations %}
       <section class="py-3" id="destinos">
@@ -124,9 +132,6 @@
       <section class="py-3" id="gallery">
         <h2 class="fs-5 mb-3">{% translate "Galería" %}</h2>
         <div class="row g-3">
-          <div class="col-sm-4">
-            {% image page.hero_image original format-avif loading="lazy" class="img-fluid shadow-xl rounded-3" %}
-          </div>
           {% for item in gallery %}
             <div class="col-sm-4">
               {% image item.image original format-avif loading="lazy" class="img-fluid shadow-xl rounded-3" %}
@@ -136,7 +141,7 @@
       </section>
     {% endif %}
     <section class="py-3" id="servicios">
-      <h2 class="fs-5">{% translate "Comodidades" %}</h2>
+      <h2 class="fs-5">{% translate "Servicios" %}</h2>
       <div class="row row-cols-1 row-cols-md-3">
         {% for amenity in page.amenities.all %}
           <div class="col p-2">
@@ -148,17 +153,17 @@
         {% endfor %}
       </div>
     </section>
+    {% if page.faq %}
+      <section class="py-3" id="faq">
+        {{ page.faq }}
+      </section>
+    {% endif %}
     {% if page.body %}
       <section class="py-3" id="about">
         <h2 class="fs-5 pb-3">Sobre {{ page.title }}</h2>
         <div class="row">
-          <div class="col-12">{{ page.body }}</div>
+          <div class="col-12 col-md-7">{{ page.body }}</div>
         </div>
-      </section>
-    {% endif %}
-    {% if page.faq %}
-      <section class="py-3" id="faq">
-        {{ page.faq }}
       </section>
     {% endif %}
     {% if page.ratings %}
@@ -174,13 +179,6 @@
         </div>
       </section>
     {% endif %}
-    <section class="py-3">
-      <h2 class="fs-5 pb-3">¡Comprá tu pasaje con {{ page.title }}!</h2>
-      <p>
-        En <a href="https://ventanita.com.py">ventanita.com.py</a> podes buscar y
-        comparar los mejores precios de pasajes de {{ page.title }}, así como también obtener información detallada sobre las rutas y los horarios de partida. Averigua los promociones vigentes y comience a disfrutar de su viaje sin complicaciones.
-      </p>
-    </section>
     {% if page.links %}
       <section class="py-3">
         {{ page.links }}
@@ -215,19 +213,47 @@
         </div>
       </div>
       <div class="collapse" id="feedbackFail">
-        <div class="row">
-          <div class="col-sm-6 py-3">
-            <p class="fw-bold">{% translate "¿En qué aspectos esta página no es útil?" %}</p>
-            <form method="post" action="{% url 'base:page-feedback' %}">
-              {% csrf_token %}
-              {{ page_feedback_form }}
-              <button type="submit" class="btn bg-gradient-primary">{% translate "Enviar" %}</button>
-            </form>
+        <div class="alert alert-light" role="alert">
+          <div class="row">
+            <div class="col-sm-6">
+              <p class="fw-bold">{% translate "¿En qué aspectos esta página no es útil?" %}</p>
+              <form method="post" action="{% url 'base:page-feedback' %}">
+                {% csrf_token %}
+                {{ page_feedback_form }}
+                <div class="d-flex justify-content-end">
+                  <button type="submit" class="btn bg-gradient-primary">
+                    {% translate "Enviar" %}
+                    <svg class="bi ms-2" width="16" height="16" fill="CurrentColor" aria-hidden="true">
+                      <use xlink:href="{% static 'assets/icons/icons.svg' %}#arrow-right" />
+                    </svg>
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       </div>
       <div class="collapse" id="feedbackSuccess">
-        <p>{% translate "Gracias por tus comentarios." %}</p>
+        <div class="alert alert-light" role="alert">
+          <div class="row">
+            <div class="col-sm-6">
+              <p class="fw-bold">{% translate "Nos alegra que te guste." %}</p>
+              <small>{% translate "Si tienes alguna idea o sugerencia sobre cómo podemos hacerlo más útil, escríbenos aquí." %}</small>
+              <form method="post" action="{% url 'base:suggestion' %}">
+                {% csrf_token %}
+                {{ suggestion_form }}
+                <div class="d-flex justify-content-end">
+                  <button type="submit" class="btn bg-gradient-primary">
+                    {% translate "Enviar" %}
+                    <svg class="bi ms-2" width="16" height="16" fill="CurrentColor" aria-hidden="true">
+                      <use xlink:href="{% static 'assets/icons/icons.svg' %}#arrow-right" />
+                    </svg>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   </article>
@@ -240,10 +266,6 @@
 
 {% block extra_js %}
   {{ options|json_script:"options" }}
-  <script defer src="{% static 'assets/js/autocomplete.min.js' %}"></script>
-  <script defer src="{% static 'assets/js/flatpickr.min.js' %}"></script>
-  <script defer src="{% static 'assets/js/es.js' %}"></script>
-  <script defer src="{% static 'assets/js/search.js' %}"></script>
   <script defer src="{% static 'assets/js/partner_page.js' %}"></script>
   {# djlint:off #}
     <script type="application/ld+json">{{ page.ld_entity }}</script>
