@@ -2,14 +2,15 @@
 
 {% load static i18n %}
 
-{% block body_class %}template-homepage{% endblock %}
+{% block body_class %}
+  template-homepage
+{% endblock body_class %}
 
 {% block content %}
-  <article class="container col-12 col-xl-9">
-    <h1 class="display-1 text-center">Bus</h1>
-    <section class="py-3 py-md-5">
-      {% include 'includes/search_form.html' %}
-    </section>
+  <article class="container">
+    <h1>Paraguay en Bus</h1>
+    <a href="/terminales-de-omnibus/" class="me-2">Terminales</a>
+    <a href="/empresas-de-bus/">Empresas</a>
     <section class="py-3">
       {{ page.featured_pages }}
     </section>
@@ -20,31 +21,10 @@
       {{ page.links }}
     </section>
     <section class="py-3 py-md-5">
-      {% include 'includes/company-logos.html' %}
-    </section>
-    <section class="py-3">
-      <h2 class="fs-5 pb-3 text-center">Ventanita - Tu Travel Partner</h2>
-      <p class="text-sm text-center">
-        En <a href="/">Ventanita</a>, te ofrecemos una plataforma sencilla y segura para la compra de pasajes de micros en <a href="https://ventanita.com.ar">Argentina</a> y
-        <a href="https://ventanita.com.py">Paraguay</a>.
-        Con nuestra amplia variedad de opciones de rutas, podrás planificar tu próximo viaje con facilidad.
-        Desde <a href="https://ventanita.com.ar/pasajes-de-micro/pasajes-a-buenos-aires/">Buenos Aires</a> hasta el norte, sur y oeste del país, selecciona entre las principales <a href="/empresas-de-bus/">empresas de transporte</a>,
-        compara precios y horarios, y adquiere tus boletos en solo unos clics.
-      </p>
-      <p class="text-sm text-center">
-        Descubre destinos como <a href="/pasajes-de-micro/pasajes-a-asuncion/">Asuncion</a>, <a href="/pasajes-de-micro/pasajes-a-encarnacion/">Encarnacion</a>,
-        Buenos Aires y muchos más, y viaja cómodamente a precios competitivos.
-      </p>
-      <p class="text-sm text-center">
-        Además de la compra de pasajes, en <a href="/">Ventanita</a> también encontrarás información detallada sobre las empresas de colectivos
-        y sus servicios, como las comodidades a bordo, políticas de equipaje, y promociones especiales. Si eres un viajero
-        frecuente, consulta nuestras opciones de billetes flexibles y descuentos para grupos. Accede a nuestra plataforma desde
-        cualquier dispositivo, ya sea para reservar tu viaje o para obtener detalles sobre los horarios y las mejores
-        conexiones de bus entre las principales ciudades de <a href="/pasajes-de-micro/">Paraguay</a> y <a href="https://ventanita.com.ar/pasajes-de-micro/">Argentina</a>.
-      </p>
+      {% include "includes/company-logos.html" %}
     </section>
   </article>
-  {% include 'includes/seo_links.html' %}
+  {% include "includes/seo_links.html" %}
 {% endblock content %}
 
 {% block footer %}
@@ -52,11 +32,5 @@
 {% endblock footer %}
 
 {% block extra_js %}
-  <script defer src="{% static 'assets/js/autocomplete.min.js' %}"></script>
-  <script defer src="{% static 'assets/js/flatpickr.min.js' %}"></script>
-  <script defer src="{% static 'assets/js/es.js' %}"></script>
-  <script defer src="{% static 'assets/js/search.js' %}"></script>
-  {# djlint:off #}
-  <script type="application/ld+json">{{ page.ld_entity }}</script>
-  {# djlint:on #}
+  {# djlint:off #} <script type="application/ld+json">{{ page.ld_entity }}</script> {# djlint:on #}
 {% endblock extra_js %}
