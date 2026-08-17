@@ -11,16 +11,20 @@
     <h1>Paraguay en Bus</h1>
     <a href="/terminales-de-omnibus/" class="me-2">Terminales</a>
     <a href="/empresas-de-bus/">Empresas</a>
-    <section class="py-3">
-      {{ page.featured_pages }}
-    </section>
+    {% if page.featured_pages %}
+      <section class="py-3">
+        {{ page.featured_pages }}
+      </section>
+    {% endif %}
     <section class="py-3">
       {{ page.faq }}
     </section>
+    {% if page.links %}
+      <section class="py-3">
+        {{ page.links }}
+      </section>
+    {% endif %}
     <section class="py-3">
-      {{ page.links }}
-    </section>
-    <section class="py-3 py-md-5">
       {% include "includes/company-logos.html" %}
     </section>
   </article>

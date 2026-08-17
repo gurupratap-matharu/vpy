@@ -141,11 +141,11 @@
         <h2 class="fs-5">{% translate "Galería" %}</h2>
         <div class="row">
           <div class="col-sm-4 mb-3">
-            {% picture page.image original format-avif loading="lazy" class="img-fluid border-radius-xl" %}
+            {% picture page.image original format-avif loading="lazy" class="img-fluid border-radius-xl shadow-xl" %}
           </div>
           {% for item in page.gallery_images.all %}
             <div class="col-sm-4 mb-3">
-              {% picture item.image original format-avif loading="lazy" class="img-fluid border-radius-xl" %}
+              {% picture item.image original format-avif loading="lazy" class="img-fluid border-radius-xl shadow-xl" %}
             </div>
           {% endfor %}
         </div>
@@ -187,7 +187,7 @@
       <h2 class="fs-5 pb-3">Explora con Ventanita</h2>
       <p>
         En <a href="https://ventanita.com.py" class="fw-bold">ventanita.com.py</a> podes buscar y
-        comparar los mejores precios de micros a {{ page.title }}, así como también obtener información detallada sobre las rutas y los horarios de partida. Averigua los promociones vigentes y comience a disfrutar de su viaje sin complicaciones.
+        comparar y ver los horarios de micros a {{ page.title }}, así como también obtener información detallada sobre las rutas y los horarios de partida. Averigua los promociones vigentes y comience a disfrutar de su viaje sin complicaciones.
       </p>
       <ul>
         <li>Descubre nuevos destinos con total confianza</li>
