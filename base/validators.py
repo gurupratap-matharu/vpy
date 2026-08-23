@@ -6,3 +6,10 @@ validate_phone = RegexValidator(
     regex=r"^\+?1?\d{9,17}$",
     message=_("Phone number must be entered in the format: '+595 981 123 456'. Up to 17 digits allowed."),
 )
+
+
+validate_lat_lng = RegexValidator(
+    regex=r"^(\-?\d+(\.\d+)?),\s*(\-?\d+(\.\d+)?)$",
+    message="Lat Long must be a comma-separated numeric lat and long",
+    code="invalid_lat_long",
+)
