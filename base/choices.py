@@ -31,3 +31,13 @@ class Departamento(models.TextChoices):
     PARAGUARI = "PAR", "Paraguarí"
     PRESIDENTEHAYES = "PRH", "Presidente Hayes"
     SANPEDRO = "SPD", "San Pedro"
+
+
+class Country(models.TextChoices):
+    ARGENTINA = "ARG", "Argentina"
+    BOLIVIA = "BOL", "Bolivia"
+    BRAZIL = "BRA", "Brasil"
+    CHILE = "CHL", "Chile"
+    PARAGUAY = "PGY", "Paraguay"
+    PERU = "PER", "Perú"
+    URUGUAY = "URU", "Uruguay"
