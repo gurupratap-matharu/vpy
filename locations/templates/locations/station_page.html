@@ -112,10 +112,12 @@
           </svg>
         </a>
       {% endif %}
-      <h3 class="fs-6">{% translate "Dirección" %}</h3>
-      {{ page.address }}
+      {% if page.address %}
+        <h3 class="fs-6">{% translate "Dirección" %}</h3>
+        {{ page.address }}
+      {% endif %}
       {% if page.directions %}
-        <h3 class="fs-6">{% translate "¿Cómo llegar?" %}</h3>
+        <h3 class="fs-6 mt-3">{% translate "¿Cómo llegar?" %}</h3>
         {{ page.directions }}
       {% endif %}
     </section>

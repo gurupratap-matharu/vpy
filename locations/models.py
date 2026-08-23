@@ -17,11 +17,11 @@ from wagtail.search import index
 
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
 
-from base.blocks import BaseStreamBlock, FAQBlock, LinkBlock, NavTabLinksBlock, RatingsBlock
-from base.choices import Weekday
+from base.blocks import BaseStreamBlock, FAQBlock, LinkBlock, NavTabLinksBlock, RatingsBlock, NavTabBlock
+from base.choices import Weekday, Departamento, Country
 from base.forms import PageFeedbackForm
 from base.models import BasePage
-from base.validators import validate_phone
+from base.validators import validate_lat_lng, validate_phone
 
 
 logger = logging.getLogger(__name__)
@@ -249,9 +249,36 @@ class StationIndexPage(BasePage):
     page_description = "Use this page to show a list of terminals or stations"
 
     intro = models.TextField(help_text="Text to describe the page", blank=True)
+    image = models.ForeignKey(
+        "wagtailimages.Image",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
+        help_text="Landscape mode only; horizontal width between 1000px and 3000px.",
+    )
+    body = StreamField(BaseStreamBlock(), verbose_name="Page body", blank=True, collapsed=True)
+    faq = StreamField(
+        [("faq", FAQBlock())],
+        verbose_name="FAQ Section",
+        blank=True,
+        max_num=1,
+        collapsed=True,
+    )
+    links = StreamField(
+        [("Links", LinkBlock())],
+        verbose_name="Links Section",
+        blank=True,
+        max_num=1,
+        collapsed=True,
+    )
 
     content_panels = BasePage.content_panels + [
-        FieldPanel("intro"),
+        FieldPanel("intro", classname="collapsed"),
+        FieldPanel("image", classname="collapsed"),
+        FieldPanel("body", classname="collapsed"),
+        FieldPanel("faq", classname="collapsed"),
+        FieldPanel("links", classname="collapsed"),
     ]
 
     subpage_types = ["StationPage"]
@@ -331,9 +358,16 @@ class StationPage(RoutablePageMixin, BasePage):
         related_name="+",
         help_text="Landscape mode only; horizontal width between 1000px and 3000px.",
     )
-
+    lat_long = models.CharField(
+        max_length=36,
+        blank=True,
+        help_text="Comma separated lat/long. (Ex. 64.144367, -21.939182) \
+                   Right click Google Maps and select 'What's Here'",
+        validators=[validate_lat_lng],
+    )
     address = models.TextField(_("Address"))
     phone = models.CharField(_("Phone"), max_length=20, blank=True, validators=[validate_phone])
+    province = models.CharField(_("Province"), max_length=20, choices=Departamento, blank=True)
     departamento = models.ForeignKey(
         "wagtailcore.Page",
         null=True,
@@ -341,22 +375,18 @@ class StationPage(RoutablePageMixin, BasePage):
         on_delete=models.SET_NULL,
         related_name="terminales",
     )
-    lat_long = models.CharField(
-        max_length=36,
-        blank=True,
-        help_text="Comma separated lat/long. (Ex. 64.144367, -21.939182) \
-                   Right click Google Maps and select 'What's Here'",
-        validators=[
-            RegexValidator(
-                regex=r"^(\-?\d+(\.\d+)?),\s*(\-?\d+(\.\d+)?)$",
-                message="Lat Long must be a comma-separated numeric lat and long",
-                code="invalid_lat_long",
-            ),
-        ],
-    )
+    country = models.CharField(_("Country"), max_length=20, choices=Country, blank=True)
     services = ParentalManyToManyField("locations.Service", blank=True)
     directions = StreamField(BaseStreamBlock(), verbose_name="Directions (Como llegar?)", blank=True, collapsed=True)
     body = StreamField(BaseStreamBlock(), verbose_name="Page body", blank=True, collapsed=True)
+
+    info = StreamField(
+        [("Info", NavTabBlock())],
+        verbose_name="Info Section",
+        blank=True,
+        max_num=1,
+        collapsed=True,
+    )
 
     faq = StreamField(
         [("faq", FAQBlock())],
@@ -401,6 +431,9 @@ class StationPage(RoutablePageMixin, BasePage):
                 FieldPanel("phone"),
                 FieldPanel("address"),
                 FieldPanel("lat_long"),
+                FieldPanel("province"),
+                FieldPanel("departamento"),
+                FieldPanel("country"),
                 FieldPanel("services", widget=forms.CheckboxSelectMultiple),
                 InlinePanel(
                     "opening_hours",
@@ -413,6 +446,7 @@ class StationPage(RoutablePageMixin, BasePage):
             heading="Basic Info",
             classname="collapsed",
         ),
+        FieldPanel("info", classname="collapsed"),
         FieldPanel("directions", classname="collapsed"),
         FieldPanel("body", classname="collapsed"),
         FieldPanel("faq", classname="collapsed"),
