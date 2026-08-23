@@ -102,6 +102,11 @@
         {{ page.companies }}
       </section>
     {% endif %}
+    {% if page.info %}
+      <section class="py-3" id="info">
+        {{ page.info }}
+      </section>
+    {% endif %}
     <section class="py-3" id="info">
       <h2 class="fs-5">{% translate "Información Útil" %}</h2>
       {% if page.phone %}
