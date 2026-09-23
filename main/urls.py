@@ -13,20 +13,7 @@ from base.views import IndexNow, RobotsView, favicon
 from search import views as search_views
 
 
-def debug_ip(request):
-    from django.http import JsonResponse
-
-    return JsonResponse(
-        {
-            "REMOTE_ADDR": request.META.get("REMOTE_ADDR"),
-            "HTTP_X_FORWARDED_FOR": request.META.get("HTTP_X_FORWARDED_FOR"),
-            "HTTP_CF_CONNECTING_IP": request.META.get("HTTP_CF_CONNECTING_IP"),
-        }
-    )
-
-
 urlpatterns = [
-    path("debugip/", debug_ip),
     path("private/", include(wagtailadmin_urls)),
     path("accounts/", include("allauth.urls")),
     path("i18n/", include("django.conf.urls.i18n")),
@@ -37,9 +24,7 @@ urlpatterns = [
     path("favicon.ico", favicon),
     path("robots.txt", RobotsView.as_view()),
     path(f"{settings.INDEXNOW_KEY}.txt", IndexNow.as_view(), name="indexnow"),
-    path("styleguide/", TemplateView.as_view(template_name="styleguide.html")),
     path("", include("pages.urls")),
-    path("", include("trips.urls")),
 ]
 
 
@@ -53,6 +38,7 @@ if settings.DEBUG:
 
     # Add routes to test error templates
     urlpatterns += [
+        path("styleguide/", TemplateView.as_view(template_name="styleguide.html")),
         path("test404/", TemplateView.as_view(template_name="404.html")),
         path("test500/", TemplateView.as_view(template_name="500.html")),
     ]
