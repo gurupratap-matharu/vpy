@@ -338,10 +338,13 @@ class PartnerPage(BasePage):
         bus operator in the organisation schema markup with aggregated Ratings.
         """
 
-        image = self.logo or self.listing_image or self.social_image
+        logo = self.logo or self.listing_image or self.social_image
+        logo_url = logo.file.url if logo else ""
+
+        image = self.hero_image or self.listing_image or self.social_image
         image_url = image.file.url if image else ""
 
-        contact = dict()
+        contact = {}
         if self.contact:
             contact.update(self.contact.raw_data[0]["value"])
 
@@ -361,7 +364,7 @@ class PartnerPage(BasePage):
             "@type": "Organization",
             "name": self.title,
             "url": self.full_url,
-            "logo": f"https://ventanita.com.py{image_url}",
+            "logo": f"https://ventanita.com.py{logo_url}",
             "image": f"https://ventanita.com.py{image_url}",
             "description": self.search_description,
             "email": email,
@@ -405,7 +408,7 @@ class PartnerPage(BasePage):
                 {
                     "@type": "ListItem",
                     "position": 2,
-                    "name": "Empresas de Omnibus",
+                    "name": "Empresas de Bus",
                     "item": self.get_parent().full_url,
                 },
                 {

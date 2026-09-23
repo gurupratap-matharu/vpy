@@ -501,11 +501,11 @@ class StationPage(RoutablePageMixin, BasePage):
             {
                 "@context": "http://schema.org",
                 "@graph": [
-                    self._get_station_schema(),
-                    self._get_image_schema(),
-                    self._get_faq_schema(),
-                    self._get_organisation_schema(),
                     self._get_breadcrumb_schema(),
+                    self._get_image_schema(),
+                    self._get_station_schema(),
+                    self._get_organisation_schema(),
+                    self._get_faq_schema(),
                 ],
             },
             ensure_ascii=False,
