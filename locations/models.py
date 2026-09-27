@@ -17,8 +17,8 @@ from wagtail.search import index
 
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
 
-from base.blocks import BaseStreamBlock, FAQBlock, LinkBlock, NavTabLinksBlock, RatingsBlock, NavTabBlock
-from base.choices import Weekday, Departamento, Country
+from base.blocks import BaseStreamBlock, FAQBlock, LinkBlock, NavTabBlock, NavTabLinksBlock, RatingsBlock
+from base.choices import Country, Departamento, Weekday
 from base.forms import PageFeedbackForm
 from base.models import BasePage
 from base.validators import validate_lat_lng, validate_phone
@@ -539,6 +539,8 @@ class StationPage(RoutablePageMixin, BasePage):
     def _get_image_schema(self):
         image = self.image or self.social_image
         image_url = image.file.url if image else ""
+        image_title = getattr(image, "title", "")
+        image_description = getattr(image, "description", "")
 
         image_schema = {
             "@context": "https://schema.org",
@@ -547,12 +549,12 @@ class StationPage(RoutablePageMixin, BasePage):
             "url": f"https://ventanita.com.py{image_url}",
             "license": "https://ventanita.com.py/condiciones-generales/",
             "acquireLicensePage": "https://ventanita.com.py/contact/",
-            "creditText": image.title,
+            "creditText": image_title,
             "creator": {"@type": "Person", "name": "Ventanita"},
             "copyrightNotice": "Ventanita",
             "contentLocation": self.title,
-            "description": image.description,
-            "name": image.title,
+            "description": image_description,
+            "name": image_title,
         }
 
         return image_schema

@@ -8,30 +8,18 @@
 
 {% block content %}
   <div class="container col-12 col-xl-9 mt-3 min-vh-75">
+    {% breadcrumbs %}
     <h1 class="fs-2">
-      <span class="text-primary text-gradient">{% translate "Busca pasajes baratos en" %}</span>
+      <span class="text-primary text-gradient">{% translate "Ciudades en" %}</span>
       <br />
       {{ page.title }}
     </h1>
-    <section class="py-3 py-md-5">
-      {% include 'includes/search_form.html' %}
-    </section>
-    <section class="py-3">
-      {% breadcrumbs %}
-    </section>
-    <section class="row row-cols-2 row-cols-md-4 mx-2">
+    <section class="row row-cols-2 row-cols-md-4">
       {% for city in cities %}
-        <div class="col p-1">
+        <div class="col">
           <a href="{% pageurl city %}">{{ city }}</a>
         </div>
       {% endfor %}
-    </section>
-    <section class="py-3 py-md-5">
-      <h2 class="fs-5 pb-3">¡Comprá tu pasajes en Ventanita!</h2>
-      <p>
-        En <a href="https://ventanita.com.py" class="fw-bold">ventanita.com.py</a> podes buscar y
-        comparar los mejores precios de micros en Paraguay y paises limitrofes, así como también obtener información detallada sobre las rutas y los horarios de partida. Averigua los promociones vigentes y comience a disfrutar de su viaje sin complicaciones.
-      </p>
     </section>
     <section class="py-3 py-md-5">
       {% include "includes/company-logos.html" %}
@@ -48,11 +36,5 @@
 {% endblock footer %}
 
 {% block extra_js %}
-  <script defer src="{% static 'assets/js/autocomplete.min.js' %}"></script>
-  <script defer src="{% static 'assets/js/flatpickr.min.js' %}"></script>
-  <script defer src="{% static 'assets/js/es.js' %}"></script>
-  <script defer src="{% static 'assets/js/search.js' %}"></script>
-  {# djlint:off #}
-    <script type="application/ld+json">{{ page.ld_entity }}</script>
-  {# djlint:on #}
+  {# djlint:off #} <script type="application/ld+json">{{ page.ld_entity }}</script> {# djlint:on #}
 {% endblock extra_js %}
