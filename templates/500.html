@@ -18,18 +18,16 @@
   <div class="container mt-3">
     <div class="row">
       <div class="col col-sm-10 col-md-8 col-lg-6 mx-auto">
-        <div class="alert alert-light alert-dismissible fade show" role="alert">
-          <svg class="bi flex-shrink-0 me-2" width="24" height="24" fill="currentColor" aria-label="Danger:">
-            <use xlink:href="{% static 'assets/icons/icons.svg' %}#bell" />
-          </svg>
-          {% translate "Uh Oh! Tenemos una problema. Lo estamos resolviendo" %}
-          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        <p class="text-sm">
-          {% blocktranslate %}
-          Si deseas dejarnos un mensaje por favor <a href="/contact/">escribinos aquí</a> o ir al <a href="/">home</a>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          <h4 class="alert-heading">{% translate "Error :/" %}</h4>
+          <p>{% translate "Uh Oh! Tenemos una problema y lo estamos resolviendo." %}</p>
+          <hr />
+          <p>
+            {% blocktranslate %}
+          Si deseas dejarnos un mensaje por favor <a class="alert-link" href="/contact/">escribinos aquí</a> o ir al <a class="alert-link" href="/">home</a>
           {% endblocktranslate %}
-        </p>
+          </p>
+        </div>
       </div>
     </div>
   </div>
