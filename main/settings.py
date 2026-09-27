@@ -91,11 +91,11 @@ AUTHENTICATION_BACKENDS = [
 
 AUTH_USER_MODEL = "users.CustomUser"
 
+TESTING = "test" in sys.argv
 
 # Debug Toolbar
-INTERNAL_IPS = ["127.0.0.1"]
-TESTING = "test" in sys.argv
-if not TESTING:
+if DEBUG and not TESTING:
+    INTERNAL_IPS = ["127.0.0.1"]
     INSTALLED_APPS = [*INSTALLED_APPS, "debug_toolbar"]
     MIDDLEWARE = ["debug_toolbar.middleware.DebugToolbarMiddleware", *MIDDLEWARE]
 

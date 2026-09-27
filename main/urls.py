@@ -15,11 +15,11 @@ from search import views as search_views
 
 urlpatterns = [
     path("private/", include(wagtailadmin_urls)),
+    path("dj-admin/", admin.site.urls),
     path("accounts/", include("allauth.urls")),
     path("i18n/", include("django.conf.urls.i18n")),
     path("documents/", include(wagtaildocs_urls)),
     path("base/", include("base.urls")),
-    path("django-admin/", admin.site.urls),
     path("sitemap.xml", sitemap),
     path("favicon.ico", favicon),
     path("robots.txt", RobotsView.as_view()),
@@ -28,9 +28,11 @@ urlpatterns = [
 ]
 
 
-if settings.DEBUG:
+if settings.DEBUG and not settings.TESTING:
     from django.conf.urls.static import static
     from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+
+    from debug_toolbar.toolbar import debug_toolbar_urls
 
     # Serve static and media files from development server
     urlpatterns += staticfiles_urlpatterns()
@@ -43,11 +45,7 @@ if settings.DEBUG:
         path("test500/", TemplateView.as_view(template_name="500.html")),
     ]
 
-
-if not settings.TESTING:
-    from debug_toolbar.toolbar import debug_toolbar_urls
-
-    urlpatterns = [*urlpatterns] + debug_toolbar_urls()
+    urlpatterns += debug_toolbar_urls()
 
 
 urlpatterns += i18n_patterns(
