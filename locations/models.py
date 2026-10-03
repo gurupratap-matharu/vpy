@@ -336,7 +336,6 @@ class StationIndexPage(BasePage):
 
 class StationPageManager(PageManager):
     def get_queryset(self):
-        logger.info("StationPageManager: get_queryset called...")
         qs = super().get_queryset().select_related("locale")
         return qs
 
