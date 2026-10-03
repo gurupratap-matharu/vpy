@@ -128,7 +128,6 @@ ACCOUNT_USERNAME_VALIDATORS = "users.validators.ascii_validator"
 ACCOUNT_SESSION_REMEMBER = True
 ACCOUNT_ADAPTER = "users.adapters.AccountAdapter"
 
-ALLAUTH_TRUSTED_CLIENT_IP_HEADER = "CF-Connecting-IP"
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 
