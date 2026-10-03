@@ -3,18 +3,21 @@
 {% load static i18n account socialaccount %}
 
 {% block title %}
-  {% trans "Sign in" %}
+  {% translate "Sign in" %}
 {% endblock title %}
 
 {% block header %}
 {% endblock header %}
 
 {% block content %}
-  <div class="row">
+  <div class="row vh-100 align-items-center">
     <div class="col-sm-8 col-md-6 col-lg-4 mx-auto">
+      <div class="text-center">
+        <a href="/" aria-label="{{ site_name }}" class="navbar-brand fs-3">{{ site_name }}</a>
+      </div>
       <div class="card card-plain">
-        <div class="card-header pb-0 text-center bg-transparent">
-          <h5>{% translate "Welcome Back" %}</h5>
+        <div class="card-header text-center">
+          <h5 class="mb-4">{% translate "Login" %}</h5>
           <a class="btn shadow-none border" href="{% provider_login_url 'facebook' method="oauth2" %}">
             <svg width="24" height="24" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
               <g transform="translate(3 3)" fill="none">
