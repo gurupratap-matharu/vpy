@@ -16,8 +16,13 @@ dump-data:
 pullmedia:
 	rsync -azP DO:/home/veer/code/vpy/media .
 
-pulldb:
+pulldbold:
 	rsync -azP DO:/home/veer/code/vpy/db.sqlite3 .
+
+pulldb:
+	ssh DO "sqlite3 /home/veer/code/vpy/db.sqlite3 '.backup /tmp/db-backup.sqlite3'"
+	rsync -azP DO:/tmp/db-backup.sqlite3 ./db.sqlite3
+	ssh DO "rm /tmp/db-backup.sqlite3"
 
 tags:
 	ctags --recurse=yes --exclude=.git --exclude=docs --exclude=static --exclude=staticfiles
