@@ -105,7 +105,6 @@ ROOT_URLCONF = "main.urls"
 
 # Django allauth
 ACCOUNT_LOGIN_METHODS = {"email"}
-ACCOUNT_LOGIN_BY_CODE_ENABLED = True
 
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 ACCOUNT_EMAIL_VERIFICATION_BY_CODE_ENABLED = True
@@ -120,8 +119,6 @@ ACCOUNT_LOGOUT_REDIRECT = "/"
 
 ACCOUNT_PASSWORD_RESET_BY_CODE_ENABLED = True
 
-ACCOUNT_PHONE_VERIFICATION_SUPPORTS_RESEND = True
-
 ACCOUNT_PRESERVE_USERNAME_CASING = False
 ACCOUNT_USERNAME_MIN_LENGTH = 3
 ACCOUNT_USERNAME_VALIDATORS = "users.validators.ascii_validator"
@@ -130,6 +127,8 @@ ACCOUNT_ADAPTER = "users.adapters.AccountAdapter"
 
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
+
+SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True
 
 SOCIALACCOUNT_PROVIDERS = {
     "google": {
@@ -145,6 +144,7 @@ SOCIALACCOUNT_PROVIDERS = {
         "AUTH_PARAMS": {
             "access_type": "online",
         },
+        "EMAIL_AUTHENTICATION": True,
     },
     "facebook": {
         "APP": {
@@ -157,6 +157,7 @@ SOCIALACCOUNT_PROVIDERS = {
             "email",
             "public_profile",
         ],
+        "EMAIL_AUTHENTICATION": True,
         "AUTH_PARAMS": {
             "auth_type": "reauthenticate",
         },
@@ -259,6 +260,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+        "OPTIONS": {
+            "min_length": 9,
+        },
     },
     {
         "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
@@ -438,6 +442,11 @@ LOGGING = {
 
 SHELL_PLUS_PRINT_SQL = True
 SHELL_PLUS_PRINT_SQL_TRUNCATE = None
+SHELL_PLUS_IMPORTS = [
+    "import json, random",
+    "from datetime import datetime, timedelta",
+]
+
 
 if not DEBUG:
     EMAIL_HOST = "smtp.mailgun.org"
