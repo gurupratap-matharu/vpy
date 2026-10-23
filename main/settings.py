@@ -128,7 +128,6 @@ ACCOUNT_ADAPTER = "users.adapters.AccountAdapter"
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 
-SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True
 
 SOCIALACCOUNT_PROVIDERS = {
     "google": {
@@ -145,6 +144,7 @@ SOCIALACCOUNT_PROVIDERS = {
             "access_type": "online",
         },
         "EMAIL_AUTHENTICATION": True,
+        "VERIFIED_EMAIL": True,
     },
     "facebook": {
         "APP": {
@@ -157,7 +157,8 @@ SOCIALACCOUNT_PROVIDERS = {
             "email",
             "public_profile",
         ],
-        "EMAIL_AUTHENTICATION": True,
+        "EMAIL_AUTHENTICATION": False,
+        "VERIFIED_EMAIL": False,
         "AUTH_PARAMS": {
             "auth_type": "reauthenticate",
         },
@@ -174,7 +175,6 @@ SOCIALACCOUNT_PROVIDERS = {
         ],
         "EXCHANGE_TOKEN": True,
         "LOCALE_FUNC": lambda request: "es_LA",
-        "VERIFIED_EMAIL": True,
         "VERSION": "v13.0",
         "GRAPH_API_URL": "https://graph.facebook.com/v13.0",
     },
@@ -447,6 +447,8 @@ SHELL_PLUS_IMPORTS = [
     "from datetime import datetime, timedelta",
 ]
 
+RED_BASE_URL = os.getenv("RED_BASE_URL")
+PINK_BASE_URL = os.getenv("PINK_BASE_URL")
 
 if not DEBUG:
     EMAIL_HOST = "smtp.mailgun.org"

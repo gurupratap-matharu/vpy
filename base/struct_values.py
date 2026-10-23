@@ -46,7 +46,7 @@ class RatingsStructValue(StructValue):
 
     def get_star_colors(self):
         stars = self.stats[2]
-        return ["gold"] * stars + ["lightgrey"] * (5 - stars)
+        return ["#ffc107"] * stars + ["lightgrey"] * (5 - stars)
 
     def get_star_percentages(self):
         return self.stats[3]
