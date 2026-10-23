@@ -15,12 +15,10 @@
             <div class="card h-100">
               {% image post.image fill-400x300 class="card-img-top" %}
               <div class="card-body">
-                <h5 class="card-title">
-                  <a href="{% pageurl post %}">{{ post.title }}</a>
-                </h5>
+                <h5 class="card-title">{{ post.title }}</h5>
                 <p class="card-text">{{ post.intro|truncatechars:120 }}</p>
-                <a href="{% pageurl post %}" class="card-link icon-link icon-link-hover">{% translate "Leer" %}
-                  <svg class="bi" width="16" height="16" fill="currentColor" aria-hidden="true">
+                <a href="{% pageurl post %}" class="stretched-link">{% translate "Leer" %}
+                  <svg width="16" height="16" fill="currentColor" aria-hidden="true">
                     <use xlink:href="{% static 'assets/icons/icons.svg' %}#chevron-right" />
                   </svg>
                 </a>

@@ -15,40 +15,31 @@
             width: 0%;
             height: 3px;
             z-index: 9999;
-            background: linear-gradient(310deg, #7928ca, #ff0080);
+            background: rgb(5, 74, 218);
             transition: width 0.2s ease;
-       }
-
-
-       #toc .nav-link {
-            color: #6c757d;
-            padding: 3px 0;
-       }
-
-       #toc .nav-link.active {
-            color: #054ada;
-            font-weight: 600;
        }
   </style>
 {% endblock extra_css %}
 
 {% block content %}
+  {# Top progress bar #}
   <div id="reading-progress"></div>
+  {# Page header #}
   <section class="container">
     <div class="row">
       <div class="col col-lg-6 mx-auto">
-        <h1 class="display-4 text-center">{{ page.title }}</h1>
+        <h1 class="text-center">{{ page.title }}</h1>
         {% for author in page.authors %}
           <div class="author justify-content-center align-items-center py-3 py-md-5">
             {% image author.image width-200 class="avatar avatar-xl rounded-circle" %}
             <div class="name ps-2">
-              <p class="h6 mb-0">Por: {{ author.first_name }} {{ author.last_name }}</p>
+              <p class="h6 mb-0">{% translate "Por " %} {{ author.first_name }} {{ author.last_name }}</p>
               <div class="stats">
-                <small class="text-sm text-secondary">Actualizado: {{ page.date }}</small>
-                <svg class="mx-1" width="8" height="8" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                  <circle cx="32" cy="32" r="30" fill="#054ada" />
+                <small class="text-sm">{% translate "Actualizado " %}{{ page.date }}</small>
+                <svg width="24" height="24" fill="currentColor" aria-hidden="true">
+                  <use xlink:href="{% static 'assets/icons/icons.svg' %}#dot" />
                 </svg>
-                <small class="text-sm text-secondary">{{ page.reading_time }} min de lectura</small>
+                <small class="text-sm">{{ page.reading_time }} min de lectura</small>
               </div>
             </div>
           </div>
@@ -56,15 +47,17 @@
       </div>
     </div>
   </section>
-  <section class="container py-5">
+  <section class="container py-md-5">
     <div class="row">
+      {# Toc #}
       <nav id="toc" class="col-lg-3 d-none d-lg-block">
         <div class="position-sticky" style="top: 100px;">
-          <h6>Contenidos</h6>
-          <nav id="toc-list" class="nav flex-column text-sm">
+          <h6 class="ms-3">Contenidos</h6>
+          <nav id="toc-list" class="nav nav-pills flex-column text-sm">
           </nav>
         </div>
       </nav>
+      {# Main article #}
       <div class="col col-lg-6 me-auto">
         <article id="blog-content"
                  data-bs-spy="scroll"

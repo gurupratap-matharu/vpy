@@ -3,7 +3,7 @@
 {% image page.social_image width-400 as tmp_photo %}
 {% get_current_language as LANGUAGE_CODE %}
 <!DOCTYPE html>
-<html lang="{{ LANGUAGE_CODE }}">
+<html lang="{{ LANGUAGE_CODE }}" data-bs-theme="dark">
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
@@ -53,6 +53,9 @@
     <link rel="icon" href="{% static "assets/img/logos/ventanita.svg" %}" sizes="any" type="image/svg+xml" />
     {# Force all links in the live preview panel to be opened in a new tab #}
     {% if request.in_preview_panel %}<base target="_blank" />{% endif %}
+    {# Color modes #}
+    <script src="{% static "assets/js/color-modes.js" %}"></script>
+    {# Google Analytics #}
     {% if not debug %}
       <script async src="https://www.googletagmanager.com/gtag/js?id=G-MZEYNLZLPE"></script>
       <script>
