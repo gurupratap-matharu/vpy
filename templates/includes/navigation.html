@@ -60,48 +60,46 @@
               </li>
             </div>
             {# Theme switcher #}
-            {% if user.is_superuser %}
-              <li class="nav-item dropdown">
-                <button class="btn nav-link dropdown-toggle"
-                        id="bd-theme"
-                        type="button"
-                        aria-expanded="false"
-                        data-bs-toggle="dropdown"
-                        data-bs-display="static"
-                        aria-label="Toggle theme (dark)">
-                  <svg class="theme-icon-active" width="16" height="16" fill="currentColor" aria-hidden="true">
-                    <use xlink:href="{% static 'assets/icons/icons.svg' %}#sun" />
-                  </svg>
-                  <span class="d-lg-none ms-1" id="bd-theme-text">{% translate "Color" %}</span>
-                </button>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="bd-theme-text">
-                  <li>
-                    <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light" aria-pressed="false">
-                      <svg class="bi me-2 opacity-50" width="16" height="16" fill="currentColor" aria-hidden="true">
-                        <use xlink:href="{% static 'assets/icons/icons.svg' %}#sun" />
-                      </svg>
-                      {% translate "Claro" %}
-                    </button>
-                  </li>
-                  <li>
-                    <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="dark" aria-pressed="false">
-                      <svg class="bi me-2 opacity-50" width="16" height="16" fill="currentColor" aria-hidden="true">
-                        <use xlink:href="{% static 'assets/icons/icons.svg' %}#moon-stars-fill" />
-                      </svg>
-                      {% translate "Oscuro" %}
-                    </button>
-                  </li>
-                  <li>
-                    <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="auto" aria-pressed="false">
-                      <svg class="bi me-2 opacity-50" width="16" height="16" fill="currentColor" aria-hidden="true">
-                        <use xlink:href="{% static 'assets/icons/icons.svg' %}#circle-half" />
-                      </svg>
-                      {% translate "Auto" %}
-                    </button>
-                  </li>
-                </ul>
-              </li>
-            {% endif %}
+            <li class="nav-item dropdown">
+              <button class="btn nav-link dropdown-toggle"
+                      id="bd-theme"
+                      type="button"
+                      aria-expanded="false"
+                      data-bs-toggle="dropdown"
+                      data-bs-display="static"
+                      aria-label="Toggle theme (dark)">
+                <svg class="theme-icon-active" width="16" height="16" fill="currentColor" aria-hidden="true">
+                  <use xlink:href="{% static 'assets/icons/icons.svg' %}#sun" />
+                </svg>
+                <span class="d-lg-none ms-1" id="bd-theme-text">{% translate "Color" %}</span>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="bd-theme-text">
+                <li>
+                  <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light" aria-pressed="false">
+                    <svg class="bi me-2 opacity-50" width="16" height="16" fill="currentColor" aria-hidden="true">
+                      <use xlink:href="{% static 'assets/icons/icons.svg' %}#sun" />
+                    </svg>
+                    {% translate "Claro" %}
+                  </button>
+                </li>
+                <li>
+                  <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="dark" aria-pressed="false">
+                    <svg class="bi me-2 opacity-50" width="16" height="16" fill="currentColor" aria-hidden="true">
+                      <use xlink:href="{% static 'assets/icons/icons.svg' %}#moon-stars-fill" />
+                    </svg>
+                    {% translate "Oscuro" %}
+                  </button>
+                </li>
+                <li>
+                  <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="auto" aria-pressed="false">
+                    <svg class="bi me-2 opacity-50" width="16" height="16" fill="currentColor" aria-hidden="true">
+                      <use xlink:href="{% static 'assets/icons/icons.svg' %}#circle-half" />
+                    </svg>
+                    {% translate "Auto" %}
+                  </button>
+                </li>
+              </ul>
+            </li>
             {% if user.is_authenticated %}
               <li class="nav-item">
                 <a class="nav-link" href="{% url 'account_logout' %}">
