@@ -30,17 +30,14 @@
       <div class="col col-lg-6 mx-auto">
         <h1 class="text-center">{{ page.title }}</h1>
         {% for author in page.authors %}
-          <div class="author justify-content-center align-items-center py-3 py-md-5">
-            {% image author.image width-200 class="avatar avatar-xl rounded-circle" %}
-            <div class="name ps-2">
-              <p class="h6 mb-0">{% translate "Por " %} {{ author.first_name }} {{ author.last_name }}</p>
-              <div class="stats">
-                <small class="text-sm">{% translate "Actualizado " %}{{ page.date }}</small>
-                <svg width="24" height="24" fill="currentColor" aria-hidden="true">
-                  <use xlink:href="{% static 'assets/icons/icons.svg' %}#dot" />
-                </svg>
-                <small class="text-sm">{{ page.reading_time }} min de lectura</small>
-              </div>
+          <div class="d-flex justify-content-center align-items-center gap-3 py-3 py-md-5">
+            <div class="col-2">
+              {% image author.image original format-avif loading="lazy" class="img-fluid rounded-circle flex-shrink-0" %}
+            </div>
+            <div class="col-auto">
+              <p class="fw-bolder mb-0">{% translate "Por " %} {{ author.first_name }} {{ author.last_name }}</p>
+              <p class="text-sm mb-0">{% translate "Actualizado " %}{{ page.date }}</p>
+              <span class="text-sm text-secondary">{{ page.reading_time }} min de lectura</span>
             </div>
           </div>
         {% endfor %}
