@@ -8,39 +8,36 @@
     <meta charset="utf-8" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    {% if page.canonical_url %}<link rel="canonical" href="{{ page.canonical_url }}" />{% endif %}
+    <link rel="canonical" href="{% firstof page.canonical_url request.build_absolute_uri %}" />
     {# djlint:off #}
     <title>{% block title %}{% firstof page.seo_title page.title %}{% endblock %}</title>
     {# djlint:on #}
-    {% if page.search_description %}<meta name="description" content="{{ page.search_description }}" />{% endif %}
+    <meta name="description" content="{% block description %}{{ page.search_description }}{% endblock %}" />
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <meta name="MSSmartTagsPreventParsing" content="true" />
     <meta name="Copyright" content="Ventanita Team" />
     <meta name="author" content="Ventanita Team" />
     <meta name="color-scheme" content="light dark" />
-    <meta property="theme-color" content="#ffffff" />
-    {% block og_tags %}
-      <meta property="og:title" content="{% firstof page.seo_title page.title "Pasajes de Micro" %}" />
-      <meta property="og:url" content="{{ page.get_full_url }}" />
-      <meta property="og:type" content="article" />
-      <meta property="og:description" content="{{ page.search_description }}" />
-      <meta property="og:image" content="{{ tmp_photo.full_url }}" />
-      <meta property="og:image:alt" content="{{ tmp_photo.alt }}" />
-      <meta property="og:image:width" content="{{ tmp_photo.width }}" />
-      <meta property="og:image:height" content="{{ tmp_photo.height }}" />
-      <meta property="og:image:type" content="image/jpg" />
-      <meta property="og:site_name" content="Ventanita" />
-      <meta property="og:locale" content="{{ LANGUAGE_CODE }}" />
-      <meta property="article:published_time" content="{{ page.first_published_at|date:"c" }}" />
-      <meta property="article:modified_time" content="{{ page.latest_revision_created_at|date:"c" }}" />
-      <meta property="twitter:card" content="summary_large_image" />
-      <meta property="twitter:creator" content="@VentanitaARG" />
-      <meta property="twitter:site" content="@VentanitaARG" />
-      <meta name="twitter:title" content="{% firstof page.seo_title page.title %}" />
-      <meta name="twitter:image" content="{{ tmp_photo.full_url }}" />
-      <meta name="twitter:description" content="{{ page.search_description }}" />
-    {% endblock og_tags %}
-
+    <meta name="theme-color" id="theme-meta" content="#212529" />
+    <meta property="og:title" content="{% firstof page.seo_title page.title "Pasajes de Micro" %}" />
+    <meta property="og:url" content="{{ page.get_full_url }}" />
+    <meta property="og:type" content="article" />
+    <meta property="og:description" content="{{ page.search_description }}" />
+    <meta property="og:image" content="{{ tmp_photo.full_url }}" />
+    <meta property="og:image:alt" content="{{ tmp_photo.alt }}" />
+    <meta property="og:image:width" content="{{ tmp_photo.width }}" />
+    <meta property="og:image:height" content="{{ tmp_photo.height }}" />
+    <meta property="og:image:type" content="image/jpg" />
+    <meta property="og:site_name" content="Ventanita" />
+    <meta property="og:locale" content="{{ LANGUAGE_CODE }}" />
+    <meta property="article:published_time" content="{{ page.first_published_at|date:"c" }}" />
+    <meta property="article:modified_time" content="{{ page.latest_revision_created_at|date:"c" }}" />
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:creator" content="@VentanitaARG" />
+    <meta property="twitter:site" content="@VentanitaARG" />
+    <meta name="twitter:title" content="{% firstof page.seo_title page.title %}" />
+    <meta name="twitter:image" content="{{ tmp_photo.full_url }}" />
+    <meta name="twitter:description" content="{{ page.search_description }}" />
     <link rel="apple-touch-icon" sizes="180x180" href="{% static 'assets/img/logos/apple-touch-icon.png' %}" />
     <meta name="apple-mobile-web-app-title" content="Ventanita" />
     <meta name="mobile-web-app-capable" content="yes" />
