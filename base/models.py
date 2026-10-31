@@ -242,8 +242,9 @@ class BasePage(SocialFields, ListingFields, Page):
         image_url = image.file.url if image else ""
         org = {
             "@type": "Organization",
-            "name": "Ventanita",
+            "@id": "https://ventanita.com.py/#organization",
             "url": "https://ventanita.com.py",
+            "name": "Ventanita",
         }
 
         article_schema = {

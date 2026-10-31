@@ -362,6 +362,7 @@ class PartnerPage(BasePage):
         org_schema = {
             "@context": "https://schema.org",
             "@type": "Organization",
+            "@id": f"{self.full_url}#organization",
             "name": self.title,
             "url": self.full_url,
             "logo": f"https://ventanita.com.py{logo_url}",
