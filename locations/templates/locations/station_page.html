@@ -35,12 +35,12 @@
           <svg class="d-none d-sm-inline" width="24" height="24" fill="currentColor" aria-hidden="true">
             <use xlink:href="{% static 'assets/icons/icons.svg' %}#dot" />
           </svg>
-          <span class="text-sm text-success">{% translate "Abierto" %}<span class="text-sm text-secondary ms-1">{% translate "las 24hs" %}</span></span>
+          <span class="text-sm text-success">{% translate "Abierto" %}<span class="text-sm text-body-secondary ms-1">{% translate "las 24hs" %}</span></span>
           {% if page.phone %}
             <svg width="24" height="24" fill="currentColor" aria-hidden="true">
               <use xlink:href="{% static 'assets/icons/icons.svg' %}#dot" />
             </svg>
-            <span class="text-sm text-secondary">Tel: <a class="icon-link" href="tel:{{ page.phone }}">{{ page.phone }}
+            <span class="text-sm text-body-secondary">Tel: <a class="icon-link" href="tel:{{ page.phone }}">{{ page.phone }}
               <svg width="16" height="16" fill="currentColor" aria-hidden="true">
                 <use xlink:href="{% static 'assets/icons/icons.svg' %}#telephone-outbound" />
               </svg>
@@ -51,8 +51,8 @@
           <svg class="d-none d-sm-inline" width="24" height="24" fill="currentColor" aria-hidden="true">
             <use xlink:href="{% static 'assets/icons/icons.svg' %}#dot" />
           </svg>
-          <span class="text-sm text-secondary">{{ page.address }}</span>
-          <a class="text-sm" href="{{ page.get_google_maps_directions_url }}" target="_blank">¿Como llegar?</a>
+          <span class="text-sm text-body-secondary">{{ page.address }}</span>
+          <a class="text-sm" href="{{ page.get_google_maps_directions_url }}" target="_blank">{% translate "¿Como llegar?" %}</a>
         </div>
         <div class="col-sm-auto">
           <a class="d-none d-sm-inline" href="#" type="button" id="share">
@@ -68,20 +68,20 @@
     {% if page.province %}
       <section class="py-3">
         <div class="row align-items-center">
-          <div class="col-3 col-lg-2">
+          <div class="col-3 col-lg-1">
             {% with 'assets/img/flags/'|add:page.province|add:'.avif' as flag %}
               <img src="{% static flag %}" class="img-fluid border" alt="{{ page.get_province_display }}" />
             {% endwith %}
           </div>
           <div class="col-auto">
-            <p class="text-secondary small mb-0">Departamento</p>
+            <p class="text-body-secondary small mb-0">{% translate "Departamento" %}</p>
             <span>{{ page.get_province_display }}</span>
           </div>
         </div>
       </section>
     {% endif %}
     <section class="sticky-top adaptive-bg">
-      <ul class="nav nav-underline border-bottom border-secondary-subtle text-sm" id="scrollnav">
+      <ul class="nav nav-underline border-bottom text-sm" id="scrollnav">
         <li class="nav-item">
           <a class="nav-link" href="#map">{% translate "Mapa" %}</a>
         </li>

@@ -33,7 +33,7 @@
               <svg class="d-none d-sm-inline" width="24" height="24" fill="currentColor" aria-hidden="true">
                 <use xlink:href="{% static 'assets/icons/icons.svg' %}#dot" />
               </svg>
-              <span class="text-sm text-secondary">Tel: <a class="icon-link" href="tel:{{ contact.phone }}">{{ contact.phone }}
+              <span class="text-sm text-body-secondary">Tel: <a class="icon-link" href="tel:{{ contact.phone }}">{{ contact.phone }}
                 <svg width="16" height="16" fill="currentColor" aria-hidden="true">
                   <use xlink:href="{% static 'assets/icons/icons.svg' %}#telephone-outbound" />
                 </svg>
@@ -51,7 +51,7 @@
               <svg class="d-none d-sm-inline" width="24" height="24" fill="currentColor" aria-hidden="true">
                 <use xlink:href="{% static 'assets/icons/icons.svg' %}#dot" />
               </svg>
-              <span class="text-sm text-secondary">{{ contact.address }}</span>
+              <span class="text-sm text-body-secondary">{{ contact.address }}</span>
             </div>
           {% endwith %}
         {% endif %}
@@ -92,19 +92,19 @@
         </div>
         <div class="col-8 col-md-8 ps-3">
           <div class="d-flex align-items-center">
-            <h2 class="fs-5">
+            <h2 class="fs-5 icon-link">
               {{ page.title }}
-              <svg width="18" height="18" fill="#0061ff" aria-hidden="true">
+              <svg width="16" height="16" fill="#0d6efd" aria-hidden="true">
                 <use xlink:href="{% static 'assets/icons/icons.svg' %}#check-circle-fill" />
               </svg>
             </h2>
           </div>
           <ul class="text-sm list-unstyled">
             <li>
-              <span class="text-secondary">Salidas</span> {{ page.daily_departures }} • <span class="text-secondary">Rutas</span> {{ page.num_routes }}
+              <span class="text-body-secondary">{% translate "Salidas" %}</span> {{ page.daily_departures }} • <span class="text-body-secondary">{% translate "Rutas" %}</span> {{ page.num_routes }}
             </li>
             <li>
-              <span class="text-secondary">Destinos</span> {{ page.cities }} • <span class="text-secondary">Países</span> {{ page.countries }}
+              <span class="text-body-secondary">{% translate "Destinos" %}</span> {{ page.cities }} • <span class="text-body-secondary">{% translate "Países" %}</span> {{ page.countries }}
             </li>
           </ul>
         </div>
@@ -113,7 +113,7 @@
             <svg class="bi" width="16" height="16" fill="currentColor" aria-hidden="true">
               <use xlink:href="{% static 'assets/icons/icons.svg' %}#chat-left-dots" />
             </svg>
-          Escribí Opinion</a>
+          {% translate "Escribí Opinion" %}</a>
         </div>
       </div>
     </section>
@@ -179,7 +179,7 @@
             <svg class="bi" width="16" height="16" fill="currentColor" aria-hidden="true">
               <use xlink:href="{% static 'assets/icons/icons.svg' %}#chat-left-dots" />
             </svg>
-          Escribí Opinion</a>
+          {% translate "Escribí Opinion" %}</a>
         </div>
       </section>
     {% endif %}
