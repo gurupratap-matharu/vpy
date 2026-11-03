@@ -118,6 +118,14 @@ class Command(BaseCommand):
                 f"Encontrá toda la información para tu viaje en micro desde {origin} a {dest}. "
                 f"Horarios, terminales y tips para planificar tu próxima escapada con Ventanita."
             ),
+            (
+                f"Consultá los horarios, precios estimados y empresas de colectivos para viajar de {origin} a {dest}. "
+                f"¡Planificá tu viaje gratis antes de ir a la terminal con Ventanita!"
+            ),
+            (
+                f"Compará las salidas de colectivos de {origin} a {dest}. Encontrá precios mínimos, empresas operadoras, "
+                f"frecuencias y el viaje más rápido en Ventanita."
+            ),
         ]
         return random.choice(templates)
 
@@ -154,7 +162,7 @@ class Command(BaseCommand):
         origin, dest = self.route.origin, self.route.destination
         low_d = self.route.get_min_duration_display()
         avg_d = self.route.get_avg_duration_display()
-        distance = self.route.distance or 0
+        distance = int(self.route.distance) or 0
         min_price = int(self.route.min_price)
         avg_price = int(self.route.avg_price)
         companies = ", ".join({t.company.name for t in self.route.trips.all()})
@@ -164,58 +172,84 @@ class Command(BaseCommand):
             "item": [
                 # Price Q&A
                 {
-                    "question": f"¿Cuál es el precio estimado del pasaje en micro de {origin} a {dest}?",
+                    "question": f"¿Cuánto sale el pasaje de {origin} a {dest}?",
                     "answer": RichText(
-                        f"<p>El costo estimado oscila entre los Gs. {min_price} y Gs. {avg_price} por tramo. Los precios varían según la empresa y el tipo de coche (Común, Semi-Cama o Ejecutivo).</p>"
+                        f"<p>En promedio, el pasaje en colectivo está unos <b>Gs. {avg_price}</b>, pero podés conseguir lo más barato desde "
+                        f"<b>Gs. {min_price}</b>. Acordate que el precio final depende de la empresa que elijas y el "
+                        f"tipo de coche (Común, Semi-Cama o Ejecutivo). Un consejo: los precios suelen subir en fechas "
+                        f"clave (como Semana Santa o fin de año), así que mejor organizate con tiempo.</p>"
                     ),
                 },
                 # Duration Q&A
                 {
-                    "question": f"¿Cuánto dura el viaje en bus de {origin} a {dest}?",
+                    "question": f"¿Cuánto tiempo lleva el viaje de {origin} a {dest}?",
                     "answer": RichText(
-                        f"<p>El viaje en micro suele tardar entre {low_d} y {avg_d}. La duración exacta depende del tipo de servicio (si es directo o si realiza paradas en el camino) y del estado del tráfico en los accesos.</p>"
+                        f"<p>El viaje suele durar más o menos entre <b>{low_d}</b> y <b>{avg_d}</b>. Eso sí, tené en cuenta que el viaje "
+                        f"se puede alargar un poco dependiendo del tráfico para salir de la ciudad, cómo estén las rutas o si el colectivo "
+                        f"es de los que paran mucho en el camino a alzar pasajeros. Para que sepas la distancia por carretera entre "
+                        f"<b>{origin}</b> y <b>{dest}</b> es de aproximadamente <b>{distance}</b> kilómetros</p>"
                     ),
                 },
                 # Empresas
                 {
                     "question": f"¿Qué empresas de transporte operan en la ruta {origin} - {dest}?",
                     "answer": RichText(
-                        f"<p>Las principales empresas que cubren este trayecto son {companies} entre otras.</p>"
+                        f"<p>Las principales empresas que te llevan en esta ruta son <b>{companies}</b> entre otras. "
+                        f"En <b>Ventanita</b> podés mirar bien los horarios de cada una para elegir la opción que mejor te calce.</p>"
                     ),
                 },
                 # First & last departure Q&A
                 {
                     "question": f"¿Cuándo es la primera y la última salida de bus entre {origin} y {dest}?",
                     "answer": RichText(
-                        f"<p>La primera salida de {origin} a {dest} sale a las {self.route.first_departure:%I:%M %p} y la última salida es a las {self.route.last_departure:%I:%M %p}</p>"
+                        f"<p>La primera salida de <b>{origin}</b> a <b>{dest}</b> sale a las <b>{self.route.first_departure:%I:%M %p}</b> "
+                        f"y la última salida es a las <b>{self.route.last_departure:%I:%M %p}</b></p>"
                     ),
                 },
                 # Distance Q&A
                 {
                     "question": f"¿Cuántos kilómetros hay de {origin} a {dest}?",
                     "answer": RichText(
-                        f"<p>La distancia por carretera entre {origin} y {dest} es de aproximadamente {distance} kilómetros, aunque puede variar según el recorrido y los puntos de salida y llegada.</p>"
+                        f"<p>La distancia por carretera entre <b>{origin}</b> y <b>{dest}</b> es de aproximadamente <b>{distance}</b> kilómetros, "
+                        f"aunque puede variar según el recorrido y los puntos de salida y llegada. "
+                        f"Para que sepas el viaje suele durar más o menos entre <b>{low_d}</b> y <b>{avg_d}</b>.</p>"
                     ),
                 },
-                # Generic Q&A
+                # Generic Bus categories
                 {
                     "question": "¿Qué diferencia hay entre los servicios Común, Semi-Cama y Ejecutivo?",
                     "answer": RichText(
-                        "<p>El servicio común realiza más paradas en el trayecto. Los servicios Semi-Cama y Ejecutivo ofrecen asientos más reclinables, aire acondicionado, pantallas y, en algunos casos, refrigerios a bordo, siendo ideales para viajar de noche.</p>"
+                        "<p>El servicio común realiza más paradas en el trayecto. Los servicios Semi-Cama y Ejecutivo "
+                        "ofrecen asientos más reclinables, aire acondicionado, pantallas y, en algunos casos, refrigerios "
+                        "a bordo, siendo ideales para viajar de noche.</p>"
                     ),
                 },
-                # Generic Q&A
+                # Generic Advice
                 {
                     "question": "¿Es necesario comprar los pasajes con anticipación?",
                     "answer": RichText(
-                        "<p>Aunque hay mucha frecuencia, te recomendamos asegurar tu lugar con días de antelación si planeás viajar durante el verano, fines de semana largos, Semana Santa o fiestas de fin de año, ya que la demanda aumenta considerablemente.</p>"
+                        "<p>Aunque hay mucha frecuencia, te recomendamos asegurar tu lugar con días de antelación "
+                        "si planeás viajar durante el verano, fines de semana largos, Semana Santa o "
+                        "fiestas de fin de año, ya que la demanda aumenta considerablemente.</p>"
                     ),
                 },
-                # Generic Q&A
+                # Generic Documentation
                 {
                     "question": "¿Qué documentación necesito para viajar en bus por Paraguay?",
                     "answer": RichText(
-                        "<p>Solo necesitás presentar tu Cédula de Identidad civil vigente al momento de abordar. Si viajás con menores de edad, recordá llevar también el Certificado de Nacimiento o la autorización correspondiente si no viaja con ambos padres.</p>"
+                        "<p>Solo necesitás presentar tu <b>Cédula de Identidad</b> civil vigente al momento de abordar. "
+                        "Si viajás con menores de edad, recordá llevar también el Certificado de Nacimiento o "
+                        "la autorización correspondiente si no viaja con ambos padres.</p>"
+                    ),
+                },
+                # Generic Equipaje
+                {
+                    "question": "¿Cuánto equipaje puedo llevar en el bus?",
+                    "answer": RichText(
+                        "<p>Tecnicamente podés subir con un bolso de mano chico (de hasta 40x40x25 cm) y llevar en la bodega "
+                        "una maleta grande (máximo 80x80x30 cm). En total, tu equipaje no debe pasar los <b>15 kilos</b>. "
+                        "Si te excedés en el peso o el tamaño, la empresa te puede cobrar una tasa extra basada en sus precios de encomiendas. "
+                        "Pero en realidad no todas las empresas los tienen muy estricto esas reglas según las observaciones de los pasajeros.</p>"
                     ),
                 },
             ],
