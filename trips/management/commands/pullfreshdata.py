@@ -99,7 +99,12 @@ class Command(BaseCommand):
 
     # Pink
     def pull_pink(self, obj: Route, soup: BeautifulSoup) -> bool:
-        tag = soup.find(class_="info").find(class_="table")
+        results = soup.find(class_="info")
+        if not results:
+            # no search results
+            return False
+
+        tag = results.find(class_="table")
 
         min_price = self.clean_price(self.get_value(tag, id="tableCellPasajeMasBarato"))
         avg_price = self.clean_price(self.get_value(tag, id="tableCellPrecioPromedio"))
@@ -158,7 +163,11 @@ class Command(BaseCommand):
 
         departure = self.clean_pink_departure(obj, tag)
         arrival = self.clean_pink_arrival(obj, tag)
-        # TODO: if arrival < departure add days=1 to arrival
+
+        if arrival < departure:
+            # If arrival < departure it means trip reached the next day
+            # increment day by 1
+            arrival = arrival + td(days=1)
 
         trip = {
             "company": self.clean_pink_company(tag),
@@ -226,7 +235,9 @@ class Command(BaseCommand):
     def clean_pink_category(self, tag: Tag) -> Trip.Category:
         cat = tag.find(class_="servicio").find("span").get_text().strip().lower()
         map = {
+            "ca": Trip.Category.CAMA,
             "cama": Trip.Category.CAMA,
+            "diferencial": Trip.Category.SEMICAMA,
             "semicama": Trip.Category.SEMICAMA,
             "comun": Trip.Category.COMMON,
         }
@@ -241,6 +252,10 @@ class Command(BaseCommand):
         # Parse all trips first
         cards = soup.find_all(class_="nC-N2W_card")
         trips = [self.parse_card(obj, card) for card in cards]
+
+        if not trips:
+            # no search results
+            return False
 
         # Build route metadata from trips - they don't provide
         num_companies = len({t.get("company") for t in trips})
@@ -274,13 +289,14 @@ class Command(BaseCommand):
         obj.min_duration = min_duration
         obj.save()
 
-        # Remove all previous Auto trips - revise this later
-        obj.trips.filter(strategy=Trip.Strategy.AUTO).delete()
+        with transaction.atomic():
+            # Remove all previous Auto trips - revise this later
+            obj.trips.filter(strategy=Trip.Strategy.AUTO).delete()
 
-        # Create trips
-        for trip in trips:
-            t, created = Trip.objects.get_or_create(route=obj, **trip)
-            self.stdout.write(f"trip:{t} created:{created}")
+            # Create trips
+            for trip in trips:
+                t, created = Trip.objects.get_or_create(route=obj, **trip)
+                self.stdout.write(f"trip:{t} created:{created}")
 
         return True
 
@@ -289,7 +305,11 @@ class Command(BaseCommand):
 
         departure = self.clean_red_departure(obj, tag)
         arrival = self.clean_red_arrival(obj, tag)
-        # TODO: if arrival < departure add days=1 to arrival
+
+        if arrival < departure:
+            # If arrival < departure it means trip reached the next day
+            # increment day by 1
+            arrival = arrival + td(days=1)
 
         trip = {
             "company": self.clean_red_company(tag),
@@ -332,6 +352,8 @@ class Command(BaseCommand):
         row0 = tag.find(attrs={"data-testid": "service-quality-row-0"})
         cat = row0.find(class_="nC-N2W_qualityName").get_text().strip().lower()
         map = {
+            "cama suite": Trip.Category.CAMASUITE,
+            "cama ejecutivo": Trip.Category.CAMAEJECUTIVO,
             "cama": Trip.Category.CAMA,
             "semicama": Trip.Category.SEMICAMA,
             "comun": Trip.Category.COMMON,

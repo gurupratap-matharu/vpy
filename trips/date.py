@@ -12,6 +12,8 @@ def next_weekday(dt: datetime, weekday: int = 0) -> datetime:
 def duration_display(td: timedelta) -> str:
     # convert 5:35:00 -> 5 hr 35 min
     # '6:08:31.764706'
+    if not td:
+        return ""
     txt = str(td)
     hours, minutes, *_ = txt.split(":")
 

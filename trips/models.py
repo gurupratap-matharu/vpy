@@ -133,6 +133,9 @@ class Route(models.Model):
         return f"{settings.PINK_BASE_URL}/{origin}/{dest}?FIda={departure}&CntPas=1"
 
     def get_red_url(self) -> str:
+        if not self.origin.red_code or not self.destination.red_code:
+            return ""
+
         o_slug, o_code = self.origin.red_code.split(",")
         d_slug, d_code = self.destination.red_code.split(",")
         next_monday = next_weekday(timezone.now(), 0)

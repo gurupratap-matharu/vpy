@@ -109,15 +109,16 @@ class RouteAdmin(admin.ModelAdmin[Route]):
         return obj.num_trips
 
     def operators(self, obj: Route) -> int:
-        return obj.num_companies
+        return obj.num_companies or 0
 
     def min_fare(self, obj: Route) -> str:
-        return f"{obj.min_price:,.0f}"
+        fare = f"{obj.min_price:,.0f}" if obj.min_price else "?"
+        return fare
 
     @admin.display(ordering="min_duration")
     def min_time(self, obj: Trip) -> str:
         # converts 5:20:00 -> 5:20
-        return str(obj.min_duration)[:-3]
+        return str(obj.min_duration)[:-3] if obj.min_duration else "?"
 
     @admin.display(ordering="updated")
     def last_updated(self, obj: Route) -> str:
