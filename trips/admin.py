@@ -84,6 +84,7 @@ class RouteAdmin(admin.ModelAdmin[Route]):
     list_filter = ("updated", "strategy", "is_active")
     list_per_page = 30
     list_select_related = ("origin", "destination")
+    autocomplete_fields = ("origin", "destination")
     search_fields = ("id", "code", "origin__name", "destination__name")
     inlines = (TripInlineAdmin,)
     actions = ("pull_red", "pull_pink", "create_route_page")

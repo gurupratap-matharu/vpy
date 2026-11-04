@@ -168,7 +168,7 @@ class Command(BaseCommand):
         companies = ", ".join({t.company.name for t in self.route.trips.all()})
 
         data = {
-            "title": f"Preguntas frecuentes sobre la ruta {origin} a {dest}",
+            "title": f"Preguntas frecuentes sobre el viaje de {origin} a {dest}",
             "item": [
                 # Price Q&A
                 {
@@ -238,8 +238,8 @@ class Command(BaseCommand):
                     "question": "¿Qué documentación necesito para viajar en bus por Paraguay?",
                     "answer": RichText(
                         "<p>Solo necesitás presentar tu <b>Cédula de Identidad</b> civil vigente al momento de abordar. "
-                        "Si viajás con menores de edad, recordá llevar también el Certificado de Nacimiento o "
-                        "la autorización correspondiente si no viaja con ambos padres.</p>"
+                        "Si viajás con <b>menores</b> de edad, recordá llevar también el <b>Certificado de Nacimiento</b> o "
+                        "la <i>autorización correspondiente</i> si no viaja con ambos padres.</p>"
                     ),
                 },
                 # Generic Equipaje
