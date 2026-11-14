@@ -1,3 +1,4 @@
+import json
 import os
 import sys
 from pathlib import Path
@@ -13,9 +14,11 @@ load_dotenv()
 PROJECT_DIR = Path(__file__).resolve().parent
 BASE_DIR = PROJECT_DIR.parent
 
+BASE_URI = os.getenv("BASE_URI")
+
 SECRET_KEY = os.getenv("SECRET_KEY")
 
-DEBUG = int(os.getenv("DEBUG", default=0))
+DEBUG = int(os.getenv("DEBUG", "0"))
 
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", default="").split(" ")
 
@@ -63,7 +66,6 @@ INSTALLED_APPS = [
     "allauth.account",
     "allauth.socialaccount",
     "allauth.socialaccount.providers.google",
-    "allauth.socialaccount.providers.facebook",
     "django_extensions",
     "modelcluster",
     "taggit",
@@ -145,39 +147,7 @@ SOCIALACCOUNT_PROVIDERS = {
         },
         "EMAIL_AUTHENTICATION": True,
         "VERIFIED_EMAIL": True,
-    },
-    "facebook": {
-        "APP": {
-            "client_id": os.getenv("FB_CLIENT_ID"),
-            "secret": os.getenv("FB_CLIENT_SECRET"),
-            "key": "",
-        },
-        "METHOD": "oauth2",
-        "SCOPE": [
-            "email",
-            "public_profile",
-        ],
-        "EMAIL_AUTHENTICATION": False,
-        "VERIFIED_EMAIL": False,
-        "AUTH_PARAMS": {
-            "auth_type": "reauthenticate",
-        },
-        "INIT_PARAMS": {"cookie": True},
-        "FIELDS": [
-            "id",
-            "first_name",
-            "last_name",
-            "middle_name",
-            "name",
-            "name_format",
-            "picture",
-            "short_name",
-        ],
-        "EXCHANGE_TOKEN": True,
-        "LOCALE_FUNC": lambda request: "es_LA",
-        "VERSION": "v13.0",
-        "GRAPH_API_URL": "https://graph.facebook.com/v13.0",
-    },
+    }
 }
 
 # Mailpit
@@ -186,22 +156,17 @@ EMAIL_HOST = "127.0.0.1"
 EMAIL_PORT = 1025
 
 # Email
-DEFAULT_FROM_EMAIL = "'Ventanita' <noreply@ventanita.com.py>"
-DEFAULT_TO_EMAIL = "gurupratap.matharu@gmail.com"
-SERVER_EMAIL = "wagtail@ventanita.com.py"
+DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL")
+DEFAULT_TO_EMAIL = os.getenv("DEFAULT_TO_EMAIL")
+SERVER_EMAIL = os.getenv("SERVER_EMAIL")
 
-SUPPORT_EMAIL = "'Soporte' <support@ventanita.com.py>"
-SUPPORT_PHONE = "+595 (0) 992090983"
-SUPPORT_ADDRESS = "MCF3+JH4, Av. Dr. Fernando de la Mora, Asunción 001424, Paraguay"
+SUPPORT_EMAIL = os.getenv("SUPPORT_EMAIL")
+SUPPORT_PHONE = os.getenv("SUPPORT_PHONE")
+SUPPORT_ADDRESS = os.getenv("SUPPORT_ADDRESS")
 
-RECIPIENT_LIST = [
-    "gurupratap.matharu@gmail.com",
-    "veerplaying@gmail.com",
-]
+RECIPIENT_LIST = json.loads(os.getenv("RECIPIENT_LIST", "[]"))
 
-ADMINS = [
-    ("Veer", "veerplaying@gmail.com"),
-]
+ADMINS = [tuple(admin) for admin in json.loads(os.getenv("ADMINS", "[[]]"))]
 
 TEMPLATES = [
     {
@@ -340,10 +305,10 @@ DATA_UPLOAD_MAX_NUMBER_FIELDS = 10_000
 
 # Wagtail settings
 
-WAGTAIL_SITE_NAME = "Ventanita"
 SITE_ROOT = os.getenv("SITE_ROOT", "http://localhost:8000").removesuffix("/")
-SITE_NAME = os.getenv("SITE_NAME", "Ventanita")
+SITE_NAME = os.getenv("SITE_NAME")
 SITE_LOGO_URL = os.getenv("SITE_LOGO_URL")
+WAGTAIL_SITE_NAME = SITE_NAME
 
 # Search
 # https://docs.wagtail.org/en/stable/topics/search/backends.html
