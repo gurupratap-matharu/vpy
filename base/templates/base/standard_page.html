@@ -3,9 +3,9 @@
 {% load wagtailimages_tags %}
 
 {% block content %}
-  <article class="container col-12 col-xl-9 pt-3 min-vh-75">
-    <h1>{{ page.title }}</h1>
-    <section class="py-3 py-md-5">
+  <article class="container min-vh-75">
+    <h1 class="fs-2 mb-0">{{ page.title }}</h1>
+    <section class="py-3">
       {{ page.body }}
     </section>
   </article>
