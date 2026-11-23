@@ -4,6 +4,7 @@ from datetime import time
 
 from django import forms
 from django.apps import apps
+from django.conf import settings
 from django.core.validators import RegexValidator
 from django.db import models
 from django.shortcuts import get_object_or_404
@@ -74,10 +75,10 @@ class CityIndexPage(BasePage):
         context["cities"] = self.get_children().live().order_by("title")
         return context
 
-    def ld_entity(self):
+    def ld_entity(self) -> str:
         page_schema = json.dumps(
             {
-                "@context": "http://schema.org",
+                "@context": "https://schema.org",
                 "@graph": [
                     self._get_breadcrumb_schema(),
                     self._get_image_schema(),
@@ -90,7 +91,7 @@ class CityIndexPage(BasePage):
         )
         return mark_safe(page_schema)
 
-    def _get_breadcrumb_schema(self):
+    def _get_breadcrumb_schema(self) -> dict:
         breadcrumb_schema = {
             "@context": "https://schema.org",
             "@type": "BreadcrumbList",
@@ -98,8 +99,8 @@ class CityIndexPage(BasePage):
                 {
                     "@type": "ListItem",
                     "position": 1,
-                    "name": "Pasajes de Micro",
-                    "item": "https://ventanita.com.py/",
+                    "name": "Paraguay",
+                    "item": f"{settings.BASE_URI}",
                 },
                 {
                     "@type": "ListItem",
@@ -209,7 +210,7 @@ class CityPage(BasePage):
     def ld_entity(self):
         page_schema = json.dumps(
             {
-                "@context": "http://schema.org",
+                "@context": "https://schema.org",
                 "@graph": [
                     self._get_breadcrumb_schema(),
                     self._get_image_schema(),
@@ -230,13 +231,13 @@ class CityPage(BasePage):
                 {
                     "@type": "ListItem",
                     "position": 1,
-                    "name": "Pasajes de Micro",
-                    "item": "https://ventanita.com.py/",
+                    "name": "Inicio",
+                    "item": f"{settings.BASE_URI}",
                 },
                 {
                     "@type": "ListItem",
                     "position": 2,
-                    "name": "Paraguay",
+                    "name": "Destinos",
                     "item": self.get_parent().full_url,
                 },
                 {
@@ -329,13 +330,13 @@ class StationIndexPage(BasePage):
                 {
                     "@type": "ListItem",
                     "position": 1,
-                    "name": "Paraguay",
-                    "item": "https://ventanita.com.py/",
+                    "name": "Inicio",
+                    "item": f"{settings.BASE_URI}",
                 },
                 {
                     "@type": "ListItem",
                     "position": 2,
-                    "name": "Terminales De Micro",
+                    "name": "Terminales de Micro",
                     "item": self.full_url,
                 },
             ],
@@ -514,7 +515,7 @@ class StationPage(RoutablePageMixin, BasePage):
     def ld_entity(self):
         page_schema = json.dumps(
             {
-                "@context": "http://schema.org",
+                "@context": "https://schema.org",
                 "@graph": [
                     self._get_breadcrumb_schema(),
                     self._get_image_schema(),
@@ -560,13 +561,13 @@ class StationPage(RoutablePageMixin, BasePage):
         image_schema = {
             "@context": "https://schema.org",
             "@type": "ImageObject",
-            "contentUrl": f"https://ventanita.com.py{image_url}",
-            "url": f"https://ventanita.com.py{image_url}",
-            "license": "https://ventanita.com.py/condiciones-generales/",
-            "acquireLicensePage": "https://ventanita.com.py/contact/",
+            "contentUrl": f"{settings.BASE_URI}{image_url}",
+            "url": f"{settings.BASE_URI}{image_url}",
+            "license": f"{settings.BASE_URI}/condiciones-generales/",
+            "acquireLicensePage": f"{settings.BASE_URI}/contact/",
             "creditText": image_title,
-            "creator": {"@type": "Person", "name": "Ventanita"},
-            "copyrightNotice": "Ventanita",
+            "creator": {"@type": "Person", "name": f"{settings.SITE_NAME}"},
+            "copyrightNotice": f"{settings.SITE_NAME}",
             "contentLocation": self.title,
             "description": image_description,
             "name": image_title,
@@ -609,13 +610,13 @@ class StationPage(RoutablePageMixin, BasePage):
                     "@type": "ListItem",
                     "position": 1,
                     "name": "Inicio",
-                    "item": "https://ventanita.com.py/",
+                    "item": f"{settings.BASE_URI}",
                 },
                 {
                     "@type": "ListItem",
                     "position": 2,
                     "name": "Terminales de Ómnibus",
-                    "item": "https://ventanita.com.py/terminales-de-omnibus/",
+                    "item": f"{settings.BASE_URI}/terminales-de-omnibus/",
                 },
                 {
                     "@type": "ListItem",
@@ -773,7 +774,7 @@ class RouteIndexPage(BasePage):
     def ld_entity(self):
         page_schema = json.dumps(
             {
-                "@context": "http://schema.org",
+                "@context": "https://schema.org",
                 "@graph": [
                     self._get_breadcrumb_schema(),
                     self._get_image_schema(),
@@ -794,8 +795,8 @@ class RouteIndexPage(BasePage):
                 {
                     "@type": "ListItem",
                     "position": 1,
-                    "name": "Paraguay",
-                    "item": "https://ventanita.com.py/",
+                    "name": "Inicio",
+                    "item": f"{settings.BASE_URI}",
                 },
                 {
                     "@type": "ListItem",
@@ -811,6 +812,7 @@ class RouteIndexPage(BasePage):
 
 class RoutePage(BasePage):
     page_description = "Use this to create a A -> B route page"
+    route_obj = None
 
     code = models.CharField(_("route code"), max_length=20, blank=True)
     intro = models.TextField(help_text="Text to describe the page", blank=True)
@@ -902,28 +904,28 @@ class RoutePage(BasePage):
         context["route"], context["trips"] = self.get_route_trips()
         return context
 
-    def get_page_feedback_form(self):
+    def get_page_feedback_form(self) -> PageFeedbackForm:
         # prepopulate the hidden url field with page url
         initial = {"url": self.url}
         form = PageFeedbackForm(initial=initial)
         return form
 
-    def get_suggestion_form(self):
+    def get_suggestion_form(self) -> SuggestionForm:
         initial = {"url": self.url}
         form = SuggestionForm(initial=initial)
         return form
 
-    def get_route_trips(self):
-        Route = apps.get_model("trips.Route")
-        qs = Route.objects.all()
-        self.route = get_object_or_404(qs, code=self.code)
-        self.trips = self.route.trips.all()
-        return self.route, self.trips
+    def get_route_trips(self) -> tuple:
+        route_model = apps.get_model("trips.Route")
+        qs = route_model.objects.all()
+        self.route_obj = get_object_or_404(qs, code=self.code)
+        self.trips = self.route_obj.trips.all()
+        return self.route_obj, self.trips
 
     def ld_entity(self):
         page_schema = json.dumps(
             {
-                "@context": "http://schema.org",
+                "@context": "https://schema.org",
                 "@graph": [
                     self._get_web_page_schema(),
                     self._get_breadcrumb_schema(),
@@ -956,8 +958,8 @@ class RoutePage(BasePage):
                 {
                     "@type": "ListItem",
                     "position": 1,
-                    "name": "Home",
-                    "item": "https://ventanita.com.py/",
+                    "name": "Inicio",
+                    "item": f"{settings.BASE_URI}",
                 },
                 {
                     "@type": "ListItem",
@@ -977,16 +979,18 @@ class RoutePage(BasePage):
         return breadcrumb_schema
 
     def _get_bus_trip_schema(self):
-        if not self.route or not self.trips:
+        if not self.route_obj or not self.trips:
             self.get_route_trips()
+
+        origin = self.route_obj.origin
+        dest = self.route_obj.destination
 
         schema = {
             "@type": "ItemList",
             "@id": f"{self.full_url}#departures",
-            "name": f"Horarios y Precios de Micros de {self.route.origin} a {self.route.destination}",
+            "name": f"Horarios y Precios de Colectivos de {origin} a {dest}",
             "description": (
-                f"Listado de servicios, horarios y tarifas de empresas de micros "
-                f"para el trayecto {self.route.origin} a {self.route.destination}."
+                f"Listado de servicios, horarios y tarifas de empresas de micros para el trayecto {origin} a {dest}."
             ),
             "itemListElement": [self._get_trip_item(pos, trip) for pos, trip in enumerate(self.trips, 1)],
         }
@@ -997,8 +1001,8 @@ class RoutePage(BasePage):
         """
         See https://schema.org/BusTrip
         """
-        origin = self.route.origin
-        dest = self.route.destination
+        origin = self.route_obj.origin
+        dest = self.route_obj.destination
         company = trip.company
         dep = timezone.localtime(trip.departure).time()
         arr = timezone.localtime(trip.arrival).time()
@@ -1013,15 +1017,15 @@ class RoutePage(BasePage):
                 "@id": f"{self.full_url}#{trip_id}",
                 "url": f"{self.full_url}",
                 "name": f"Bus de {origin} a {dest} - {company}",
-                "busName": f"{company}",
+                "busName": f"{company.name}",
                 "departureTime": f"{dep}",
                 "arrivalTime": f"{arr}",
                 "provider": {
                     "@type": "Organization",
                     "name": f"{company.name}",
                     # provide both id & url to cross link entities
-                    "@id": f"https://ventanita.com.py/empresas/{company.slug}/#organization",
-                    "url": f"https://ventanita.com.py/empresas/{company.slug}/",
+                    "@id": f"{settings.BASE_URI}/empresas/{company.slug}/#organization",
+                    "url": f"{settings.BASE_URI}/empresas/{company.slug}/",
                 },
                 "departureBusStop": {
                     "@type": "BusStation",
@@ -1043,14 +1047,14 @@ class RoutePage(BasePage):
                 },
                 "offers": {
                     "@type": "Offer",
-                    "price": f"{int(trip.price)}",
+                    "price": f"{int(trip.price_a)}",
                     "priceCurrency": "PYG",
-                    "category": f"{trip.get_category_display()}",
-                    "description": f"Pasaje en categoría {trip.get_category_display()}",
+                    "category": f"{trip.get_category_a_display()}",
+                    "description": f"Tarifa informada por {company.name} para servicio {trip.get_category_a_display()}",
                     "seller": {
                         "@type": "Organization",
                         "name": f"{company.name}",
-                        "url": f"https://ventanita.com.py/empresas/{company.slug}/",
+                        "url": f"{settings.BASE_URI}/empresas/{company.slug}/",
                     },
                 },
             },
