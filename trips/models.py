@@ -1,5 +1,8 @@
+from datetime import datetime
+
 from django.conf import settings
 from django.core.management import call_command
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.templatetags.static import static
 from django.utils import timezone
@@ -7,7 +10,7 @@ from django.utils.translation import gettext_lazy as _
 
 from base.choices import Departamento
 from trips.date import duration_display, next_weekday
-from trips.managers import RouteManager, StopManager, TripManager
+from trips.managers import CompanyManager, RouteManager, StopManager, TripManager
 
 
 class Company(models.Model):
@@ -25,6 +28,8 @@ class Company(models.Model):
 
     created = models.DateTimeField(_("created"), auto_now_add=True)
     updated = models.DateTimeField(_("updated"), auto_now=True)
+
+    objects = CompanyManager()
 
     class Meta:
         verbose_name = _("company")
@@ -81,6 +86,11 @@ class Route(models.Model):
         AUTO = "a", _("Auto")
         MANUAL = "m", _("Manual")
 
+    class PullPreference(models.TextChoices):
+        RED = "r", _("Red")
+        PINK = "p", _("Pink")
+        MIXED = "m", _("Mixed")
+
     name = models.CharField(_("name"), max_length=200)
     code = models.CharField(_("code"), max_length=7, unique=True)
     origin = models.ForeignKey("Stop", on_delete=models.SET_NULL, blank=True, null=True, related_name="routes_outbound")
@@ -94,16 +104,27 @@ class Route(models.Model):
     num_departures = models.PositiveIntegerField(_("num of departures"), blank=True, null=True)
     num_companies = models.PositiveIntegerField(_("num of companies"), blank=True, null=True)
 
-    distance = models.DecimalField(_("distance"), max_digits=6, decimal_places=2, blank=True, null=True)
-    co2 = models.DecimalField(_("co2"), max_digits=6, decimal_places=2, blank=True, null=True)
+    distance = models.DecimalField(
+        _("distance"), max_digits=6, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(1)]
+    )
+    co2 = models.DecimalField(
+        _("co2"), max_digits=6, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(1)]
+    )
 
-    min_price = models.DecimalField(_("min price"), max_digits=9, decimal_places=2, blank=True, null=True)
-    avg_price = models.DecimalField(_("avg price"), max_digits=9, decimal_places=2, blank=True, null=True)
+    min_price = models.DecimalField(
+        _("min price"), max_digits=9, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(1)]
+    )
+    avg_price = models.DecimalField(
+        _("avg price"), max_digits=9, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(1)]
+    )
 
     min_duration = models.DurationField(_("min duration"), blank=True, null=True)
     avg_duration = models.DurationField(_("avg duration"), blank=True, null=True)
 
     strategy = models.CharField(_("strategy"), max_length=1, choices=Strategy, default=Strategy.AUTO)
+    pull_preference = models.CharField(
+        _("pull preference"), max_length=1, choices=PullPreference, default=PullPreference.RED
+    )
     is_active = models.BooleanField(_("active"), default=True)
     created = models.DateTimeField(_("created"), auto_now_add=True)
     updated = models.DateTimeField(_("updated"), auto_now=True)
@@ -121,14 +142,14 @@ class Route(models.Model):
         return (self.code,)
 
     def next_departure(self) -> timezone:
-        next_monday = next_weekday(timezone.now(), 0)
-        return timezone.localtime(next_monday)
+        next_friday = next_weekday(timezone.now(), 4)
+        return timezone.localtime(next_friday)
 
     def get_pink_url(self) -> str:
         origin = self.origin.pink_code
         dest = self.destination.pink_code
-        next_monday = next_weekday(timezone.now(), 0)
-        departure = next_monday.strftime("%m/%d/%Y")
+        next_departure = self.next_departure()
+        departure = next_departure.strftime("%m/%d/%Y")
 
         return f"{settings.PINK_BASE_URL}/{origin}/{dest}?FIda={departure}&CntPas=1"
 
@@ -138,14 +159,10 @@ class Route(models.Model):
 
         o_slug, o_code = self.origin.red_code.split(",")
         d_slug, d_code = self.destination.red_code.split(",")
-        next_monday = next_weekday(timezone.now(), 0)
-        departure = next_monday.strftime("%d-%m-%Y")
+        next_departure = self.next_departure()
+        departure = next_departure.strftime("%d-%m-%Y")
 
         return f"{settings.RED_BASE_URL}/{o_slug}/{d_slug}/{o_code}/{d_code}/{departure}/_/1/0/0"
-
-    def pull(self, strategy="red") -> str:
-        out = call_command("pullfreshdata", self.id, strategy=strategy)
-        return out
 
     def get_min_duration_display(self) -> str:
         return duration_display(self.min_duration)
@@ -180,12 +197,19 @@ class Trip(models.Model):
     route = models.ForeignKey("Route", on_delete=models.CASCADE, related_name="trips")
     company = models.ForeignKey("Company", on_delete=models.CASCADE, related_name="services")
 
-    category = models.CharField(_("category"), choices=Category, default=Category.SEMICAMA)
     departure = models.DateTimeField(_("departure"))
     arrival = models.DateTimeField(_("arrival"))
     duration = models.DurationField(_("duration"), blank=True, null=True)
-    price = models.DecimalField(_("price"), max_digits=9, decimal_places=2, blank=True, null=True)
+
+    category_a = models.CharField(_("category a"), choices=Category, default=Category.SEMICAMA)
+    category_b = models.CharField(_("category b"), choices=Category, blank=True)
+
+    price_a = models.DecimalField(_("price a"), max_digits=9, decimal_places=2, blank=True, null=True)
+    price_b = models.DecimalField(_("price b"), max_digits=9, decimal_places=2, blank=True, null=True)
+
     strategy = models.CharField(_("strategy"), max_length=1, choices=Strategy, default=Strategy.AUTO)
+    created = models.DateTimeField(_("created"), auto_now_add=True)
+    updated = models.DateTimeField(_("updated"), auto_now=True)
 
     objects = TripManager()
 
@@ -194,4 +218,10 @@ class Trip(models.Model):
         verbose_name_plural = _("Trips")
 
     def get_duration_display(self) -> str:
-        return duration_display(self.duration)
+        return duration_display(self.arrival - self.departure)
+
+    def local_departure(self) -> datetime:
+        return timezone.localtime(self.departure)
+
+    def local_arrival(self) -> datetime:
+        return timezone.localtime(self.arrival)
