@@ -4,7 +4,8 @@ from django.contrib import admin, messages
 from django.core.management import call_command
 from django.db.models import Count, QuerySet
 from django.http import HttpRequest
-from django.utils.html import format_html
+from django.utils import timezone
+from django.utils.html import format_html, format_html_join
 
 from trips.models import Company, Route, Stop, Trip
 
@@ -74,11 +75,12 @@ class RouteAdmin(admin.ModelAdmin[Route]):
         "min_fare",
         "min_time",
         "last_updated",
-        "strategy",
-        "pink",
         "red",
+        "pink",
         "map",
         "active",
+        "strategy",
+        "pull_preference",
     )
     list_display_links = ("id", "name")
     list_filter = ("updated", "strategy", "is_active")
@@ -87,12 +89,17 @@ class RouteAdmin(admin.ModelAdmin[Route]):
     autocomplete_fields = ("origin", "destination")
     search_fields = ("id", "code", "origin__name", "destination__name")
     inlines = (TripInlineAdmin,)
-    actions = ("pull_red", "pull_pink", "create_route_page")
+    actions = (
+        "pull",
+        "pull_red",
+        "pull_pink",
+        "create_route_page",
+    )
 
     _basic_fields = (("name", "code", "origin", "destination"),)
-    _departure_fields = (("num_departures", "num_companies", "first_departure", "last_departure"),)
+    _extra_fields = (("distance", "co2", "strategy", "pull_preference", "is_active"),)
     _price_duration_fields = (("min_price", "avg_price", "min_duration", "avg_duration"),)
-    _extra_fields = (("distance", "co2", "strategy", "is_active"),)
+    _departure_fields = (("num_departures", "num_companies", "first_departure", "last_departure"),)
 
     fieldsets = (
         ("Basic Information", {"fields": _basic_fields}),
@@ -113,8 +120,7 @@ class RouteAdmin(admin.ModelAdmin[Route]):
         return obj.num_companies or 0
 
     def min_fare(self, obj: Route) -> str:
-        fare = f"{obj.min_price:,.0f}" if obj.min_price else "?"
-        return fare
+        return f"{obj.min_price:,.0f}" if obj.min_price else "?"
 
     @admin.display(ordering="min_duration")
     def min_time(self, obj: Trip) -> str:
@@ -123,36 +129,45 @@ class RouteAdmin(admin.ModelAdmin[Route]):
 
     @admin.display(ordering="updated")
     def last_updated(self, obj: Route) -> str:
-        return obj.updated.strftime("%d %b %Y %H:%M:%S")
+        return obj.updated.strftime("%d-%m-%g %H:%M:%S")
 
     def pink(self, obj: Route) -> str:
         url = obj.get_pink_url()
-        return format_html("<a href='{}' target='_blank'>View</a>", url)
+        return format_html("<a href='{}' target='_blank' rel='noreferrer'>View</a>", url)
 
     def red(self, obj: Route) -> str:
         url = obj.get_red_url()
-        return format_html("<a href='{}' target='_blank'>View</a>", url)
+        return format_html("<a href='{}' target='_blank' rel='noreferrer'>View</a>", url)
 
     def map(self, obj: Route) -> str:
         url = obj.get_maps_directions_url()
-        return format_html("<a href='{}' target='_blank'>See</a>", url)
+        return format_html("<a href='{}' target='_blank', rel='noreferrer'>See</a>", url)
 
     def active(self, obj: Route) -> bool:
         return obj.is_active
 
     active.boolean = True
 
-    @admin.action(description="Pull selected routes from Red")
+    @admin.action(description="Pull selected routes via Red")
     def pull_red(self, request: HttpRequest, qs: QuerySet[Route]) -> None:
         ids = [obj.id for obj in qs]
-        out = call_command("pullfreshdata", ids)
+        out = call_command("pull_red", ids)
         self.message_user(request, f"{out} {len(qs)} routes updated.", messages.SUCCESS)
 
-    @admin.action(description="Pull selected routes from Pink")
+    @admin.action(description="Pull selected routes via Pink")
     def pull_pink(self, request: HttpRequest, qs: QuerySet[Route]) -> None:
         ids = [obj.id for obj in qs]
-        out = call_command("pullfreshdata", ids, strategy="pink")  # <-- note the strategy
+        out = call_command("pull_pink", ids)
         self.message_user(request, f"{out} {len(qs)} routes updated.", messages.SUCCESS)
+
+    @admin.action(description="Pull selected routes via Preference")
+    def pull(self, request: HttpRequest, qs: QuerySet[Route]) -> None:
+        red_qs = qs.filter(pull_preference=Route.PullPreference.RED)
+        pink_qs = qs.filter(pull_preference=Route.PullPreference.PINK)
+        if red_qs.exists():
+            self.pull_red(request, red_qs)
+        if pink_qs.exists():
+            self.pull_pink(request, pink_qs)
 
     @admin.action(description="Create Route Pages")
     def create_route_page(self, request: HttpRequest, qs: QuerySet[Route]) -> None:
@@ -163,25 +178,36 @@ class RouteAdmin(admin.ModelAdmin[Route]):
 
 @admin.register(Trip)
 class TripAdmin(admin.ModelAdmin):
-    list_display = ("id", "route", "company", "departs", "arrives", "runtime", "category", "amount", "strategy")
-    list_display_links = ("id", "route")
+    list_display = ("id", "route", "company", "departs", "arrives", "runtime", "price", "strategy")
     list_per_page = 30
     list_select_related = ("route", "company")
+    list_filter = ("strategy", "updated")
     search_fields = ("route__name", "company__name", "route__origin__name", "route__destination__name")
+    _basic_fields = (("route", "company", "strategy"),)
+    _times_fields = (("departure", "arrival", "duration"),)
+    _price_category_fields = (("category_a", "price_a", "category_b", "price_b"),)
+    fieldsets = (
+        ("Basic Information", {"fields": _basic_fields}),
+        ("Times", {"fields": _times_fields}),
+        ("Price & Category", {"fields": _price_category_fields}),
+    )
 
     @admin.display(ordering="departure")
     def departs(self, obj: Trip) -> str:
-        return obj.departure.strftime("%d %b %Y %H:%M")
+        departure = timezone.localtime(obj.departure)
+        return departure.strftime("%d %b %H:%M")
 
     @admin.display(ordering="arrival")
     def arrives(self, obj: Trip) -> str:
-        return obj.arrival.strftime("%d %b %Y %H:%M")
+        arrival = timezone.localtime(obj.arrival)
+        return arrival.strftime("%d %b %H:%M")
 
     @admin.display(ordering="duration")
     def runtime(self, obj: Trip) -> str:
         # converts 5:20:00 -> 5:20
         return str(obj.duration)[:-3]
 
-    @admin.display(ordering="price")
-    def amount(self, obj: Trip) -> int:
-        return f"{int(obj.price):,}"
+    def price(self, obj: Trip) -> int:
+        prices = [(obj.category_a, obj.price_a), (obj.category_b, obj.price_b)]
+        prices = [(obj.Category(x[0]).label, int(x[1])) for x in prices if x[0] and x[1]]
+        return format_html_join("\n", "<span>{} {}</span><br>", (prices))
