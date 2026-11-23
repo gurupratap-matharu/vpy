@@ -2,6 +2,11 @@ from django.db import models
 from django.db.models import QuerySet
 
 
+class CompanyManager(models.Manager["Company"]):
+    def get_by_natural_key(self, slug):
+        return self.get(slug=slug)
+
+
 class StopManager(models.Manager["Stop"]):
     def get_by_natural_key(self, slug):
         return self.get(slug=slug)
