@@ -63,7 +63,7 @@
         <div class="row align-items-center">
           <div class="col-3 col-lg-1">
             {% with 'assets/img/flags/'|add:page.province|add:'.avif' as flag %}
-              <img src="{% static flag %}" class="img-fluid" alt="{{ page.get_province_display }}" />
+              <img src="{% static flag %}" class="img-fluid shadow" alt="{{ page.get_province_display }}" />
             {% endwith %}
           </div>
           <div class="col-auto">
@@ -101,63 +101,100 @@
             <li class="list-group-item">
               <div class="row align-items-center">
                 <div class="col-12 col-md-3">
-                  <img class="img-fluid"
+                  <img class="img-fluid mb-1"
                        width="90"
                        height="30"
                        loading="lazy"
                        src="{{ trip.company.logo_url }}"
                        alt="Logo of {{ trip.company.name }}" />
-                  <p class="text-body-secondary text-xs mt-1 mb-md-0">{{ trip.company.name }}</p>
+                  <p class="text-body-secondary text-xs mb-1">{{ trip.company.name }}</p>
                 </div>
                 <div class="col-12 col-md-3">
-                  <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                      <span class="fw-medium">{{ trip.departure|date:"g:i A" }}</span>
+                  <div class="row">
+                    <div class="col-5">
+                      <span class="h5">{{ trip.local_departure|time }}</span>
                       <p class="text-body-secondary text-xs mb-1">{{ route.origin }}</p>
                     </div>
-                    <svg class="bi" width="16" height="16" fill="CurrentColor" aria-hidden="true">
+                    <svg class="col-2 align-self-center" width="16" height="16" fill="CurrentColor" aria-hidden="true">
                       <use xlink:href="{% static 'assets/icons/icons.svg' %}#arrow-right" />
                     </svg>
-                    <div>
-                      <span class="fw-medium">{{ trip.arrival|date:"g:i A" }}</span>
+                    <div class="col-5 text-end">
+                      <span class="h5">{{ trip.local_arrival|time }}
+                        {% if trip.local_arrival.time < trip.local_departure.time %}<sup>+1</sup>{% endif %}
+                      </span>
                       <p class="text-body-secondary text-xs mb-1">{{ route.destination }}</p>
                     </div>
                   </div>
                 </div>
                 <div class="col-12 col-md-2 text-center">
-                  <p class="text-sm mb-2 mb-md-0">{{ trip.get_duration_display }}</p>
-                  <span class="d-none d-md-block text-body-secondary text-xs mb-0">{{ route.origin.code }}-{{ route.destination.code }}</span>
+                  <p class="text-xs mb-1">{{ trip.get_duration_display }}</p>
+                  <span class="d-none d-md-block text-body-secondary text-xs">{{ route.origin.code }}-{{ route.destination.code }}</span>
                 </div>
-                <div class="col-6 col-md-2">
-                  <span class="text-xs text-uppercase">{{ trip.get_category_display }}</span>
-                </div>
-                <div class="col-6 col-md-2 text-end text-md-start">
-                  <span class="fw-medium">Gs. {{ trip.price|floatformat:"0" }}</span>
+                <div class="col-12 col-md-4 text-end text-md-start">
+                  <div class="d-flex align-items-center">
+                    <span class="text-xs text-uppercase">{{ trip.get_category_a_display }}</span>
+                    <div class="ms-auto">
+                      <span class="text-xs">Gs.</span>
+                      <span class="fw-medium text-sm">{{ trip.price_a|floatformat:"0" }}</span>
+                    </div>
+                  </div>
+                  {% if trip.category_b and trip.price_b %}
+                    <hr class="my-1 border d-md-none" />
+                    <div class="d-flex align-items-center">
+                      <span class="text-xs text-uppercase">{{ trip.get_category_b_display }}</span>
+                      <div class="ms-auto">
+                        <span class="text-xs">Gs.</span>
+                        <span class="fw-medium text-sm">{{ trip.price_b|floatformat:"0" }}</span>
+                      </div>
+                    </div>
+                  {% endif %}
                 </div>
               </div>
             </li>
           {% endfor %}
         </ul>
-        <p class="text-body-secondary text-sm mt-2 mb-1">
-          {% translate "Los horarios son estimados y pueden contener errores." %}
+        <p class="text-body-secondary text-sm mt-2">
+          Horarios de referencia (Actualizado hace {{ route.updated|timesince }}). Por ahora no vendemos pasajes online.
           <a data-bs-toggle="collapse"
              href="#collapseDisclaimer"
              role="button"
              aria-expanded="false"
              aria-controls="collapseDisclaimer">{% translate "¿Por que? Leer más" %}</a>
         </p>
-        <p class="text-body-secondary text-sm">{% translate "Última actualización hace" %} {{ route.updated|timesince }}</p>
         <div class="collapse" id="collapseDisclaimer">
-          <div class="alert alert-success alert-dismissible fade show text-sm" role="alert">
-            {% translate "Los horarios se actualiza a partir de datos públicos proporcionados por las empresas de micros. Pueden sufrir cambios de última hora sin previo aviso." %}
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <h4 class="h6 alert-heading">¿Cómo funciona Ventanita hoy?</h4>
+            <p class="text-sm">
+              <strong>Sin venta de pasajes (por ahora):</strong> Actualmente Ventanita es una guía informativa gratuita. Todavía no
+              emitimos pasajes ni tenemos conexión en tiempo real con las boleterías. Para comprar tu lugar, te
+              recomendamos comunicarte directamente con la empresa de transporte o acercarte a la terminal.
+            </p>
+            <p class="text-sm">
+              <strong>¿De dónde salen estos horarios?</strong> Recopilamos y verificamos manualmente esta información a partir de
+              fuentes públicas, redes sociales oficiales de las empresas y portales de transporte.
+            </p>
+            <p class="text-sm">
+              <strong>Frecuencia de actualización:</strong> Revisamos y actualizamos esta ruta cada 2 a 3 semanas aproximadamente.
+              Como los horarios y tarifas pueden cambiar sin previo aviso por decisiones de cada empresa o factores
+              climáticos, siempre conviene confirmar antes de viajar.
+            </p>
+            <p class="text-sm">
+              <strong>Próximamente: Compra online y alertas</strong>
+              Estamos trabajando en alianzas con las empresas de ómnibus de Paraguay para habilitar la reserva directa
+              desde nuestra web.
+            </p>
+            <p class="text-sm">
+              <em>¿Querés ser de los primeros en enterarte cuando activemos la venta de pasajes o recibir
+                avisos de descuentos? </em><a href="/contact/" class="alert-link">Dejanos tu correo acá</a>
+            </p>
             <hr />
             <p class="d-inline-flex gap-3">
               <a class="alert-link small"
                  data-bs-toggle="collapse"
                  href="#collapseDisclaimer"
                  role="button"
-                 aria-controls="collapseDisclaimer">{% translate "Okay Entendido" %}</a>
-              <a class="alert-link small" href="/contact/">{% translate "Me quedo una duda" %}</a>
+                 aria-controls="collapseDisclaimer">{% translate "Okay, entendido" %}</a>
+              <a class="alert-link small" href="/feedback/">{% translate "Reportar un horario desactualizado" %}</a>
             </p>
           </div>
         </div>
@@ -191,7 +228,7 @@
             <div class="col">
               <div class="card bg-light-subtle h-100">
                 <div class="card-body">
-                  <p class="fw-bold">{% translate "Más rapidó" %}</p>
+                  <p class="fw-bold">{% translate "Más rápido" %}</p>
                   <div class="row">
                     <div class="col-md"><span class="fs-3">{{ route.get_min_duration_display }}</span></div>
                     <div class="col-md">
