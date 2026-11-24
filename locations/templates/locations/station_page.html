@@ -206,18 +206,6 @@
       {% include "includes/advice.html" %}
     </section>
     <section class="py-3">
-      <h2 class="fs-5 pb-3">Explora con Ventanita</h2>
-      <p>
-        En <a href="https://ventanita.com.py" class="fw-bold">ventanita.com.py</a> podes buscar y
-        comparar y ver los horarios de micros a {{ page.title }}, así como también obtener información detallada sobre las rutas y los horarios de partida. Averigua los promociones vigentes y comience a disfrutar de su viaje sin complicaciones.
-      </p>
-      <ul>
-        <li>Descubre nuevos destinos con total confianza</li>
-        <li>Viaja cómodo, seguro y económico</li>
-        <li>Nuestra plataforma te conecta con Paraguay y Argentina</li>
-      </ul>
-    </section>
-    <section class="py-3">
       {% include "includes/company-logos.html" %}
     </section>
     <section class="py-3">
@@ -271,8 +259,8 @@
         <div class="alert alert-light" role="alert">
           <div class="row">
             <div class="col-sm-6">
-              <p class="fw-bold">{% translate "Nos alegra que te guste." %}</p>
-              <small>{% translate "Si tienes alguna idea o sugerencia sobre cómo podemos hacerlo más útil, escríbenos aquí." %}</small>
+              <p class="fw-bold">{% translate "¡Qué bueno que te sirvió!" %}</p>
+              <small>{% translate "Si tenés alguna idea o sugerencia para que la página sea todavía más útil, escribinos acá:" %}</small>
               <form method="post" action="{% url 'base:suggestion' %}">
                 {% csrf_token %}
                 {{ suggestion_form }}

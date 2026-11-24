@@ -112,14 +112,13 @@ class PartnerIndexPage(BasePage):
 
     def _get_breadcrumb_schema(self):
         breadcrumb_schema = {
-            "@context": "https://schema.org",
             "@type": "BreadcrumbList",
             "itemListElement": [
                 {
                     "@type": "ListItem",
                     "position": 1,
                     "name": "Paraguay",
-                    "item": "https://ventanita.com.py/",
+                    "item": f"{settings.BASE_URI}",
                 },
                 {
                     "@type": "ListItem",
@@ -360,13 +359,12 @@ class PartnerPage(BasePage):
             rating_value = rating_count = 0
 
         org_schema = {
-            "@context": "https://schema.org",
             "@type": "Organization",
             "@id": f"{self.full_url}#organization",
             "name": self.title,
             "url": self.full_url,
-            "logo": f"https://ventanita.com.py{logo_url}",
-            "image": f"https://ventanita.com.py{image_url}",
+            "logo": f"{settings.BASE_URI}{logo_url}",
+            "image": f"{settings.BASE_URI}{image_url}",
             "description": self.search_description,
             "email": email,
             "telephone": telephone,
@@ -397,14 +395,13 @@ class PartnerPage(BasePage):
 
     def _get_breadcrumb_schema(self):
         breadcrumb_schema = {
-            "@context": "https://schema.org",
             "@type": "BreadcrumbList",
             "itemListElement": [
                 {
                     "@type": "ListItem",
                     "position": 1,
                     "name": "Paraguay",
-                    "item": "https://ventanita.com.py/",
+                    "item": f"{settings.BASE_URI}",
                 },
                 {
                     "@type": "ListItem",

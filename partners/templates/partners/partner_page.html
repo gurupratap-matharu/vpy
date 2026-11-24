@@ -244,8 +244,8 @@
         <div class="alert alert-light" role="alert">
           <div class="row">
             <div class="col-sm-6">
-              <p class="fw-bold">{% translate "Nos alegra que te guste." %}</p>
-              <small>{% translate "Si tienes alguna idea o sugerencia sobre cómo podemos hacerlo más útil, escríbenos aquí." %}</small>
+              <p class="fw-bold">{% translate "¡Qué bueno que te sirvió!" %}</p>
+              <small>{% translate "Si tenés alguna idea o sugerencia para que la página sea todavía más útil, escribinos acá:" %}</small>
               <form method="post" action="{% url 'base:suggestion' %}">
                 {% csrf_token %}
                 {{ suggestion_form }}

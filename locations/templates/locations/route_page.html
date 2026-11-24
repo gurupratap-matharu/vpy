@@ -1,6 +1,6 @@
 {% extends "layouts/base.html" %}
 
-{% load static i18n wagtailcore_tags wagtailimages_tags navigation_tags %}
+{% load static i18n l10n wagtailcore_tags wagtailimages_tags navigation_tags base_extras %}
 
 {% block content %}
   <article class="container"
@@ -135,7 +135,7 @@
                     <span class="text-xs text-uppercase">{{ trip.get_category_a_display }}</span>
                     <div class="ms-auto">
                       <span class="text-xs">Gs.</span>
-                      <span class="fw-medium text-sm">{{ trip.price_a|floatformat:"0" }}</span>
+                      <span class="fw-medium text-sm">{{ trip.price_a|gs_format }}</span>
                     </div>
                   </div>
                   {% if trip.category_b and trip.price_b %}
@@ -144,7 +144,7 @@
                       <span class="text-xs text-uppercase">{{ trip.get_category_b_display }}</span>
                       <div class="ms-auto">
                         <span class="text-xs">Gs.</span>
-                        <span class="fw-medium text-sm">{{ trip.price_b|floatformat:"0" }}</span>
+                        <span class="fw-medium text-sm">{{ trip.price_b|gs_format }}</span>
                       </div>
                     </div>
                   {% endif %}
@@ -154,7 +154,7 @@
           {% endfor %}
         </ul>
         <p class="text-body-secondary text-sm mt-2">
-          Horarios de referencia (Actualizado hace {{ route.updated|timesince }}). Por ahora no vendemos pasajes online.
+          Horarios de referencia (Última verificación {{ route.updated|timesince }}). Por ahora no vendemos pasajes online.
           <a data-bs-toggle="collapse"
              href="#collapseDisclaimer"
              role="button"
@@ -233,7 +233,7 @@
                     <div class="col-md"><span class="fs-3">{{ route.get_min_duration_display }}</span></div>
                     <div class="col-md">
                       <small>
-                        El colectivo más rapidó de {{ route.origin }} a {{ route.destination }} tarda {{ route.get_min_duration_display }}
+                        El colectivo más rápido de {{ route.origin }} a {{ route.destination }} tarda {{ route.get_min_duration_display }}
                       </small>
                     </div>
                   </div>
@@ -372,8 +372,8 @@
         <div class="alert alert-light" role="alert">
           <div class="row">
             <div class="col-sm-6">
-              <p class="fw-bold">{% translate "Nos alegra que te guste." %}</p>
-              <small>{% translate "Si tienes alguna idea o sugerencia sobre cómo podemos hacerlo más útil, escríbenos aquí." %}</small>
+              <p class="fw-bold">{% translate "¡Qué bueno que te sirvió!" %}</p>
+              <small>{% translate "Si tenés alguna idea o sugerencia para que la página sea todavía más útil, escribinos acá:" %}</small>
               <form method="post" action="{% url 'base:suggestion' %}">
                 {% csrf_token %}
                 {{ suggestion_form }}

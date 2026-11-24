@@ -1,5 +1,6 @@
 import logging
 
+from django.conf import settings
 from django.contrib import messages
 from django.db import models
 from django.forms import widgets
@@ -225,14 +226,13 @@ class BasePage(SocialFields, ListingFields, Page):
         image_url = image.file.url if image else ""
 
         image_schema = {
-            "@context": "https://schema.org",
             "@type": "ImageObject",
-            "contentUrl": f"https://ventanita.com.py{image_url}",
-            "license": "https://ventanita.com.py/condiciones-generales/",
-            "acquireLicensePage": "https://ventanita.com.py/contact/",
+            "contentUrl": f"{settings.BASE_URI}{image_url}",
+            "license": f"{settings.BASE_URI}/condiciones-generales/",
+            "acquireLicensePage": f"{settings.BASE_URI}/contact/",
             "creditText": self.listing_title or self.social_text,
-            "creator": {"@type": "Person", "name": "Ventanita"},
-            "copyrightNotice": "Ventanita",
+            "creator": {"@type": "Person", "name": f"{settings.SITE_NAME}"},
+            "copyrightNotice": f"{settings.SITE_NAME}",
         }
 
         return image_schema
@@ -242,16 +242,15 @@ class BasePage(SocialFields, ListingFields, Page):
         image_url = image.file.url if image else ""
         org = {
             "@type": "Organization",
-            "@id": "https://ventanita.com.py/#organization",
-            "url": "https://ventanita.com.py",
-            "name": "Ventanita",
+            "@id": f"{settings.BASE_URI}/#organization",
+            "url": f"{settings.BASE_URI}",
+            "name": f"{settings.SITE_NAME}",
         }
 
         article_schema = {
-            "@context": "https://schema.org",
             "@type": "Article",
             "headline": self.title,
-            "image": [f"https://ventanita.com.py{image_url}"],
+            "image": [f"{settings.BASE_URI}{image_url}"],
             "datePublished": self.first_published_at.isoformat(),
             "dateModified": self.last_published_at.isoformat(),
             "author": [org],
@@ -265,7 +264,6 @@ class BasePage(SocialFields, ListingFields, Page):
             return
 
         faq_schema = {
-            "@context": "https://schema.org",
             "@type": "FAQPage",
             "mainEntity": self._get_faq_entities(),
         }

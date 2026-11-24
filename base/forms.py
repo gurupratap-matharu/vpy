@@ -79,7 +79,14 @@ class SuggestionForm(forms.Form):
         label=_("Sugerencia"),
         min_length=10,
         required=True,
-        widget=forms.Textarea(attrs={"class": "form-control", "rows": 3, "cols": 20}),
+        widget=forms.Textarea(
+            attrs={
+                "class": "form-control",
+                "rows": 3,
+                "cols": 20,
+                "placeholder": _("Contanos tu idea o sugerencia..."),
+            }
+        ),
     )
 
     def send_mail(self):

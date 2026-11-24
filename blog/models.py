@@ -2,6 +2,7 @@ import json
 import logging
 
 from django import forms
+from django.conf import settings
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db import models
@@ -164,14 +165,13 @@ class BlogIndexPage(RoutablePageMixin, BasePage):
 
     def _get_breadcrumb_schema(self):
         breadcrumb_schema = {
-            "@context": "https://schema.org",
             "@type": "BreadcrumbList",
             "itemListElement": [
                 {
                     "@type": "ListItem",
                     "position": 1,
-                    "name": "Ventanita",
-                    "item": "https://ventanita.com.py/",
+                    "name": f"{settings.SITE_NAME}",
+                    "item": f"{settings.BASE_URI}",
                 },
                 {
                     "@type": "ListItem",
@@ -354,20 +354,19 @@ class BlogPage(BasePage):
 
     def _get_breadcrumb_schema(self):
         breadcrumb_schema = {
-            "@context": "https://schema.org",
             "@type": "BreadcrumbList",
             "itemListElement": [
                 {
                     "@type": "ListItem",
                     "position": 1,
-                    "name": "Ventanita",
-                    "item": "https://ventanita.com.py/",
+                    "name": f"{settings.SITE_NAME}",
+                    "item": f"{settings.BASE_URI}",
                 },
                 {
                     "@type": "ListItem",
                     "position": 2,
                     "name": "Blog",
-                    "item": "https://ventanita.com.py/blog/",
+                    "item": f"{settings.BASE_URI}/blog/",
                 },
                 {
                     "@type": "ListItem",
@@ -384,10 +383,7 @@ class BlogPageGalleryImage(Orderable):
     page = ParentalKey(BlogPage, on_delete=models.CASCADE, related_name="gallery_images")
     image = models.ForeignKey("wagtailimages.Image", on_delete=models.CASCADE, related_name="+")
     caption = models.CharField(blank=True, max_length=250)
-    panels = [
-        FieldPanel("image"),
-        FieldPanel("caption"),
-    ]
+    panels = (FieldPanel("image"), FieldPanel("caption"))
 
     class Meta:
         verbose_name = "blogpagegallery"
@@ -399,10 +395,7 @@ class BlogPageRelatedLink(Orderable):
     name = models.CharField(max_length=255)
     url = models.URLField()
 
-    panels = [
-        FieldPanel("name"),
-        FieldPanel("url"),
-    ]
+    panels = (FieldPanel("name"), FieldPanel("url"))
 
     class Meta:
         verbose_name = "blogpagerelatedlink"
@@ -421,10 +414,7 @@ class BlogCategory(models.Model):
         on_delete=models.SET_NULL,
         related_name="+",
     )
-    panels = [
-        FieldPanel("name"),
-        FieldPanel("icon"),
-    ]
+    panels = (FieldPanel("name"), FieldPanel("icon"))
 
     def __str__(self):
         return self.name
