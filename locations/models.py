@@ -225,7 +225,6 @@ class CityPage(BasePage):
 
     def _get_breadcrumb_schema(self):
         breadcrumb_schema = {
-            "@context": "https://schema.org",
             "@type": "BreadcrumbList",
             "itemListElement": [
                 {
@@ -324,7 +323,6 @@ class StationIndexPage(BasePage):
 
     def _get_breadcrumb_schema(self):
         breadcrumb_schema = {
-            "@context": "https://schema.org",
             "@type": "BreadcrumbList",
             "itemListElement": [
                 {
@@ -559,7 +557,6 @@ class StationPage(RoutablePageMixin, BasePage):
         image_description = getattr(image, "description", "")
 
         image_schema = {
-            "@context": "https://schema.org",
             "@type": "ImageObject",
             "contentUrl": f"{settings.BASE_URI}{image_url}",
             "url": f"{settings.BASE_URI}{image_url}",
@@ -603,7 +600,6 @@ class StationPage(RoutablePageMixin, BasePage):
 
     def _get_breadcrumb_schema(self):
         breadcrumb_schema = {
-            "@context": "https://schema.org",
             "@type": "BreadcrumbList",
             "itemListElement": [
                 {
@@ -789,7 +785,6 @@ class RouteIndexPage(BasePage):
 
     def _get_breadcrumb_schema(self):
         breadcrumb_schema = {
-            "@context": "https://schema.org",
             "@type": "BreadcrumbList",
             "itemListElement": [
                 {
