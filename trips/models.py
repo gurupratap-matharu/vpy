@@ -1,7 +1,6 @@
 from datetime import datetime
 
 from django.conf import settings
-from django.core.management import call_command
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.templatetags.static import static
@@ -11,6 +10,9 @@ from django.utils.translation import gettext_lazy as _
 from base.choices import Departamento
 from trips.date import duration_display, next_weekday
 from trips.managers import CompanyManager, RouteManager, StopManager, TripManager
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class Company(models.Model):
@@ -79,6 +81,23 @@ class Stop(models.Model):
 
     def natural_key(self) -> str:
         return (self.slug,)
+
+    def get_address_schema(self) -> dict:
+        country_map = {"paraguay": "PY", "argentina": "AR"}
+        try:
+            street, locality, postal_code, country = self.address.split(", ")
+            country_code = country_map.get(country.lower())
+        except ValueError:
+            logger.warning("address for %s is malformatted", self)
+            return
+        schema = {
+            "@type": "PostalAddress",
+            "streetAddress": street,
+            "addressLocality": locality,
+            "postalCode": postal_code,
+            "addressCountry": country_code,
+        }
+        return schema
 
 
 class Route(models.Model):

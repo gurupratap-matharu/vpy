@@ -1026,20 +1026,12 @@ class RoutePage(BasePage):
                 "departureBusStop": {
                     "@type": "BusStation",
                     "name": f"Terminal de Ómnibus {origin}",
-                    "address": {
-                        "@type": "PostalAddress",
-                        "addressLocality": f"{origin.address}",
-                        "addressCountry": "PY",
-                    },
+                    "address": origin.get_address_schema(),
                 },
                 "arrivalBusStop": {
                     "@type": "BusStation",
                     "name": f"Terminal de Ómnibus de {dest}",
-                    "address": {
-                        "@type": "PostalAddress",
-                        "addressLocality": f"{dest.address}",
-                        "addressCountry": "PY",
-                    },
+                    "address": dest.get_address_schema(),
                 },
                 "offers": {
                     "@type": "Offer",
@@ -1048,9 +1040,7 @@ class RoutePage(BasePage):
                     "category": f"{trip.get_category_a_display()}",
                     "description": f"Tarifa informada por {company.name} para servicio {trip.get_category_a_display()}",
                     "seller": {
-                        "@type": "Organization",
-                        "name": f"{company.name}",
-                        "url": f"{settings.BASE_URI}/empresas/{company.slug}/",
+                        "@id": f"{settings.BASE_URI}/empresas/{company.slug}/#organization",
                     },
                 },
             },
