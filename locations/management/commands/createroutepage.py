@@ -111,19 +111,19 @@ class Command(BaseCommand):
                 f"Informate sobre la ruta, los horarios y los detalles de tu viaje con Ventanita."
             ),
             (
-                f"¿Viajás de {origin} a {dest}? Descubrí información sobre el recorrido en micro, "
-                f"consultá detalles de la ruta y planificá tu próximo viaje con Ventanita."
+                f"¿Viajás de {origin} a {dest}? Descubrí la guía completa sobre los horarios, precios, "
+                f"y la ruta. Planificá tu próximo viaje con Ventanita."
             ),
             (
-                f"Encontrá toda la información para tu viaje en micro desde {origin} a {dest}. "
-                f"Horarios, terminales y tips para planificar tu próxima escapada con Ventanita."
+                f"Encontrá toda la información para tu viaje de {origin} a {dest}. "
+                f"Horarios, terminales y tips para planificar tu próximo viaje con Ventanita."
             ),
             (
                 f"Consultá los horarios, precios estimados y empresas de colectivos para viajar de {origin} a {dest}. "
-                f"¡Planificá tu viaje gratis antes de ir a la terminal con Ventanita!"
+                f"¡Planificá tu viaje con Ventanita!"
             ),
             (
-                f"Compará las salidas de colectivos de {origin} a {dest}. Encontrá precios mínimos, empresas operadoras, "
+                f"Compará las salidas de colectivos de {origin} a {dest}. Encontrá precios mínimos, empresas, "
                 f"frecuencias y el viaje más rápido en Ventanita."
             ),
         ]
@@ -194,7 +194,7 @@ class Command(BaseCommand):
                 {
                     "question": f"¿Qué empresas de transporte operan en la ruta {origin} - {dest}?",
                     "answer": RichText(
-                        f"<p>Las principales empresas que te llevan en esta ruta son <b>{companies}</b> entre otras. "
+                        f"<p>Las principales empresas de bus que te llevan en esta ruta son <b>{companies}</b> entre otras. "
                         f"En <b>Ventanita</b> podés mirar bien los horarios de cada una para elegir la opción que mejor te calce.</p>"
                     ),
                 },
@@ -246,10 +246,10 @@ class Command(BaseCommand):
                 {
                     "question": "¿Cuánto equipaje puedo llevar en el bus?",
                     "answer": RichText(
-                        "<p>Tecnicamente podés subir con un bolso de mano chico (de hasta 40x40x25 cm) y llevar en la bodega "
+                        "<p>Técnicamente podés subir con un bolso de mano chico (de hasta 40x40x25 cm) y llevar en la bodega "
                         "una maleta grande (máximo 80x80x30 cm). En total, tu equipaje no debe pasar los <b>15 kilos</b>. "
                         "Si te excedés en el peso o el tamaño, la empresa te puede cobrar una tasa extra basada en sus precios de encomiendas. "
-                        "Pero en realidad no todas las empresas los tienen muy estricto esas reglas según las observaciones de los pasajeros.</p>"
+                        "Pero en realidad no todas las empresas aplican estas reglas de forma estricta según las observaciones de los pasajeros.</p>"
                     ),
                 },
             ],
