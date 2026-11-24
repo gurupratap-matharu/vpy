@@ -1006,6 +1006,7 @@ class RoutePage(BasePage):
         company = trip.company
         dep = timezone.localtime(trip.departure).time()
         arr = timezone.localtime(trip.arrival).time()
+        price = int(trip.price_a) if trip.price_a else 0
         # Generate unique trip id based on company and departure time
         trip_id = f"trip-{company.slug}-{dep.hour}{dep.minute}"
 
@@ -1047,7 +1048,7 @@ class RoutePage(BasePage):
                 },
                 "offers": {
                     "@type": "Offer",
-                    "price": f"{int(trip.price_a)}",
+                    "price": f"{price}",
                     "priceCurrency": "PYG",
                     "category": f"{trip.get_category_a_display()}",
                     "description": f"Tarifa informada por {company.name} para servicio {trip.get_category_a_display()}",
