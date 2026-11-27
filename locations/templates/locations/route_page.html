@@ -18,7 +18,7 @@
             <svg width="16" height="16" fill="currentColor" aria-hidden="true">
               <use xlink:href="{% static 'assets/icons/icons.svg' %}#coin" />
             </svg>
-            <span class="text-sm">{% translate "Precio min." %} Gs {{ route.min_price|floatformat:"0" }}</span>
+            <span class="text-sm">{% translate "Precio min." %} Gs {{ route.min_price|gs_format }}</span>
           </div>
         {% endif %}
         {% if route.distance %}
@@ -73,6 +73,9 @@
         </div>
       </section>
     {% endif %}
+    {% if page.intro %}
+      <p class="text-sm">{{ page.intro }}</p>
+    {% endif %}
     <section class="sticky-top adaptive-bg">
       <ul class="nav nav-underline border-bottom text-sm" id="scrollnav">
         <li class="nav-item">
@@ -92,9 +95,7 @@
     {% if trips %}
       <section class="py-3" id="horarios">
         <h2 class="fs-5">{% translate "Próximas salidas" %}</h2>
-        {% if page.intro %}
-          <p class="text-sm">{{ page.intro }}</p>
-        {% endif %}
+        <p class="text-sm">Hay {{ route.num_departures }} salidas con {{ route.num_companies }} empresas de bus desde {{ route.origin }} a {{ route.destination }} con una duración mínima de {{ route.get_min_duration_display }}.</p>
         <ul class="list-group">
           {% for trip in trips %}
             {# Trip card #}
@@ -215,9 +216,9 @@
                 <div class="card-body">
                   <p class="fw-bold">{% translate "Más económico" %}</p>
                   <div class="row">
-                    <div class="col-md"><span class="fs-3">{{ route.min_price|floatformat:"0" }} Gs.</span></div>
+                    <div class="col-md"><span class="fs-3">{{ route.min_price|gs_format }} Gs.</span></div>
                     <div class="col-md">
-                      <small>El colectivo más económico de {{ route.origin }} a {{ route.destination }} sale {{ route.min_price|floatformat:"0" }} Gs.</small>
+                      <small>El colectivo más económico de {{ route.origin }} a {{ route.destination }} sale {{ route.min_price|gs_format }} Gs.</small>
                     </div>
                   </div>
                 </div>
@@ -233,7 +234,7 @@
                     <div class="col-md"><span class="fs-3">{{ route.get_min_duration_display }}</span></div>
                     <div class="col-md">
                       <small>
-                        El colectivo más rápido de {{ route.origin }} a {{ route.destination }} tarda {{ route.get_min_duration_display }}
+                        El colectivo más rápido de {{ route.origin }} a {{ route.destination }} tarda {{ route.get_min_duration_display }}.
                       </small>
                     </div>
                   </div>
@@ -308,9 +309,9 @@
     <section class="py-3">
       {{ page.terminals }}
     </section>
-    {% if page.faq %}
+    {% if faq_html %}
       <section class="py-3" id="faq">
-        {{ page.faq }}
+        {{ faq_html }}
       </section>
     {% endif %}
     {% if page.links %}

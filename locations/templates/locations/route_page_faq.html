@@ -1,0 +1,212 @@
+<h2 class="fs-5 pb-3">Preguntas frecuentes sobre la ruta {{ route.origin }} a {{ route.dest }}</h2>
+<div class="accordion accordion-flush" id="accordionFAQ">
+  {# Price faq #}
+  <div class="accordion-item">
+    <h3 class="accordion-header">
+      <button class="accordion-button ps-0 collapsed fw-medium"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapse0"
+              aria-expanded="false"
+              aria-controls="collapse0">¿Cuánto sale el pasaje de {{ route.origin }} a {{ route.dest }}?</button>
+    </h3>
+    <div id="collapse0" class="accordion-collapse collapse" data-bs-parent="#accordionFAQ">
+      <div class="accordion-body ps-0">
+        {% if route.min_price == route.avg_price %}
+          <p>En promedio, el pasaje en colectivo está unos <b>Gs. {{ route.avg_price }}</b>.</p>
+        {% else %}
+          <p>
+            En promedio, el pasaje en colectivo está unos <b>Gs. {{ route.avg_price }}</b>,
+            pero podés conseguir lo más barato desde <b>Gs. {{ route.min_price }}</b>.
+          </p>
+        {% endif %}
+        <p>
+          Acordate que el precio final depende de la empresa que elijas y el tipo de coche (Común, Semi-Cama o Ejecutivo).
+          Un consejo: los precios suelen subir en fechas clave (como Semana Santa o fin de año), así que mejor organizate con tiempo.
+        </p>
+      </div>
+    </div>
+  </div>
+  {# Duration faq #}
+  <div class="accordion-item">
+    <h3 class="accordion-header">
+      <button class="accordion-button ps-0 collapsed fw-medium"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapse1"
+              aria-expanded="false"
+              aria-controls="collapse1">¿Cuánto tiempo lleva el viaje de {{ route.origin }} a {{ route.dest }}?</button>
+    </h3>
+    <div id="collapse1" class="accordion-collapse collapse" data-bs-parent="#accordionFAQ">
+      <div class="accordion-body ps-0">
+        {% if route.min_d == route.avg_d %}
+          <p>El viaje suele durar más o menos <b>{{ route.min_d }}</b>.</p>
+        {% else %}
+          <p>El viaje suele durar más o menos entre <b>{{ route.min_d }}</b> y <b>{{ route.avg_d }}</b>.</p>
+          <p>
+            Eso sí, tené en cuenta que el viaje se puede alargar un poco dependiendo del tráfico para salir de la ciudad,
+            cómo estén las rutas o si el colectivo es de los que paran mucho en el camino a alzar pasajeros.
+          </p>
+          <p>
+            Para que sepas la distancia por carretera entre <b>{{ route.origin }}</b> y <b>{{ route.dest }}</b> es de
+            aproximadamente <b>{{ route.distance }}</b> kilómetros.
+          </p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {# Departure faq #}
+  <div class="accordion-item">
+    <h3 class="accordion-header">
+      <button class="accordion-button ps-0 collapsed fw-medium"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapse2"
+              aria-expanded="false"
+              aria-controls="collapse2">
+        ¿Cuándo es la primera y la última salida de bus entre {{ route.origin }} y {{ route.dest }}?
+      </button>
+    </h3>
+    <div id="collapse2" class="accordion-collapse collapse" data-bs-parent="#accordionFAQ">
+      <div class="accordion-body ps-0">
+        {% if route.first_dep == route.last_dep %}
+          <p>
+            La única salida de <b>{{ route.origin }}</b> a <b>{{ route.dest }}</b> sale a las <b>{{ route.first_dep|time:"H:i" }} horas.</b>
+          </p>
+        {% else %}
+          <p>
+            La primera salida de <b>{{ route.origin }}</b> a <b>{{ route.dest }}</b> sale a las
+            <b>{{ route.first_dep|time:"H:i" }} horas</b> y la última salida es a las <b>{{ route.last_dep|time:"H:i" }} horas.</b>
+          </p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {# Companies faq #}
+  <div class="accordion-item">
+    <h3 class="accordion-header">
+      <button class="accordion-button ps-0 collapsed fw-medium"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapse3"
+              aria-expanded="false"
+              aria-controls="collapse3">¿Qué empresas de transporte operan en la ruta {{ route.origin }} a {{ route.dest }}?</button>
+    </h3>
+    <div id="collapse3" class="accordion-collapse collapse" data-bs-parent="#accordionFAQ">
+      <div class="accordion-body ps-0">
+        <p>
+          Las principales <a href="/empresas-de-bus/">empresas de bus</a> que te llevan en esta ruta son
+          {{ route.companies_links }} entre otras.
+        </p>
+        <p>En <a href="/">Ventanita</a> podés mirar bien los horarios de cada una para elegir la opción que mejor te guste.</p>
+      </div>
+    </div>
+  </div>
+  {# Distance faq #}
+  <div class="accordion-item">
+    <h3 class="accordion-header">
+      <button class="accordion-button ps-0 collapsed fw-medium"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapse4"
+              aria-expanded="false"
+              aria-controls="collapse4">¿Cuántos kilómetros hay de {{ route.origin }} a {{ route.dest }}?</button>
+    </h3>
+    <div id="collapse4" class="accordion-collapse collapse" data-bs-parent="#accordionFAQ">
+      <div class="accordion-body ps-0">
+        <p>
+          La distancia por carretera entre <b>{{ route.origin }}</b> y <b>{{ route.dest }}</b> es de aproximadamente <b>{{ route.distance }}</b> kilómetros,
+          aunque puede variar según el recorrido y los puntos de salida y llegada.
+        </p>
+        {% if route.min_d == route.avg_d %}
+          <p>Para que sepas el viaje suele durar más o menos <b>{{ route.min_d }}</b>.</p>
+        {% else %}
+          <p>Para que sepas el viaje suele durar más o menos entre <b>{{ route.min_d }}</b> y <b>{{ route.avg_d }}</b>.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {# Generic faq starts #}
+  {# Seat categories faq #}
+  <div class="accordion-item">
+    <h3 class="accordion-header">
+      <button class="accordion-button ps-0 collapsed fw-medium"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapse5"
+              aria-expanded="false"
+              aria-controls="collapse5">¿Qué diferencia hay entre los servicios Común, Semi-Cama y Ejecutivo?</button>
+    </h3>
+    <div id="collapse5" class="accordion-collapse collapse" data-bs-parent="#accordionFAQ">
+      <div class="accordion-body ps-0">
+        <p>
+          El servicio <em>Común</em> realiza más paradas en el trayecto. Los servicios <em>Semi-Cama</em> y <em>Cama
+          Ejecutivo</em> ofrecen asientos más reclinables, aire acondicionado, pantallas y, en algunos casos, refrigerios
+          a bordo, siendo ideales para viajar de noche.
+        </p>
+      </div>
+    </div>
+  </div>
+  {# Advice faq #}
+  <div class="accordion-item">
+    <h3 class="accordion-header">
+      <button class="accordion-button ps-0 collapsed fw-medium"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapse6"
+              aria-expanded="false"
+              aria-controls="collapse6">¿Es necesario comprar los pasajes con anticipación?</button>
+    </h3>
+    <div id="collapse6" class="accordion-collapse collapse" data-bs-parent="#accordionFAQ">
+      <div class="accordion-body ps-0">
+        <p>
+          Aunque hay mucha frecuencia, te recomendamos asegurar tu lugar con días de antelación
+          si planeás viajar durante el verano, fines de semana largos, Semana Santa o
+          fiestas de fin de año, ya que la demanda aumenta considerablemente.
+        </p>
+      </div>
+    </div>
+  </div>
+  {# Documentation faq #}
+  <div class="accordion-item">
+    <h3 class="accordion-header">
+      <button class="accordion-button ps-0 collapsed fw-medium"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapse7"
+              aria-expanded="false"
+              aria-controls="collapse7">¿Qué documentación necesito para viajar en bus por Paraguay?</button>
+    </h3>
+    <div id="collapse7" class="accordion-collapse collapse" data-bs-parent="#accordionFAQ">
+      <div class="accordion-body ps-0">
+        <p>
+          Solo necesitás presentar tu <b>Cédula de Identidad</b> civil vigente al momento de abordar.
+          Si viajás con <b>menores</b> de edad, recordá llevar también el <b>Certificado de Nacimiento</b> o
+          la <i>autorización correspondiente</i> si no viaja con ambos padres.
+        </p>
+        <p>Si viajas a Argentina, Brasil o Bolivia es recomendable llevar el pasaporte vigente también.</p>
+      </div>
+    </div>
+  </div>
+  {# Luggage faq #}
+  <div class="accordion-item">
+    <h3 class="accordion-header">
+      <button class="accordion-button ps-0 collapsed fw-medium"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapse8"
+              aria-expanded="false"
+              aria-controls="collapse8">¿Cuánto equipaje puedo llevar en el bus?</button>
+    </h3>
+    <div id="collapse8" class="accordion-collapse collapse" data-bs-parent="#accordionFAQ">
+      <div class="accordion-body ps-0">
+        <p>
+          Técnicamente podés subir con un bolso de mano chico (de hasta 40x40x25 cm) y llevar en la bodega
+          una maleta grande (máximo 80x80x30 cm). En total, tu equipaje no debe pasar los <b>15 kilos</b>.
+        </p>
+        <p>Si te excedés en el peso o el tamaño, la empresa te puede cobrar una tasa extra basada en sus precios de encomiendas.</p>
+        <p>Pero en realidad no todas las empresas aplican estas reglas de forma estricta según las observaciones de los pasajeros.</p>
+      </div>
+    </div>
+  </div>
+</div>
