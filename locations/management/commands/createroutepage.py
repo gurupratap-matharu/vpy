@@ -2,10 +2,12 @@ import random
 from argparse import ArgumentParser
 
 from django.core.management.base import BaseCommand
+from django.utils.html import format_html_join
 from django.utils.text import slugify
 
 from wagtail.rich_text import RichText
 
+from base.templatetags.base_extras import gs_format
 from locations.models import RouteIndexPage, RoutePage
 from partners.models import PartnerPage
 from trips.models import Route
@@ -48,7 +50,6 @@ class Command(BaseCommand):
         social_text = self.get_social_text()
         listing_title = self.get_listing_title()
         listing_summary = search_description
-        intro = self.get_intro()
 
         route_index_page = RouteIndexPage.objects.first()
         route_page = RoutePage(
@@ -59,15 +60,11 @@ class Command(BaseCommand):
             social_text=social_text,
             listing_title=listing_title,
             listing_summary=listing_summary,
-            intro=intro,
             code=self.route.code,
         )
 
         # this is how stream fields need to be added
         route_page.companies.append(self.get_companies())
-        route_page.faq.append(self.get_faq())
-        route_page.ratings.append(self.get_ratings())
-
         route_index_page.add_child(instance=route_page)
         route_page.save()
 
@@ -79,15 +76,7 @@ class Command(BaseCommand):
         print(f"listing_title: {listing_title}")
         print(f"listing_summary:{listing_summary}")
         print(f"code:{self.route.code}")
-        print(f"intro:{intro}")
-        print(f"ratings:{self.get_ratings()}")
         print(f"companies:{self.get_companies()}")
-        label, data = self.get_faq()
-        print(label)
-        for x in data["item"]:
-            print(x["question"])
-            print(x["answer"])
-        print("\n")
 
         return True
 
@@ -138,123 +127,171 @@ class Command(BaseCommand):
     def get_listing_summary(self) -> str:
         return self.get_search_description()
 
-    def get_intro(self) -> str:
-        origin, dest = self.route.origin, self.route.destination
-        num_departures = self.route.num_departures
-        num_companies = self.route.num_companies
-        min_duration = self.route.get_min_duration_display()
-
-        desc = f"Hay {num_departures} salidas con {num_companies} empresas de bus desde {origin} a {dest} con una duración mínima de {min_duration}."
-        return desc
-
-    def get_ratings(self) -> tuple[str, dict]:
-        values = range(6)
-        data = {
-            "five": random.choice(values),
-            "four": random.choice(values),
-            "three": random.choice(values),
-            "two": 0,
-            "one": 0,
-        }
-        return ("Ratings", data)
-
     def get_faq(self) -> tuple[str, dict]:
+        # TODO: Deprecated. We are using FAQ from html template
+        # based on progress remove all faq methods
         origin, dest = self.route.origin, self.route.destination
-        low_d = self.route.get_min_duration_display()
-        avg_d = self.route.get_avg_duration_display()
-        distance = int(self.route.distance) or 0
-        min_price = int(self.route.min_price)
-        avg_price = int(self.route.avg_price)
-        companies = ", ".join({t.company.name for t in self.route.trips.all()})
 
         data = {
             "title": f"Preguntas frecuentes sobre el viaje de {origin} a {dest}",
             "item": [
-                # Price Q&A
-                {
-                    "question": f"¿Cuánto sale el pasaje de {origin} a {dest}?",
-                    "answer": RichText(
-                        f"<p>En promedio, el pasaje en colectivo está unos <b>Gs. {avg_price}</b>, pero podés conseguir lo más barato desde "
-                        f"<b>Gs. {min_price}</b>. Acordate que el precio final depende de la empresa que elijas y el "
-                        f"tipo de coche (Común, Semi-Cama o Ejecutivo). Un consejo: los precios suelen subir en fechas "
-                        f"clave (como Semana Santa o fin de año), así que mejor organizate con tiempo.</p>"
-                    ),
-                },
-                # Duration Q&A
-                {
-                    "question": f"¿Cuánto tiempo lleva el viaje de {origin} a {dest}?",
-                    "answer": RichText(
-                        f"<p>El viaje suele durar más o menos entre <b>{low_d}</b> y <b>{avg_d}</b>. Eso sí, tené en cuenta que el viaje "
-                        f"se puede alargar un poco dependiendo del tráfico para salir de la ciudad, cómo estén las rutas o si el colectivo "
-                        f"es de los que paran mucho en el camino a alzar pasajeros. Para que sepas la distancia por carretera entre "
-                        f"<b>{origin}</b> y <b>{dest}</b> es de aproximadamente <b>{distance}</b> kilómetros</p>"
-                    ),
-                },
-                # Empresas
-                {
-                    "question": f"¿Qué empresas de transporte operan en la ruta {origin} - {dest}?",
-                    "answer": RichText(
-                        f"<p>Las principales empresas de bus que te llevan en esta ruta son <b>{companies}</b> entre otras. "
-                        f"En <b>Ventanita</b> podés mirar bien los horarios de cada una para elegir la opción que mejor te calce.</p>"
-                    ),
-                },
-                # First & last departure Q&A
-                {
-                    "question": f"¿Cuándo es la primera y la última salida de bus entre {origin} y {dest}?",
-                    "answer": RichText(
-                        f"<p>La primera salida de <b>{origin}</b> a <b>{dest}</b> sale a las <b>{self.route.first_departure:%I:%M %p}</b> "
-                        f"y la última salida es a las <b>{self.route.last_departure:%I:%M %p}</b></p>"
-                    ),
-                },
-                # Distance Q&A
-                {
-                    "question": f"¿Cuántos kilómetros hay de {origin} a {dest}?",
-                    "answer": RichText(
-                        f"<p>La distancia por carretera entre <b>{origin}</b> y <b>{dest}</b> es de aproximadamente <b>{distance}</b> kilómetros, "
-                        f"aunque puede variar según el recorrido y los puntos de salida y llegada. "
-                        f"Para que sepas el viaje suele durar más o menos entre <b>{low_d}</b> y <b>{avg_d}</b>.</p>"
-                    ),
-                },
-                # Generic Bus categories
-                {
-                    "question": "¿Qué diferencia hay entre los servicios Común, Semi-Cama y Ejecutivo?",
-                    "answer": RichText(
-                        "<p>El servicio común realiza más paradas en el trayecto. Los servicios Semi-Cama y Ejecutivo "
-                        "ofrecen asientos más reclinables, aire acondicionado, pantallas y, en algunos casos, refrigerios "
-                        "a bordo, siendo ideales para viajar de noche.</p>"
-                    ),
-                },
-                # Generic Advice
-                {
-                    "question": "¿Es necesario comprar los pasajes con anticipación?",
-                    "answer": RichText(
-                        "<p>Aunque hay mucha frecuencia, te recomendamos asegurar tu lugar con días de antelación "
-                        "si planeás viajar durante el verano, fines de semana largos, Semana Santa o "
-                        "fiestas de fin de año, ya que la demanda aumenta considerablemente.</p>"
-                    ),
-                },
-                # Generic Documentation
-                {
-                    "question": "¿Qué documentación necesito para viajar en bus por Paraguay?",
-                    "answer": RichText(
-                        "<p>Solo necesitás presentar tu <b>Cédula de Identidad</b> civil vigente al momento de abordar. "
-                        "Si viajás con <b>menores</b> de edad, recordá llevar también el <b>Certificado de Nacimiento</b> o "
-                        "la <i>autorización correspondiente</i> si no viaja con ambos padres.</p>"
-                    ),
-                },
-                # Generic Equipaje
-                {
-                    "question": "¿Cuánto equipaje puedo llevar en el bus?",
-                    "answer": RichText(
-                        "<p>Técnicamente podés subir con un bolso de mano chico (de hasta 40x40x25 cm) y llevar en la bodega "
-                        "una maleta grande (máximo 80x80x30 cm). En total, tu equipaje no debe pasar los <b>15 kilos</b>. "
-                        "Si te excedés en el peso o el tamaño, la empresa te puede cobrar una tasa extra basada en sus precios de encomiendas. "
-                        "Pero en realidad no todas las empresas aplican estas reglas de forma estricta según las observaciones de los pasajeros.</p>"
-                    ),
-                },
+                self.get_price_faq(),
+                self.get_duration_faq(),
+                self.get_departure_faq(),
+                self.get_companies_faq(),
+                self.get_distance_faq(),
+                *self.get_generic_faq(),
             ],
         }
         return ("faq", data)
+
+    def get_price_faq(self) -> dict:
+        origin, dest = self.route.origin, self.route.destination
+        min_price = gs_format(self.route.min_price)
+        avg_price = gs_format(self.route.avg_price)
+
+        if min_price == avg_price:
+            prefix = f"<p>En promedio, el pasaje en colectivo está unos <b>Gs. {avg_price}</b>.</p>"
+        else:
+            prefix = (
+                f"<p>En promedio, el pasaje en colectivo está unos <b>Gs. {avg_price}</b>,"
+                f" pero podés conseguir lo más barato desde <b>Gs. {min_price}</b>.</p>"
+            )
+        suffix = (
+            "<p>Acordate que el precio final depende de la empresa que elijas y el "
+            "tipo de coche (Común, Semi-Cama o Ejecutivo).</p><p>Un consejo: los precios suelen subir en fechas "
+            "clave (como Semana Santa o fin de año), así que mejor organizate con tiempo.</p>"
+        )
+        data = {
+            "question": f"¿Cuánto sale el pasaje de {origin} a {dest}?",
+            "answer": RichText(prefix + suffix),
+        }
+        return data
+
+    def get_duration_faq(self) -> dict:
+        origin, dest = self.route.origin, self.route.destination
+        min_d = self.route.get_min_duration_display()
+        avg_d = self.route.get_avg_duration_display()
+        distance = int(self.route.distance) or 0
+
+        if min_d == avg_d:
+            prefix = f"<p>El viaje suele durar más o menos <b>{min_d}</b>.</p> "
+        else:
+            prefix = f"<p>El viaje suele durar más o menos entre <b>{min_d}</b> y <b>{avg_d}</b>.</p> "
+
+        suffix = (
+            "<p>Eso sí, tené en cuenta que el viaje se puede alargar un poco dependiendo del tráfico para salir de la ciudad, "
+            "cómo estén las rutas o si el colectivo es de los que paran mucho en el camino a alzar pasajeros.</p>"
+            f"<p>Para que sepas la distancia por carretera entre <b>{origin}</b> y <b>{dest}</b> es de aproximadamente <b>{distance}</b> kilómetros.</p>"
+        )
+
+        data = {"question": f"¿Cuánto tiempo lleva el viaje de {origin} a {dest}?", "answer": RichText(prefix + suffix)}
+        return data
+
+    def get_departure_faq(self) -> dict:
+        origin = self.route.origin
+        dest = self.route.destination
+        first_dep, last_dep = self.route.first_departure, self.route.last_departure
+
+        if first_dep == last_dep:
+            # only one trip exists
+            answer = (
+                f"<p>La única salida de <b>{origin}</b> a <b>{dest}</b> sale a las <b>{first_dep:%H:%M} horas.</b></p>"
+            )
+        else:
+            answer = (
+                f"<p>La primera salida de <b>{origin}</b> a <b>{dest}</b> sale a las <b>{first_dep:%H:%M} horas</b> "
+                f"y la última salida es a las <b>{last_dep:%H:%M} horas.</b></p>"
+            )
+
+        data = {
+            "question": f"¿Cuándo es la primera y la última salida de bus entre {origin} y {dest}?",
+            "answer": RichText(answer),
+        }
+        return data
+
+    def get_companies_faq(self) -> dict:
+        origin = self.route.origin
+        dest = self.route.destination
+        companies = {t.company for t in self.route.trips.all()}
+        companies_html = format_html_join(
+            ", ",
+            "<a href='/empresas-de-bus/{}/'>{}</a>",
+            ((c.slug, c.name) for c in companies),
+        )
+
+        data = {
+            "question": f"¿Qué empresas de transporte operan en la ruta {origin} a {dest}?",
+            "answer": RichText(
+                f"<p>Las principales <a href='/empresas-de-bus/'>empresas de bus</a> que te llevan en esta ruta son {companies_html} entre otras.</p>"
+                f"<p>En <a href='/'>Ventanita</a> podés mirar bien los horarios de cada una para elegir la opción que mejor te guste.</p>"
+            ),
+        }
+        return data
+
+    def get_distance_faq(self) -> dict:
+        origin = self.route.origin
+        dest = self.route.destination
+        min_d = self.route.get_min_duration_display()
+        avg_d = self.route.get_avg_duration_display()
+        distance = int(self.route.distance) or 0
+
+        prefix = (
+            f"<p>La distancia por carretera entre <b>{origin}</b> y <b>{dest}</b> es de aproximadamente <b>{distance}</b> kilómetros, "
+            f"aunque puede variar según el recorrido y los puntos de salida y llegada.</p>"
+        )
+        if min_d == avg_d:
+            suffix = f"<p>Para que sepas el viaje suele durar más o menos <b>{min_d}</b>.</p> "
+        else:
+            suffix = f"<p>Para que sepas el viaje suele durar más o menos entre <b>{min_d}</b> y <b>{avg_d}</b>.</p> "
+
+        data = {
+            "question": f"¿Cuántos kilómetros hay de {origin} a {dest}?",
+            "answer": RichText(prefix + suffix),
+        }
+        return data
+
+    def get_generic_faq(self) -> dict:
+        data = [
+            # Seat categories
+            {
+                "question": "¿Qué diferencia hay entre los servicios Común, Semi-Cama y Ejecutivo?",
+                "answer": RichText(
+                    "<p>El servicio común realiza más paradas en el trayecto. Los servicios Semi-Cama y Ejecutivo "
+                    "ofrecen asientos más reclinables, aire acondicionado, pantallas y, en algunos casos, refrigerios "
+                    "a bordo, siendo ideales para viajar de noche.</p>"
+                ),
+            },
+            # Generic Advice
+            {
+                "question": "¿Es necesario comprar los pasajes con anticipación?",
+                "answer": RichText(
+                    "<p>Aunque hay mucha frecuencia, te recomendamos asegurar tu lugar con días de antelación "
+                    "si planeás viajar durante el verano, fines de semana largos, Semana Santa o "
+                    "fiestas de fin de año, ya que la demanda aumenta considerablemente.</p>"
+                ),
+            },
+            # Generic Documentation
+            {
+                "question": "¿Qué documentación necesito para viajar en bus por Paraguay?",
+                "answer": RichText(
+                    "<p>Solo necesitás presentar tu <b>Cédula de Identidad</b> civil vigente al momento de abordar. "
+                    "Si viajás con <b>menores</b> de edad, recordá llevar también el <b>Certificado de Nacimiento</b> o "
+                    "la <i>autorización correspondiente</i> si no viaja con ambos padres.</p>"
+                ),
+            },
+            # Generic Equipaje
+            {
+                "question": "¿Cuánto equipaje puedo llevar en el bus?",
+                "answer": RichText(
+                    "<p>Técnicamente podés subir con un bolso de mano chico (de hasta 40x40x25 cm) y llevar en la bodega "
+                    "una maleta grande (máximo 80x80x30 cm). En total, tu equipaje no debe pasar los <b>15 kilos</b>.</p>"
+                    "<p>Si te excedés en el peso o el tamaño, la empresa te puede cobrar una tasa extra basada en sus precios de encomiendas.</p>"
+                    "<p>Pero en realidad no todas las empresas aplican estas reglas de forma estricta según las observaciones de los pasajeros.</p>"
+                ),
+            },
+        ]
+        return data
 
     def get_companies(self) -> tuple[str, dict]:
         origin = self.route.origin
