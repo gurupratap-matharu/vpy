@@ -8,8 +8,9 @@ from django.conf import settings
 from django.core.validators import RegexValidator
 from django.db import models
 from django.shortcuts import get_object_or_404
+from django.template.loader import render_to_string
 from django.utils import timezone
-from django.utils.html import mark_safe
+from django.utils.html import format_html_join, mark_safe
 from django.utils.translation import gettext_lazy as _
 
 from wagtail.admin.panels import FieldPanel, FieldRowPanel, InlinePanel, MultiFieldPanel, PageChooserPanel
@@ -18,6 +19,7 @@ from wagtail.fields import StreamField
 from wagtail.models import Orderable, PageManager
 from wagtail.search import index
 
+from bs4 import BeautifulSoup
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
 
 from base.blocks import (
@@ -32,6 +34,7 @@ from base.blocks import (
 from base.choices import Country, Departamento, Weekday
 from base.forms import PageFeedbackForm, SuggestionForm
 from base.models import BasePage
+from base.templatetags.base_extras import gs_format
 from base.validators import validate_lat_lng, validate_phone
 
 
@@ -808,6 +811,7 @@ class RouteIndexPage(BasePage):
 class RoutePage(BasePage):
     page_description = "Use this to create a A -> B route page"
     route_obj = None
+    faq_html = None
 
     code = models.CharField(_("route code"), max_length=20, blank=True)
     intro = models.TextField(help_text="Text to describe the page", blank=True)
@@ -893,11 +897,13 @@ class RoutePage(BasePage):
         return self.title
 
     def get_context(self, request, *args, **kwargs) -> dict:
-        context = super().get_context(request, *args, **kwargs)
-        context["page_feedback_form"] = self.get_page_feedback_form()
-        context["suggestion_form"] = self.get_suggestion_form()
-        context["route"], context["trips"] = self.get_route_trips()
-        return context
+        ctx = super().get_context(request, *args, **kwargs)
+        ctx["page_feedback_form"] = self.get_page_feedback_form()
+        ctx["suggestion_form"] = self.get_suggestion_form()
+        ctx["route"], ctx["trips"] = self.get_route_trips()
+        ctx["route_ctx"] = route_ctx = self.get_route_ctx()
+        ctx["faq_html"] = self.get_faq(route_ctx)
+        return ctx
 
     def get_page_feedback_form(self) -> PageFeedbackForm:
         # prepopulate the hidden url field with page url
@@ -914,8 +920,38 @@ class RoutePage(BasePage):
         route_model = apps.get_model("trips.Route")
         qs = route_model.objects.all()
         self.route_obj = get_object_or_404(qs, code=self.code)
-        self.trips = self.route_obj.trips.all()
+        self.trips = self.route_obj.trips.order_by("departure__hour", "departure__minute")
         return self.route_obj, self.trips
+
+    def get_route_ctx(self) -> dict:
+        if not self.route_obj or not self.trips:
+            self.get_route_trips()
+        obj = self.route_obj
+        companies = {t.company for t in self.trips}
+        companies_links = format_html_join(
+            ", ",
+            "<a href='/empresas-de-bus/{}/'>{}</a>",
+            ((c.slug, c.name) for c in companies),
+        )
+
+        ctx = {
+            "route": obj,
+            "origin": obj.origin,
+            "dest": obj.destination,
+            "min_price": gs_format(obj.min_price),
+            "avg_price": gs_format(obj.avg_price),
+            "min_d": obj.get_min_duration_display(),
+            "avg_d": obj.get_avg_duration_display(),
+            "distance": int(obj.distance) or 0,
+            "first_dep": obj.first_departure,
+            "last_dep": obj.last_departure,
+            "companies_links": companies_links,
+        }
+        return ctx
+
+    def get_faq(self, ctx: dict) -> tuple[str, list]:
+        self.faq_html = render_to_string("locations/route_page_faq.html", {"route": ctx})
+        return self.faq_html
 
     def ld_entity(self):
         page_schema = json.dumps(
@@ -1046,3 +1082,37 @@ class RoutePage(BasePage):
             },
         }
         return trip_item
+
+    def _get_faq_schema(self) -> dict:
+        """
+        Route page uses faq schema generated from `route_page_faq` template snippet.
+        in get_faq() method we parse and set the schema variable. This method
+        override the base/models.py default method to use our custom schema.
+        """
+        faq_schema = {
+            "@type": "FAQPage",
+            "mainEntity": self._get_faq_entities(),
+        }
+
+        return faq_schema
+
+    def _get_faq_entities(self):
+        if not self.faq_html:
+            return None
+        soup = BeautifulSoup(self.faq_html)
+        entities = []
+        items = soup.find_all(class_="accordion-item")
+        for item in items:
+            question = item.find("button").get_text(strip=True)
+            answer = item.find(class_="accordion-body").get_text(" ", strip=True)
+            answer = "".join(x.strip() for x in answer.split("\n"))
+
+            entity = {
+                "@type": "Question",
+                "name": question,
+                "acceptedAnswer": {"@type": "Answer", "text": answer},
+            }
+
+            entities.append(entity)
+
+        return entities
