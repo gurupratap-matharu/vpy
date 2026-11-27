@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime
 
 from django.conf import settings
@@ -10,7 +11,7 @@ from django.utils.translation import gettext_lazy as _
 from base.choices import Departamento
 from trips.date import duration_display, next_weekday
 from trips.managers import CompanyManager, RouteManager, StopManager, TripManager
-import logging
+
 
 logger = logging.getLogger(__name__)
 
