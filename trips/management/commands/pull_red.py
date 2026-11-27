@@ -7,6 +7,7 @@ from timeit import default_timer as timer
 
 from django.core.management.base import BaseCommand
 from django.db import transaction
+from django.utils import timezone
 from django.utils.dateparse import parse_time
 
 import requests
@@ -72,45 +73,8 @@ class Command(BaseCommand):
             # no search results
             return False
 
-        # Build route metadata from trips - they don't provide
-        num_companies = len({t.get("company") for t in trips})
-
-        first_departure = min([t.get("departure") for t in trips]).time()
-        last_departure = max([t.get("departure") for t in trips]).time()
-        num_departures = len(trips)
-
-        price_tuples = [(t.get("price_a"), t.get("price_b")) for t in trips]
-        prices = [x for tup in price_tuples for x in tup if x is not None]
-
-        min_price = min(prices)
-        avg_price = int(median(prices))  # we actually calculate the median
-
-        min_duration = min(t.get("duration") for t in trips)
-        avg_duration = median(t.get("duration") for t in trips)  # again median
-
-        self.stdout.write(f"min price:{min_price} avg price:{avg_price}")
-        self.stdout.write(f"first departure:{first_departure} last departure:{last_departure}")
-        self.stdout.write(f"avg duration:{avg_duration} min duration:{min_duration}")
-        self.stdout.write(f"num departures:{num_departures} num companies:{num_companies}")
-
-        obj.num_companies = num_companies
-        obj.first_departure = first_departure
-        obj.last_departure = last_departure
-        obj.num_departures = num_departures
-        obj.min_price = min_price
-        obj.avg_price = avg_price
-        obj.avg_duration = avg_duration
-        obj.min_duration = min_duration
-        obj.save()
-
-        with transaction.atomic():
-            # Remove all previous Auto trips - revise this later
-            obj.trips.filter(strategy=Trip.Strategy.AUTO).delete()
-
-            # Create trips
-            for trip in trips:
-                t, created = Trip.objects.get_or_create(route=obj, **trip)
-                self.stdout.write(f"trip:{t} created:{created}")
+        self.save_trips(obj, trips)
+        self.save_route_metadata(obj)
 
         return True
 
@@ -227,6 +191,54 @@ class Command(BaseCommand):
             microsecond=t.microsecond,
         )
         return dt
+
+    def save_trips(self, obj, trips) -> None:
+        with transaction.atomic():
+            # Remove all previous Auto trips - revise this later
+            obj.trips.filter(strategy=Trip.Strategy.AUTO).delete()
+
+            # Create trips
+            for trip in trips:
+                t, created = Trip.objects.get_or_create(route=obj, **trip)
+                self.stdout.write(f"trip:{t} created:{created}")
+
+    def save_route_metadata(self, obj) -> None:
+        """Calculate route stats from all manual + auto trips."""
+
+        obj.refresh_from_db()
+        trips = list(obj.trips.values())
+
+        num_companies = len({t.get("company_id") for t in trips})
+
+        # DB stores values in UTC but for metadata we need in PY time
+        first_departure = min(timezone.localtime(t.get("departure")) for t in trips).time()
+        last_departure = max(timezone.localtime(t.get("departure")) for t in trips).time()
+
+        num_departures = len(trips)
+
+        price_tuples = [(t.get("price_a"), t.get("price_b")) for t in trips]
+        prices = [x for tup in price_tuples for x in tup if x is not None]
+
+        min_price = min(prices)
+        avg_price = int(median(prices))  # we actually calculate the median
+
+        min_duration = min(t.get("duration") for t in trips)
+        avg_duration = median(t.get("duration") for t in trips)  # again median
+
+        self.stdout.write(f"min price:{min_price} avg price:{avg_price}")
+        self.stdout.write(f"first departure:{first_departure} last departure:{last_departure}")
+        self.stdout.write(f"avg duration:{avg_duration} min duration:{min_duration}")
+        self.stdout.write(f"num departures:{num_departures} num companies:{num_companies}")
+
+        obj.min_price = min_price
+        obj.avg_price = avg_price
+        obj.first_departure = first_departure
+        obj.last_departure = last_departure
+        obj.num_departures = num_departures
+        obj.avg_duration = avg_duration
+        obj.min_duration = min_duration
+        obj.num_companies = num_companies
+        obj.save()
 
     def wait(self) -> None:
         # don't wait if manually updating single route via admin
